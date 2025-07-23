@@ -1,4 +1,3 @@
-import gratatouille.tasks.GInputFiles
 import gratatouille.tasks.GManuallyWired
 import gratatouille.tasks.GOutputDirectory
 import gratatouille.tasks.GTask

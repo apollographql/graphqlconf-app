@@ -1,10 +1,18 @@
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
+
 plugins {
   id("org.jetbrains.kotlin.jvm")
   id("com.google.devtools.ksp")
   id("com.apollographql.execution")
   id("org.jetbrains.kotlin.plugin.serialization")
+  id("com.gradleup.loud")
+  id("com.gradleup.compat.patrouille")
 }
 
+compatPatrouille {
+  java(17)
+  kotlin(getKotlinPluginVersion())
+}
 dependencies {
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.apollo.kotlin.execution.runtime)
@@ -22,4 +30,22 @@ apolloExecution {
   }
 }
 
+loud {
+  region.set("europe-west4")
+  project.set("graphqlconf-mobile")
+//  serviceAccount.set(System.getenv("GOOGLE_SERVICES_JSON"))
+  serviceAccount.set(File("/Users/martinbonnin/.secrets/graphqlconf-mobile.json").readText())
+
+  artifactRegistry {
+    repository.set("main")
+    imageName.set("main")
+  }
+  jib {
+    baseImageReference.set("openjdk:17-alpine")
+    mainClass.set("MainKt")
+  }
+  cloudRun {
+    service.set("main")
+  }
+}
 registerDownloadResourcesTask()

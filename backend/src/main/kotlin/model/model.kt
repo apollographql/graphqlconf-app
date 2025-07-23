@@ -1,5 +1,6 @@
 package model
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -43,12 +44,14 @@ val json = Json {
   ignoreUnknownKeys = true
 }
 
+@ExperimentalSerializationApi
 val allSessions: List<JsonSession> by lazy {
   JsonSession::class.java.classLoader.getResourceAsStream("schedule-2025.json")!!.use {
     json.decodeFromStream<List<JsonSession>>(it)
   }
 }
 
+@ExperimentalSerializationApi
 val allSpeakers: List<JsonSpeaker> by lazy {
   JsonSession::class.java.classLoader.getResourceAsStream("speakers.json")!!.use {
     json.decodeFromStream<JsonSpeakers>(it).speakers

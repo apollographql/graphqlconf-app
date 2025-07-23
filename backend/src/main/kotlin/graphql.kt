@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 import com.apollographql.apollo.ast.GQLStringValue
 import com.apollographql.apollo.ast.GQLValue
 import com.apollographql.apollo.execution.Coercing
@@ -7,6 +9,7 @@ import com.apollographql.execution.annotation.GraphQLScalar
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
+import kotlinx.serialization.ExperimentalSerializationApi
 import model.allSessions
 import model.allSpeakers
 
@@ -31,11 +34,11 @@ object LocalDateTimeCoercing : Coercing<LocalDateTime> {
   }
 
   override fun deserialize(value: ExternalValue): LocalDateTime {
-    return dateFormat.parse((value as String))
+    return LocalDateTime.parse((value as String))
   }
 
   override fun parseLiteral(value: GQLValue): LocalDateTime {
-    return dateFormat.parse((value as GQLStringValue).value)
+    return LocalDateTime.parse((value as GQLStringValue).value)
   }
 }
 
