@@ -12,7 +12,7 @@ dependencies {
   implementation(libs.ktor.server.netty)
   implementation(libs.kotlin.test)
   implementation(libs.kotlinx.datetime)
-
+  implementation(libs.slf4j.simple)
 }
 
 // Configure codegen

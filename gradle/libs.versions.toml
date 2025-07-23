@@ -11,3 +11,4 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.0"
 gratatouille = "com.gradleup.gratatouille:gratatouille-gradle-plugin:0.0.10"
 okhttp = "com.squareup.okhttp3:okhttp:5.1.0"
+slf4j-simple = "org.slf4j:slf4j-simple:2.0.17"

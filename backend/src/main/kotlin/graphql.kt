@@ -5,11 +5,25 @@ import com.apollographql.apollo.execution.ExternalValue
 import com.apollographql.execution.annotation.GraphQLQuery
 import com.apollographql.execution.annotation.GraphQLScalar
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 import model.allSessions
 import model.allSpeakers
 
 @GraphQLScalar(LocalDateTimeCoercing::class)
 typealias GraphQLLocalDateTime = LocalDateTime
+
+internal val dateFormat = LocalDateTime.Format {
+  year()
+  char('-')
+  monthNumber(padding = Padding.ZERO)
+  char('-')
+  day()
+  char(' ')
+  hour(padding = Padding.ZERO)
+  char(':')
+  minute(padding = Padding.ZERO)
+}
 
 object LocalDateTimeCoercing : Coercing<LocalDateTime> {
   override fun serialize(internalValue: LocalDateTime): ExternalValue {
@@ -17,11 +31,11 @@ object LocalDateTimeCoercing : Coercing<LocalDateTime> {
   }
 
   override fun deserialize(value: ExternalValue): LocalDateTime {
-    return LocalDateTime.parse((value as String))
+    return dateFormat.parse((value as String))
   }
 
   override fun parseLiteral(value: GQLValue): LocalDateTime {
-    return LocalDateTime.parse((value as GQLStringValue).value)
+    return dateFormat.parse((value as GQLStringValue).value)
   }
 }
 
@@ -33,8 +47,8 @@ class Query {
         id = it.id,
         title = it.name,
         description = it.description,
-        start = LocalDateTime.parse(it.event_start),
-        end = LocalDateTime.parse(it.event_start),
+        start = dateFormat.parse(it.event_start),
+        end = dateFormat.parse(it.event_start),
         event_type = it.event_type,
         venue = it.venue,
         speakerUsernames = it.speakers.orEmpty().map { it.username }

@@ -1,3 +1,4 @@
+import gratatouille.tasks.GInputFiles
 import gratatouille.tasks.GManuallyWired
 import gratatouille.tasks.GOutputDirectory
 import gratatouille.tasks.GTask
@@ -16,7 +17,7 @@ private val client = OkHttpClient()
 @Suppress("Unused")
 fun downloadResourcesInternal(
   @GManuallyWired
-  outputDirectory: GOutputDirectory
+  outputDirectory: GOutputDirectory,
 ) {
   download(
     "https://raw.githubusercontent.com/graphql/graphql.github.io/b1d26dbe70a193b999efb661b9eabcce0c44a17a/scripts/sync-sched/schedule-2025.json",
