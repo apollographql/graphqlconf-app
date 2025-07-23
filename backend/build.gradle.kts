@@ -33,8 +33,7 @@ apolloExecution {
 loud {
   region.set("europe-west4")
   project.set("graphqlconf-mobile")
-//  serviceAccount.set(System.getenv("GOOGLE_SERVICES_JSON"))
-  serviceAccount.set(File("/Users/martinbonnin/.secrets/graphqlconf-mobile.json").readText())
+  serviceAccount.set(System.getenv("GOOGLE_SERVICES_JSON"))
 
   artifactRegistry {
     repository.set("main")
