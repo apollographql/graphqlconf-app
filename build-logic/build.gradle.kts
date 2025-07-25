@@ -34,6 +34,11 @@ dependencies {
   add("implementation", libs.compat.patrouille)
   add("implementation", libs.gradle.api)
   add("implementation", libs.apollo.gradle.plugin)
+  add("implementation", libs.agp)
+  add("implementation", libs.compose.gradle.plugin)
+  add("implementation", libs.compose.compiler.gradle.plugin)
+  add("implementation", libs.hot.reload)
+  add("implementation", libs.compat.patrouille)
 }
 
 extensions.getByType(GratatouilleExtension::class.java).apply {

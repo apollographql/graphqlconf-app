@@ -1,5 +1,13 @@
+[versions]
+kgp = "2.2.0"
+agp = "8.5.0"
+compose = "1.8.2"
+compileSdk = "35"
+targetSdk = "35"
+minSdk = "26"
+
 [libraries]
-kgp = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0"
+kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
 kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.2.0"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 ksp = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.2.0-2.0.2"
@@ -19,3 +27,7 @@ google-cloud-storage = { module = "com.google.cloud:google-cloud-storage" }
 jib-core = "com.google.cloud.tools:jib-core:0.27.3"
 gradle-api = "dev.gradleplugins:gradle-api:8.11.1"
 apollo-gradle-plugin = "com.apollographql.apollo:com.apollographql.apollo.gradle.plugin:4.3.2"
+agp = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "agp"}
+compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kgp"}
+compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "compose" }
+hot-reload = "org.jetbrains.compose.hot-reload:org.jetbrains.compose.hot-reload.gradle.plugin:1.0.0-beta04"
