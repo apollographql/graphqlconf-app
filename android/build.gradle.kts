@@ -1,12 +1,23 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("com.apollographql.apollo")
+  id("com.apollographql.apollo")
+  id("org.jetbrains.kotlin.multiplatform")
 }
 
-dependencies {
-  implementation("com.apollographql.apollo:apollo-compiler")
-  implementation("com.apollographql.apollo:apollo-runtime")
-  testImplementation(kotlin("test"))
+kotlin {
+  jvm()
+  sourceSets {
+    getByName("commonMain") {
+      dependencies {
+        implementation("com.apollographql.apollo:apollo-runtime")
+      }
+    }
+
+    getByName("commonTest") {
+      dependencies {
+        implementation(kotlin("test"))
+      }
+    }
+  }
 }
 
 apollo {
