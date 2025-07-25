@@ -1,0 +1,5 @@
+query GetSessions {
+  sessions {
+    id
+  }
+}

@@ -33,6 +33,7 @@ dependencies {
   add("implementation", libs.google.cloud.run)
   add("implementation", libs.compat.patrouille)
   add("implementation", libs.gradle.api)
+  add("implementation", libs.apollo.gradle.plugin)
 }
 
 extensions.getByType(GratatouilleExtension::class.java).apply {

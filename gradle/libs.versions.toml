@@ -18,3 +18,4 @@ google-cloud-run = "com.google.cloud:google-cloud-run:0.68.0"
 google-cloud-storage = { module = "com.google.cloud:google-cloud-storage" }
 jib-core = "com.google.cloud.tools:jib-core:0.27.3"
 gradle-api = "dev.gradleplugins:gradle-api:8.11.1"
+apollo-gradle-plugin = "com.apollographql.apollo:com.apollographql.apollo.gradle.plugin:4.3.2"

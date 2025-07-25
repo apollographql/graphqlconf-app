@@ -11,5 +11,5 @@ plugins {
   id("build-logic").apply(false)
 }
 
-include(":backend")
+include(":backend", ":android")
 
