@@ -15,5 +15,5 @@ plugins {
   id("org.gradle.toolchains.foojay-resolver-convention").version("1.0.0")
 }
 
-include(":backend", ":apps")
+include(":backend", ":app")
 

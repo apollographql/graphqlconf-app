@@ -7,13 +7,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.unit.sp
-import graphqlconf_2025_apps.apps.generated.resources.CommitMono_400_Italic
-import graphqlconf_2025_apps.apps.generated.resources.CommitMono_400_Regular
-import graphqlconf_2025_apps.apps.generated.resources.CommitMono_700_Italic
-import graphqlconf_2025_apps.apps.generated.resources.CommitMono_700_Regular
-import graphqlconf_2025_apps.apps.generated.resources.HostGrotesk_Italic
-import graphqlconf_2025_apps.apps.generated.resources.HostGrotesk_Normal
-import graphqlconf_2025_apps.apps.generated.resources.Res
+import graphqlconf_app.app.generated.resources.CommitMono_400_Italic
+import graphqlconf_app.app.generated.resources.CommitMono_400_Regular
+import graphqlconf_app.app.generated.resources.CommitMono_700_Italic
+import graphqlconf_app.app.generated.resources.CommitMono_700_Regular
+import graphqlconf_app.app.generated.resources.HostGrotesk_Italic
+import graphqlconf_app.app.generated.resources.HostGrotesk_Normal
+import graphqlconf_app.app.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 
 class Typography(

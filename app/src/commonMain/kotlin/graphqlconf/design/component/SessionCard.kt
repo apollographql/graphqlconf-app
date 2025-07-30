@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -17,16 +16,11 @@ import androidx.compose.ui.unit.dp
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
-import graphqlconf_2025_apps.apps.generated.resources.Res
-import graphqlconf_2025_apps.apps.generated.resources.location
+import graphqlconf_app.app.generated.resources.Res
+import graphqlconf_app.app.generated.resources.location
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-enum class TalkStatus {
-  Past, Live, Upcoming,
-}
-
-private val CardTalkShape = RoundedCornerShape(8.dp)
 
 @Composable
 fun SessionCard(
