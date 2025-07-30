@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 plugins {
   id("com.apollographql.apollo")
@@ -12,15 +13,19 @@ plugins {
 compatPatrouille {
   java(17)
 }
+
 kotlin {
   jvm()
   sourceSets {
     getByName("commonMain").dependencies {
       implementation("com.apollographql.apollo:apollo-runtime")
+
       implementation(compose.runtime)
       implementation(compose.foundation)
-      implementation(compose.material)
+      implementation(compose.material3)
       implementation(compose.components.resources)
+
+      implementation(libs.components.ui.tooling.preview)
     }
 
     getByName("commonTest").dependencies {
@@ -68,4 +73,13 @@ compose.desktop {
       configurationFiles.from(project.file("rules.pro"))
     }
   }
+}
+
+composeCompiler {
+  featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
+}
+
+compose.resources {
+  publicResClass = true
+  nameOfResClass = "Res"
 }

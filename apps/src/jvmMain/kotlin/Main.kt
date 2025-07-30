@@ -1,6 +1,6 @@
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import graphqlconf.App
+import graphqlconf.app.App
 import java.io.File
 import java.util.*
 
