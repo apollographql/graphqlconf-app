@@ -22,6 +22,7 @@ class Typography(
   val h3: TextStyle,
   val h4: TextStyle,
   val text: TextStyle,
+  val badge: TextStyle,
 )
 
 internal val GraphqlConfTypography: Typography
@@ -57,6 +58,11 @@ internal val GraphqlConfTypography: Typography
         fontSize = 16.sp,
         lineHeight = 24.sp,
       ),
+      badge = TextStyle(
+        fontFamily = CommitMono,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+      )
     )
   }
 

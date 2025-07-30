@@ -31,3 +31,36 @@ internal object ColorValues {
 
   val rhodamine = Color(0xFFE10098)
 }
+
+/**
+ * From https://github.com/graphql/graphql.github.io/blob/a3d6819fbedd23b985fc05a37b8fb7722d3a517b/src/app/conf/2025/utils.ts#L4-L26
+ */
+private val eventTypeColors = mapOf(
+   "breaks" to Color(0xff7DAA5E),
+   "keynote sessions" to Color(0xff7e66cc),
+   "lightning talks" to Color(0xff1a5b77),
+   "session presentations" to Color(0xff5c2e75),
+   "workshops" to Color(0xff4b5fc0),
+   "unconference" to Color(0xff7e66cc),
+   "api platform" to Color(0xff4e6e82),
+   "backend" to Color(0xff36C1A0),
+   "breaks & special events" to Color(0xff7DAA5E),
+   "defies categorization" to Color(0xff894545),
+   "developer experience" to Color(0xff6fc9af),
+   "federation and composite schemas" to Color(0xffcbc749),
+   "graphql clients" to Color(0xffca78fc),
+   "graphql in production" to Color(0xffe4981f),
+   "graphql security" to Color(0xffCC6BB0),
+   "graphql spec" to Color(0xff6B73CC),
+   "scaling" to Color(0xff8D8D8D),
+   "frontend" to Color(0xff7F00FF),
+   "documentation" to Color(0xffFA8072),
+   "schema evolution" to Color(0xffD8BFD8),
+   "security" to Color(0xff6495ED),
+   "case studies" to Color(0xff894545),
+   "federation and distributed systems" to Color(0xffFC8251),
+)
+
+internal fun eventColor(eventType: String): Color {
+  return eventTypeColors.get(eventType.lowercase()) ?: Color(0xff6fc9af)
+}

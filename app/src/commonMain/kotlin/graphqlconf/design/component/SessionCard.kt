@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
+import graphqlconf.design.theme.eventColor
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.location
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 
 @Composable
 fun SessionCard(
@@ -43,6 +43,16 @@ fun SessionCard(
       .background(backgroundColor)
   ) {
     Column(modifier = Modifier.padding(8.dp)) {
+      if (eventType != null) {
+        val color = eventColor(eventType)
+        Text(
+          text =  eventType.uppercase(),
+          color = GraphqlConfTheme.colors.primaryText,
+          style = GraphqlConfTheme.typography.badge,
+          modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+      }
       Text(
         text = title,
         style = GraphqlConfTheme.typography.h2,
@@ -85,14 +95,13 @@ fun SessionCard(
   }
 }
 
-
 @Preview
 @Composable
 internal fun SessionCardPreview() {
   PreviewHelper {
     SessionCard(
       title = "What is the GraphQL foundation?",
-      eventType = "Keynote",
+      eventType = "Keynote sessions",
       speakers = listOf("Jeff Auriemma"),
       venue = "Grote Zaal",
       time = "10:00 - 12:00",
