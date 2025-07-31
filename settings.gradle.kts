@@ -16,4 +16,5 @@ plugins {
 }
 
 include(":backend", ":app")
+includeBuild("apollo-compose")
 

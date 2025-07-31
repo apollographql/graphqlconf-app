@@ -2,7 +2,7 @@ schema {
   query: Query
 }
 
-scalar GraphQLLocalDateTime
+scalar LocalDateTime
 
 type Query {
   sessions: [Session!]!
@@ -15,9 +15,9 @@ type Session {
 
   description: String!
 
-  start: GraphQLLocalDateTime!
+  start: LocalDateTime!
 
-  end: GraphQLLocalDateTime!
+  end: LocalDateTime!
 
   event_type: String!
 

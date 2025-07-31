@@ -1,5 +1,15 @@
 query GetSessions {
   sessions {
     id
+    title
+    description
+    speakers {
+      name
+    }
+    venue
+    event_type
+    start
+    end
   }
 }
+

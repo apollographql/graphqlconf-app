@@ -25,6 +25,10 @@ kotlin {
       implementation(compose.material3)
       implementation(compose.components.resources)
 
+      implementation(libs.kotlinx.datetime)
+      implementation(libs.kotlinx.coroutines.core)
+      implementation(libs.androidx.lifecycle.runtime.compose)
+
       implementation(libs.components.ui.tooling.preview)
     }
 
@@ -35,6 +39,8 @@ kotlin {
     getByName("jvmMain").dependencies {
       implementation(compose.desktop.currentOs)
       implementation(compose.desktop.common)
+
+      implementation(libs.kotlinx.coroutines.swing)
     }
 
     getByName("jvmTest").dependencies {
@@ -48,6 +54,7 @@ apollo {
   service("service") {
     packageName.set("graphqlconf.api")
     schemaFiles.from("../backend/graphql/schema.graphqls")
+    mapScalar("LocalDateTime", "kotlinx.datetime.LocalDateTime", "graphqlconf.app.LocalDateTimeAdapter")
   }
 }
 

@@ -4,6 +4,7 @@ import com.apollographql.apollo.ast.GQLStringValue
 import com.apollographql.apollo.ast.GQLValue
 import com.apollographql.apollo.execution.Coercing
 import com.apollographql.apollo.execution.ExternalValue
+import com.apollographql.execution.annotation.GraphQLName
 import com.apollographql.execution.annotation.GraphQLQuery
 import com.apollographql.execution.annotation.GraphQLScalar
 import kotlinx.datetime.LocalDateTime
@@ -14,6 +15,7 @@ import model.allSessions
 import model.allSpeakers
 
 @GraphQLScalar(LocalDateTimeCoercing::class)
+@GraphQLName("LocalDateTime")
 typealias GraphQLLocalDateTime = LocalDateTime
 
 internal val dateFormat = LocalDateTime.Format {

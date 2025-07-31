@@ -10,21 +10,20 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import graphqlconf.design.catalog.Gallery
+import graphqlconf.design.theme.GraphqlConfTheme
 
 @Composable
 fun App(isDarkTheme: Boolean = true) {
-  Gallery()
-//  MaterialTheme(
-//    colors = if (isDarkTheme) darkColors() else lightColors()
-//  ) {
-//    Surface(
-//      modifier = Modifier.fillMaxSize(),
-//      color = MaterialTheme.colors.background
-//    ) {
-//      Column {
-//        Text("Hello World!")
-//        Text("Tada!")
-//      }
-//    }
-//  }
+  if (false) {
+    Gallery()
+  } else {
+    GraphqlConfTheme {
+      Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = GraphqlConfTheme.colors.mainBackground
+      ) {
+        SessionList()
+      }
+    }
+  }
 }
