@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun SessionList() {
   when {
     response == null -> {
       Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
       }
     }
     response.data == null -> {
@@ -48,7 +49,8 @@ fun SessionList() {
         Text(
           text = stringResource(Res.string.oh_no) + response.exception?.message,
           style = GraphqlConfTheme.typography.h1,
-          color = GraphqlConfTheme.colors.primaryText
+          color = GraphqlConfTheme.colors.primaryText,
+          modifier = Modifier.align(Alignment.Center)
         )
       }
     }

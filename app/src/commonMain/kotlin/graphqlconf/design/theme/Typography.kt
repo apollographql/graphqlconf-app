@@ -20,8 +20,9 @@ class Typography(
   val h1: TextStyle,
   val h2: TextStyle,
   val h3: TextStyle,
-  val h4: TextStyle,
-  val text: TextStyle,
+  val bodyLarge: TextStyle,
+  val bodyMedium: TextStyle,
+  val bodySmall: TextStyle,
   val badge: TextStyle,
 )
 
@@ -31,32 +32,36 @@ internal val GraphqlConfTypography: Typography
     return Typography(
       h1 = TextStyle(
         fontFamily = HostGrotesk,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 30.sp,
-        lineHeight = 32.sp,
+        fontWeight = FontWeight.Normal,
+        fontSize = 40.sp,
+        lineHeight = 48.sp,
       ),
       h2 = TextStyle(
         fontFamily = HostGrotesk,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp,
+        lineHeight = 38.sp,
       ),
       h3 = TextStyle(
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Normal,
+        fontFamily = HostGrotesk,
+        fontSize = 24.sp,
+        lineHeight = 28.sp,
+      ),
+      bodyLarge = TextStyle(
         fontFamily = HostGrotesk,
         fontSize = 16.sp,
         lineHeight = 24.sp,
       ),
-      h4 = TextStyle(
-        fontWeight = FontWeight.SemiBold,
+      bodyMedium = TextStyle(
         fontFamily = HostGrotesk,
-        fontSize = 13.sp,
-        lineHeight = 20.sp,
+        fontSize = 14.sp,
+        lineHeight = 21.sp,
       ),
-      text = TextStyle(
+      bodySmall = TextStyle(
         fontFamily = HostGrotesk,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
+        fontSize = 12.sp,
+        lineHeight = 18.sp,
       ),
       badge = TextStyle(
         fontFamily = CommitMono,

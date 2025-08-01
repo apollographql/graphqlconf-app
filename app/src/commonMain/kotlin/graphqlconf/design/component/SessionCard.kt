@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -47,7 +48,7 @@ fun SessionCard(
         val color = eventColor(eventType)
         Text(
           text =  eventType.uppercase(),
-          color = GraphqlConfTheme.colors.primaryText,
+          color = textColor,
           style = GraphqlConfTheme.typography.badge,
           modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
         )
@@ -55,15 +56,16 @@ fun SessionCard(
       }
       Text(
         text = title,
-        style = GraphqlConfTheme.typography.h2,
+        style = GraphqlConfTheme.typography.bodyLarge,
         color = textColor,
         maxLines = 2,
         modifier = modifier,
       )
+      Spacer(modifier = Modifier.height(8.dp))
       Text(
         text = speakers.joinToString(","),
-        color = GraphqlConfTheme.colors.primaryText,
-        style = GraphqlConfTheme.typography.text,
+        color = textColor,
+        style = GraphqlConfTheme.typography.bodySmall,
         maxLines = 1,
       )
     }
@@ -82,14 +84,15 @@ fun SessionCard(
       Spacer(modifier = Modifier.width(4.dp))
       Text(
         text = venue,
-        style = GraphqlConfTheme.typography.text,
-        color = GraphqlConfTheme.colors.primaryText,
-        modifier = Modifier.weight(1f)
+        style = GraphqlConfTheme.typography.bodySmall,
+        color = textColor,
+        modifier = Modifier.weight(1f).align(Alignment.CenterVertically)
       )
       Text(
         text = time,
-        style = GraphqlConfTheme.typography.text,
-        color = GraphqlConfTheme.colors.primaryText,
+        style = GraphqlConfTheme.typography.bodySmall,
+        color = textColor,
+        modifier = Modifier.align(Alignment.CenterVertically)
       )
     }
   }
