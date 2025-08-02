@@ -1,24 +1,20 @@
 import gratatouille.gradle.GratatouilleExtension
 
 plugins {
-  id("base")
-  id("java-gradle-plugin")
+  alias(libs.plugins.kgp.jvm)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.gratatouille)
+  alias(libs.plugins.compat.patrouille)
 }
 
 buildscript {
   dependencies {
-    classpath(libs.kgp)
     classpath(libs.gratatouille)
     classpath(libs.ksp)
     classpath(libs.compat.patrouille)
   }
 }
-group = "build-logic"
-
-apply(plugin = "org.jetbrains.kotlin.jvm")
-apply(plugin = "com.gradleup.gratatouille")
-apply(plugin = "com.google.devtools.ksp")
-
+group = "graphqlconf.app"
 
 dependencies {
   add("implementation", libs.kgp)
@@ -44,23 +40,3 @@ dependencies {
 extensions.getByType(GratatouilleExtension::class.java).apply {
   codeGeneration()
 }
-
-gradlePlugin {
-  plugins {
-    // Make it possible to use this project if it is an included build
-    create("build-logic") {
-      id = "build-logic"
-      implementationClass = "Unused"
-    }
-  }
-}
-
-fun removeGradleApiFromApi() {
-  val apiDependencies = project.configurations.getByName("api").dependencies
-  apiDependencies.firstOrNull {
-    it is FileCollectionDependency
-  }.let {
-    apiDependencies.remove(it)
-  }
-}
-removeGradleApiFromApi()

@@ -4,6 +4,3 @@ pluginManagement {
     it.maven("https://storage.googleapis.com/gradleup/m2/")
   }
 }
-
-include(":compiler-plugin", "runtime", "gradle-plugin")
-includeBuild("build-logic")

@@ -7,14 +7,13 @@ pluginManagement {
     it.gradlePluginPortal()
     it.google()
   }
-  includeBuild("build-logic")
 }
 
 plugins {
-  id("build-logic").apply(false)
   id("org.gradle.toolchains.foojay-resolver-convention").version("1.0.0")
 }
 
 include(":backend", ":app")
 includeBuild("apollo-compose")
 
+includeBuild("build-logic")
