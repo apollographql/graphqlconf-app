@@ -31,6 +31,7 @@ hot-reload = "org.jetbrains.compose.hot-reload:org.jetbrains.compose.hot-reload.
 jib-core = "com.google.cloud.tools:jib-core:0.27.3"
 librarian = "com.gradleup.librarian:com.gradleup.librarian.gradle.plugin:0.0.11-SNAPSHOT-e8ab4653f68118d36889519f430f1fcd118745e3"
 kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
+kotlin-compilerEmbeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kgp" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }

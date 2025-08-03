@@ -6,7 +6,9 @@ plugins {
   id("com.gradleup.compat.patrouille")
   id("com.gradleup.gratatouille")
 }
+
 Librarian.module(project)
+
 dependencies {
   compileOnly(libs.kgp)
   compileOnly(libs.gradle.api)
@@ -17,3 +19,4 @@ gratatouille {
 
   pluginMarker("apollo.compose")
 }
+

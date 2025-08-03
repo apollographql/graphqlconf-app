@@ -6,3 +6,4 @@ plugins {
 }
 
 Librarian.module(project)
+

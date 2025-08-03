@@ -2,12 +2,12 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 plugins {
-  id("com.apollographql.apollo")
   id("org.jetbrains.kotlin.multiplatform")
   id("org.jetbrains.kotlin.plugin.compose")
   id("org.jetbrains.compose")
   id("org.jetbrains.compose.hot-reload")
   id("com.gradleup.compat.patrouille")
+  id("apollo.compose")
 }
 
 compatPatrouille {
@@ -18,7 +18,7 @@ kotlin {
   jvm()
   sourceSets {
     getByName("commonMain").dependencies {
-      implementation("com.apollographql.apollo:apollo-runtime")
+      implementation("com.apollographql.compose:runtime")
 
       implementation(compose.runtime)
       implementation(compose.foundation)
@@ -50,12 +50,8 @@ kotlin {
   }
 }
 
-apollo {
-  service("service") {
-    packageName.set("graphqlconf.api")
-    schemaFiles.from("../backend/graphql/schema.graphqls")
-    mapScalar("LocalDateTime", "kotlinx.datetime.LocalDateTime", "graphqlconf.app.LocalDateTimeAdapter")
-  }
+apolloCompose {
+  schemaFile.set(file("../backend/graphql/schema.graphqls"))
 }
 
 compose.desktop {

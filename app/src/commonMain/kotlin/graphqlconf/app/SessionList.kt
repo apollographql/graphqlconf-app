@@ -31,6 +31,25 @@ val apolloClient = ApolloClient.Builder()
   .serverUrl("https://main-546835115153.europe-west4.run.app/graphql")
   .build()
 
+val sessionsQuery = graphql(
+  // language=graphql
+  """
+  query GetSessions {
+    sessions {
+      id
+      title
+      description
+      speakers {
+        name
+      }
+      venue
+      event_type
+      start
+      end
+    }
+  }
+""".trimIndent())
+
 @Composable
 fun SessionList() {
   val responseState: State<ApolloResponse<GetSessionsQuery.Data>?> = remember {
