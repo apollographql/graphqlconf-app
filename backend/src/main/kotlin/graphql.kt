@@ -53,10 +53,10 @@ class Query {
         title = it.name,
         description = it.description,
         start = dateFormat.parse(it.event_start),
-        end = dateFormat.parse(it.event_start),
+        end = dateFormat.parse(it.event_end),
         event_type = it.event_type,
         venue = it.venue,
-        speakerUsernames = it.speakers.orEmpty().map { it.username }
+        speakerUsernames = it.speakers.map { it.username }
       )
     }
   }

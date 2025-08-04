@@ -3,6 +3,7 @@ package graphqlconf.app.screen
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -142,7 +143,7 @@ fun MainNavigation(
   modifier: Modifier = Modifier,
 ) {
   Row(
-    modifier = modifier.fillMaxWidth().padding(horizontal = 4.dp),
+    modifier = modifier.fillMaxWidth().padding(horizontal = 4.dp).background(GraphqlConfTheme.colors.surface),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     destinations.forEach { destination ->

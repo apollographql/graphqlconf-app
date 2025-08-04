@@ -4,4 +4,5 @@
   <string name="nav_destination_schedule">schedule</string>
   <string name="nav_destination_speakers">speakers</string>
   <string name="nav_destination_info">info</string>
+  <string name="now">Now</string>
 </resources>

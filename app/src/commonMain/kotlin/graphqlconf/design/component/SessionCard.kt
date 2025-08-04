@@ -6,9 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,7 +79,7 @@ fun SessionCard(
       Image(
         painter = painterResource(Res.drawable.location),
         contentDescription = "Location",
-        colorFilter = ColorFilter.tint(ColorValues.rhodamine),
+        colorFilter = ColorFilter.tint(ColorValues.primaryBase),
         modifier = Modifier.align(Alignment.CenterVertically)
       )
       Spacer(modifier = Modifier.width(4.dp))

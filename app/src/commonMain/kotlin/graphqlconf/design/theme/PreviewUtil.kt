@@ -27,7 +27,7 @@ private fun PreviewColumn(
   content: @Composable ColumnScope.() -> Unit,
 ) {
   Column(
-    modifier = Modifier.background(GraphqlConfTheme.colors.mainBackground),
+    modifier = Modifier.background(GraphqlConfTheme.colors.background),
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     content()

@@ -19,7 +19,7 @@ fun App(isDarkTheme: Boolean = true) {
     GraphqlConfTheme {
       Surface(
         modifier = Modifier.fillMaxSize(),
-        color = GraphqlConfTheme.colors.mainBackground
+        color = GraphqlConfTheme.colors.background
       ) {
         val navController = rememberNavController()
         NavHost(

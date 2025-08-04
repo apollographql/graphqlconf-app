@@ -3,7 +3,7 @@ package graphqlconf.design.theme
 import androidx.compose.ui.graphics.Color
 
 internal object ColorValues {
-  val black100 = Color(0xFF19191C)
+  val black100 = Color(0xFF000000)
   val black90 = Color(0xE519191C)
   val black80 = Color(0xCC19191C)
   val black70 = Color(0xB219191C)
@@ -29,36 +29,58 @@ internal object ColorValues {
   val white10 = Color(0x1AFFFFFF)
   val white05 = Color(0x0DFFFFFF)
 
-  val rhodamine = Color(0xFFE10098)
+  val primaryLightest = Color(0xFFFFF5FC)
+  val primaryLighter = Color(0xFFFFCCEF)
+  val primaryLight = Color(0xFFFF99DF)
+  val primaryBase = Color(0xFFE10098)
+  val primaryDark = Color(0xFF990069)
+  val primaryDarker = Color(0xFF660046)
+
+  val secondaryLighter = Color(0xFFEDFAD1)
+  val secondaryLight = Color(0xFFDBF6A2)
+  val secondaryBase = Color(0xFFCDF27E)
+  val secondaryDark = Color(0xFF85B913)
+  val secondaryDarker = Color(0xFF425D09)
+
+  val neutral000 = Color(0xFFFFFFFF)
+  val neutral100 = Color(0xFFF3F4F0)
+  val neutral200 = Color(0xFFE7E9E2)
+  val neutral300 = Color(0xFFDBDED3)
+  val neutral400 = Color(0xFFCFD3C5)
+  val neutral500 = Color(0xFFB9BDAA)
+  val neutral600 = Color(0xFFA0A88A)
+  val neutral700 = Color(0xFF6D7557)
+  val neutral800 = Color(0xFF363A2C)
+  val neutral900 = Color(0xFF0E0F0B)
 }
 
 /**
  * From https://github.com/graphql/graphql.github.io/blob/a3d6819fbedd23b985fc05a37b8fb7722d3a517b/src/app/conf/2025/utils.ts#L4-L26
  */
 private val eventTypeColors = mapOf(
-   "breaks" to Color(0xff7DAA5E),
-   "keynote sessions" to Color(0xff7e66cc),
-   "lightning talks" to Color(0xff1a5b77),
-   "session presentations" to Color(0xff5c2e75),
-   "workshops" to Color(0xff4b5fc0),
-   "unconference" to Color(0xff7e66cc),
-   "api platform" to Color(0xff4e6e82),
-   "backend" to Color(0xff36C1A0),
-   "breaks & special events" to Color(0xff7DAA5E),
-   "defies categorization" to Color(0xff894545),
-   "developer experience" to Color(0xff6fc9af),
-   "federation and composite schemas" to Color(0xffcbc749),
-   "graphql clients" to Color(0xffca78fc),
-   "graphql in production" to Color(0xffe4981f),
-   "graphql security" to Color(0xffCC6BB0),
-   "graphql spec" to Color(0xff6B73CC),
-   "scaling" to Color(0xff8D8D8D),
-   "frontend" to Color(0xff7F00FF),
-   "documentation" to Color(0xffFA8072),
-   "schema evolution" to Color(0xffD8BFD8),
-   "security" to Color(0xff6495ED),
-   "case studies" to Color(0xff894545),
-   "federation and distributed systems" to Color(0xffFC8251),
+  "breaks" to Color(0xff7DAA5E),
+  "keynote sessions" to Color(0xff7e66cc),
+  "lightning talks" to Color(0xff1a5b77),
+  "session presentations" to Color(0xff5c2e75),
+  "workshops" to Color(0xff4b5fc0),
+  "unconference" to Color(0xff7e66cc),
+  "api platform" to Color(0xff4e6e82),
+  "backend" to Color(0xff36C1A0),
+  "breaks & special events" to Color(0xff7DAA5E),
+  "defies categorization" to Color(0xff894545),
+  "developer experience" to Color(0xff6fc9af),
+  "federation and composite schemas" to Color(0xffcbc749),
+  "graphql clients" to Color(0xffca78fc),
+  "graphql in production" to Color(0xffe4981f),
+  "graphql security" to Color(0xffCC6BB0),
+  "graphql spec" to Color(0xff6B73CC),
+  "scaling" to Color(0xff8D8D8D),
+  "frontend" to Color(0xff7F00FF),
+  "documentation" to Color(0xffFA8072),
+  "schema evolution" to Color(0xffD8BFD8),
+  "security" to Color(0xff6495ED),
+  "case studies" to Color(0xff894545),
+  "federation and distributed systems" to Color(0xffFC8251),
 )
 
 internal fun eventColor(eventType: String): Color? {

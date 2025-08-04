@@ -6,5 +6,5 @@ import graphqlconf.app.navigation.SpeakersScreen
 
 @Composable
 fun SpeakersScreen() {
-  SessionList()
+
 }

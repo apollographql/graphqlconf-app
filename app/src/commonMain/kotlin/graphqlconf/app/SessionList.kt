@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,7 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
-fun SessionList() {
+fun SessionList(listState: LazyListState) {
   val responseState: State<ApolloResponse<GetSessionsQuery.Data>?> = remember {
     apolloClient.query(GetSessionsQuery()).toFlow()
   }.collectAsStateWithLifecycle(null)
@@ -49,8 +50,6 @@ fun SessionList() {
       }
     }
     else -> {
-      val listState = rememberLazyListState()
-
       LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
         this.items(response.data!!.sessions) {
           Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
