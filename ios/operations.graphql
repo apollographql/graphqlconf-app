@@ -1,0 +1,53 @@
+### Schedule
+
+query AllEventsSchedule {
+  schedule_2025 {
+    ...SessionFragment
+  }
+}
+
+fragment SessionFragment on SchedSession {
+  id
+  event {
+    start_time_epoch
+    timezone
+    start_date
+    start_time
+    end_time
+    start_weekday
+    start_month
+    start_day
+    type
+    subtype
+  }
+  name
+  description
+  speakers {
+    username
+    name
+    company
+    position
+    years
+  }
+  venue {
+    name
+  }
+}
+
+### Speakers
+
+query AllSpeakers {
+  speakers {
+    ...SpeakerFragment
+  }
+}
+
+fragment SpeakerFragment on SchedSpeaker {
+  username
+  name
+  about
+  company
+  position
+  avatar
+  years
+}

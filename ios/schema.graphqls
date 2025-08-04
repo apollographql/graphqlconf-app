@@ -1,0 +1,67 @@
+directive @defer(label: String, if: Boolean! = true) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+type Query {
+  schedule_2025: [SchedSession!]
+  speakers: [SchedSpeaker!]
+}
+
+type SchedEvent {
+  key: String!
+  start: String
+  end: String
+  start_year: String
+  start_month: String
+  start_month_short: String
+  start_day: String
+  start_weekday: String
+  start_weekday_short: String
+  start_time: String
+  start_date: String
+  end_year: String
+  end_month: String
+  end_month_short: String
+  end_day: String
+  end_weekday: String
+  end_weekday_short: String
+  end_time: String
+  end_date: String
+  type: String
+  subtype: String
+  timezone: String!
+  start_time_epoch: Int
+}
+
+type SchedSession {
+  id: String!
+  active: String
+  pinned: String
+  name: String
+  description: String
+  invite_only: String
+  goers: String
+  seats: String
+  event: SchedEvent
+  venue: SchedVenue
+  speakers: [SchedSpeaker!]
+}
+
+type SchedSpeaker {
+  username: String!
+  name: String
+  about: String
+  position: String
+  company: String
+  avatar: String
+  years: [Int!]
+  custom_order: Int
+}
+
+type SchedVenue {
+  id: String!
+  name: String
+}
+
+extend type SchedEvent @typePolicy(keyFields: "key")
+extend type SchedSession @typePolicy(keyFields: "id")
+extend type SchedSpeaker @typePolicy(keyFields: "username")
+extend type SchedVenue @typePolicy(keyFields: "id")

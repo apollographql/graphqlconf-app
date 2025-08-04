@@ -1,0 +1,34 @@
+{
+  "schemaNamespace" : "ConnectorAPI",
+  "input" : {
+    "operationSearchPaths" : [
+      "**/*.graphql"
+    ],
+    "schemaSearchPaths" : [
+      "**/*.graphqls"
+    ]
+  },
+  "output" : {
+    "testMocks" : {
+      "none" : {
+      }
+    },
+    "schemaTypes" : {
+      "path" : "../ConnectorAPI",
+      "moduleType" : {
+        "swiftPackageManager" : {
+        }
+      }
+    },
+    "operations" : {
+      "inSchemaModule" : {
+      }
+    }
+  },
+  "options" : {
+    "selectionSetInitializers" : {
+      "operations": true,
+      "namedFragments" : true
+    }
+  }
+}
