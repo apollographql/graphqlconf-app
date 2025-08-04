@@ -22,6 +22,7 @@ compat-patrouille = { module = "com.gradleup.compat.patrouille:com.gradleup.comp
 components-ui-tooling-preview = { module = "org.jetbrains.compose.components:components-ui-tooling-preview", version.ref = "compose" }
 compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kgp" }
 compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "compose" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
 google-cloud-bom = "com.google.cloud:libraries-bom:26.64.0"
 google-cloud-run = "com.google.cloud:google-cloud-run:0.68.0"
 google-cloud-storage = { module = "com.google.cloud:google-cloud-storage" }
@@ -29,10 +30,15 @@ gradle-api = "dev.gradleplugins:gradle-api:8.11.1"
 gratatouille = { module = "com.gradleup.gratatouille:gratatouille-gradle-plugin", version.ref = "gratatouille" }
 hot-reload = "org.jetbrains.compose.hot-reload:org.jetbrains.compose.hot-reload.gradle.plugin:1.0.0-beta04"
 jib-core = "com.google.cloud.tools:jib-core:0.27.3"
-librarian = "com.gradleup.librarian:com.gradleup.librarian.gradle.plugin:0.0.11-SNAPSHOT-e8ab4653f68118d36889519f430f1fcd118745e3"
 kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
+kotlin-annotations-jvm = { module = "org.jetbrains.kotlin:kotlin-annotations-jvm", version.ref = "kgp" }
+kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler", version.ref = "kgp" }
+kotlin-compiler-internal-test-framework = { module = "org.jetbrains.kotlin:kotlin-compiler-internal-test-framework", version.ref = "kgp" }
 kotlin-compilerEmbeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kgp" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kgp" }
+kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kgp" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kgp" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.0"
@@ -40,6 +46,7 @@ kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 ktor-server-netty = "io.ktor:ktor-server-netty:3.2.2"
+librarian = "com.gradleup.librarian:com.gradleup.librarian.gradle.plugin:0.0.11-SNAPSHOT-e8ab4653f68118d36889519f430f1fcd118745e3"
 okhttp = "com.squareup.okhttp3:okhttp:5.1.0"
 slf4j-simple = "org.slf4j:slf4j-simple:2.0.17"
 

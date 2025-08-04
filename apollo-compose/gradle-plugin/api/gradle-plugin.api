@@ -1,0 +1,26 @@
+public abstract class apollo/compose/gradle/ApolloComposeExtension {
+	public fun <init> ()V
+	public abstract fun getSchemaFile ()Lorg/gradle/api/file/RegularFileProperty;
+}
+
+public abstract class apollo/compose/gradle/ApolloComposeGradlePlugin : org/jetbrains/kotlin/gradle/plugin/KotlinCompilerPluginSupportPlugin {
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+	public fun applyToCompilation (Lorg/jetbrains/kotlin/gradle/plugin/KotlinCompilation;)Lorg/gradle/api/provider/Provider;
+	public fun getCompilerPluginId ()Ljava/lang/String;
+	public fun getPluginArtifact ()Lorg/jetbrains/kotlin/gradle/plugin/SubpluginArtifact;
+	public fun getPluginArtifactForNative ()Lorg/jetbrains/kotlin/gradle/plugin/SubpluginArtifact;
+	public fun isApplicable (Lorg/jetbrains/kotlin/gradle/plugin/KotlinCompilation;)Z
+}
+
+public final class apollo/compose/gradle/ApolloComposeWrapperKt {
+	public static final fun apolloComposeWrapper (Lorg/gradle/api/Project;)V
+}
+
+public abstract class apollo/compose/gradle/ApolloComposeWrapperPlugin : org/gradle/api/Plugin {
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+}
+

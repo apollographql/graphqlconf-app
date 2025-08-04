@@ -1,7 +1,9 @@
 package apollo.compose.compiler
 
 import apollo.compose.compiler.fir.ApolloFirExtensionRegistrar
+import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
+import org.jetbrains.kotlin.compiler.plugin.template.ir.SimpleIrGenerationExtension
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
 
@@ -12,13 +14,10 @@ class ApolloCompilerPluginRegistrar : CompilerPluginRegistrar() {
   override fun ExtensionStorage.registerExtensions(
     configuration: CompilerConfiguration
   ) {
-    FirExtensionRegistrarAdapter.registerExtension(
-      ApolloFirExtensionRegistrar()
-    )
-    error("Cannot error : ${configuration.get(ApolloOption.SCHEMA.raw.key)?.unescape()}")
+    FirExtensionRegistrarAdapter.registerExtension(ApolloFirExtensionRegistrar())
+    IrGenerationExtension.registerExtension(SimpleIrGenerationExtension())
   }
 }
-
 
 /**
  * Make sure the string is correctly parsed by the Kotlin parser. Especially, ',' is used to separate plugin arguments:

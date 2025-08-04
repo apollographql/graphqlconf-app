@@ -1,6 +1,7 @@
 pluginManagement {
   listOf(repositories, dependencyResolutionManagement.repositories).forEach {
     it.mavenCentral()
+    it.google()
     it.maven("https://storage.googleapis.com/gradleup/m2/")
   }
 }
