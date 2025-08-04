@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -29,7 +27,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import graphqlconf.app.SessionList
 import graphqlconf.app.navigation.InfoScreen
 import graphqlconf.app.navigation.ScheduleScreen
 import graphqlconf.app.navigation.SpeakersScreen
@@ -66,9 +63,10 @@ fun MainScreen() {
         ScheduleScreen()
       }
       composable<SpeakersScreen> {
+        SpeakersScreen()
       }
       composable<InfoScreen> {
-
+        InfoScreen()
       }
     }
     BottomNavigation(nestedNavController)

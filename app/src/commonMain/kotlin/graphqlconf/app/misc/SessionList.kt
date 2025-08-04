@@ -1,4 +1,4 @@
-package graphqlconf.app
+package graphqlconf.app.misc
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -6,24 +6,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
 import graphqlconf.api.GetSessionsQuery
+import graphqlconf.app.DateTimeFormatting
+import graphqlconf.app.apolloClient
 import graphqlconf.design.component.SessionCard
-import graphqlconf.design.theme.GraphqlConfTheme
-import graphqlconf_app.app.generated.resources.Res
-import graphqlconf_app.app.generated.resources.oh_no
-import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -35,19 +28,10 @@ fun SessionList(listState: LazyListState) {
   val response = responseState.value
   when {
     response == null -> {
-      Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-      }
+      Loading()
     }
     response.data == null -> {
-      Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-          text = stringResource(Res.string.oh_no) + response.exception?.message,
-          style = GraphqlConfTheme.typography.h1,
-          color = GraphqlConfTheme.colors.primaryText,
-          modifier = Modifier.align(Alignment.Center)
-        )
-      }
+      GeneralError(response.exception?.message)
     }
     else -> {
       LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {

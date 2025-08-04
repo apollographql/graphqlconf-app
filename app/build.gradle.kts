@@ -33,6 +33,8 @@ kotlin {
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.androidx.lifecycle.runtime.compose)
       implementation(libs.androidx.navigation.compose)
+      implementation(libs.coil.compose)
+      implementation(libs.coil.network.ktor3)
 
       implementation(libs.components.ui.tooling.preview)
     }

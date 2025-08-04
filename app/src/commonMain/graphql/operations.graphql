@@ -13,3 +13,14 @@ query GetSessions {
   }
 }
 
+query GetSpeakers {
+  speakers {
+    username
+    avatar
+    about
+    company
+    name
+    position
+    url
+  }
+}

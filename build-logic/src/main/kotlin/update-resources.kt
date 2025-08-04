@@ -19,11 +19,11 @@ fun downloadResourcesInternal(
   outputDirectory: GOutputDirectory,
 ) {
   download(
-    "https://raw.githubusercontent.com/graphql/graphql.github.io/b1d26dbe70a193b999efb661b9eabcce0c44a17a/scripts/sync-sched/schedule-2025.json",
+    "https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/schedule-2025.json",
     outputDirectory.resolve("schedule-2025.json")
   )
   download(
-    "https://raw.githubusercontent.com/graphql/graphql.github.io/b1d26dbe70a193b999efb661b9eabcce0c44a17a/scripts/sync-sched/speakers.json",
+    "https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/speakers.json",
     outputDirectory.resolve("speakers.json")
   )
 }

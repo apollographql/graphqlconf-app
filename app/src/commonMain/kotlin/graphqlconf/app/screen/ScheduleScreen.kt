@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -13,7 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
-import graphqlconf.app.SessionList
+import graphqlconf.app.misc.SessionList
 import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
 import graphqlconf.app.misc.MainHeaderTitleBar
@@ -74,10 +73,6 @@ fun ScheduleScreen() {
 //        hasAdditionalInputs = filterItems.any { it.isSelected },
 //      )
       }
-    )
-    HorizontalDivider(
-      thickness = 1.dp,
-      color = GraphqlConfTheme.colors.strokeHalf,
     )
 
     SessionList(listState)
