@@ -65,7 +65,7 @@ internal val GraphqlConfTypography: Typography
       ),
       badge = TextStyle(
         fontFamily = CommitMono,
-        fontSize = 16.sp,
+        fontSize = 10.sp,
         lineHeight = 24.sp,
       )
     )

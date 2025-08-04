@@ -1,8 +1,8 @@
 [versions]
-agp = "8.5.0"
+agp = "8.6.0"
 androidx-lifecycle = "2.9.1"
 compat-patrouille = "0.0.0"
-compileSdk = "35"
+compileSdk = "36"
 compose = "1.8.2"
 coroutines = "1.10.2"
 gratatouille = "0.1.1-SNAPSHOT-cc0251b8b2f1a34608de3c3542056ebd2689ec89"
@@ -13,6 +13,8 @@ targetSdk = "35"
 
 [libraries]
 agp = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "agp" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.0.1" }
 androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 apollo-gradle-plugin = "com.apollographql.apollo:com.apollographql.apollo.gradle.plugin:4.3.2"
 apollo-kotlin-execution-gradle-plugin = "com.apollographql.execution:com.apollographql.execution.gradle.plugin:0.1.1-SNAPSHOT-be4a397e0a1d958598b90eb4189105909d0ea59b"

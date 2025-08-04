@@ -6,8 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,16 +44,18 @@ fun SessionCard(
       .clickable(onClick = onClick)
       .background(backgroundColor)
   ) {
-    Column(modifier = Modifier.padding(8.dp)) {
-      if (eventType != null) {
+    Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)) {
+      if (eventType != null ) {
         val color = eventColor(eventType)
-        Text(
-          text =  eventType.uppercase(),
-          color = textColor,
-          style = GraphqlConfTheme.typography.badge,
-          modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+        if (color != null) {
+          Text(
+            text =  eventType.uppercase(),
+            color = textColor,
+            style = GraphqlConfTheme.typography.badge,
+            modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
+          )
+          Spacer(modifier = Modifier.height(8.dp))
+        }
       }
       Text(
         text = title,
@@ -63,23 +66,23 @@ fun SessionCard(
       )
       Spacer(modifier = Modifier.height(8.dp))
       Text(
-        text = speakers.joinToString(","),
+        text = speakers.joinToString(", "),
         color = textColor,
         style = GraphqlConfTheme.typography.bodySmall,
         maxLines = 1,
       )
     }
 
-    Divider(
-      thickness = 1.dp,
-      color = borderColor,
+    Spacer(
+      modifier = Modifier.height(1.dp).fillMaxWidth().background(borderColor),
     )
 
-    Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+    Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)) {
       Image(
         painter = painterResource(Res.drawable.location),
         contentDescription = "Location",
-        colorFilter = ColorFilter.tint(ColorValues.rhodamine)
+        colorFilter = ColorFilter.tint(ColorValues.rhodamine),
+        modifier = Modifier.align(Alignment.CenterVertically)
       )
       Spacer(modifier = Modifier.width(4.dp))
       Text(

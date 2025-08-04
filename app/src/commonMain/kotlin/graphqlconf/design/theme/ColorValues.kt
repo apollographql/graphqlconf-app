@@ -61,6 +61,6 @@ private val eventTypeColors = mapOf(
    "federation and distributed systems" to Color(0xffFC8251),
 )
 
-internal fun eventColor(eventType: String): Color {
-  return eventTypeColors.get(eventType.lowercase()) ?: Color(0xff6fc9af)
+internal fun eventColor(eventType: String): Color? {
+  return eventTypeColors.get(eventType.lowercase())
 }

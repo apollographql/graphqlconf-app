@@ -8,6 +8,7 @@ plugins {
   id("org.jetbrains.compose")
   id("org.jetbrains.compose.hot-reload")
   id("com.gradleup.compat.patrouille")
+  id("com.android.application")
 }
 
 compatPatrouille {
@@ -16,6 +17,8 @@ compatPatrouille {
 
 kotlin {
   jvm()
+  androidTarget()
+
   sourceSets {
     getByName("commonMain").dependencies {
       implementation("com.apollographql.apollo:apollo-runtime")
@@ -28,6 +31,8 @@ kotlin {
       implementation(libs.kotlinx.datetime)
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.androidx.lifecycle.runtime.compose)
+      implementation(libs.androidx.activity.compose)
+      implementation(libs.androidx.core.splashscreen)
 
       implementation(libs.components.ui.tooling.preview)
     }
@@ -89,4 +94,13 @@ composeCompiler {
 compose.resources {
   publicResClass = true
   nameOfResClass = "Res"
+}
+
+android {
+  compileSdk = libs.versions.compileSdk.get().toInt()
+  namespace = "graphqlconf.app"
+
+  defaultConfig {
+    minSdk = libs.versions.minSdk.get().toInt()
+  }
 }
