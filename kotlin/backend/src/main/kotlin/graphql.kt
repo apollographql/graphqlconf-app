@@ -56,7 +56,8 @@ class Query {
         end = dateFormat.parse(it.event_end),
         event_type = it.event_type,
         venue = it.venue,
-        speakerUsernames = it.speakers.map { it.username }
+        speakerUsernames = it.speakers.map { it.username },
+        event_subtype = it.event_subtype,
       )
     }
   }
@@ -71,10 +72,13 @@ class Query {
         about = it.about,
         location = it.location,
         url = it.url,
-        avatar = it.avatar
+        avatar = it.avatar,
+        years = it.years
       )
     }
   }
+
+  val timezone = "Europe/Amsterdam"
 }
 
 class Session(
@@ -83,6 +87,7 @@ class Session(
   val start: GraphQLLocalDateTime,
   val end: GraphQLLocalDateTime,
   val event_type: String,
+  val event_subtype: String,
   val venue: String?,
   val id: String,
   private val speakerUsernames: List<String>
@@ -100,7 +105,8 @@ class Session(
           about = it.about,
           location = it.location,
           url = it.url,
-          avatar = it.avatar
+          avatar = it.avatar,
+          years = it.years
         )
       }
     }
@@ -115,5 +121,6 @@ class Speaker(
   val location: String,
   val url: String,
   val avatar: String,
+  val years: List<Int>
 )
 

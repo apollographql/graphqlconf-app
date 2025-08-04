@@ -48,3 +48,9 @@ loud {
   }
 }
 registerDownloadResourcesTask()
+
+tasks.register("run", JavaExec::class.java) {
+  classpath(java.sourceSets.main.get().output)
+  classpath(configurations.getByName("runtimeClasspath"))
+  mainClass.set("MainKt")
+}

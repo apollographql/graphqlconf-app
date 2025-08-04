@@ -8,6 +8,8 @@ type Query {
   sessions: [Session!]!
 
   speakers: [Speaker!]!
+
+  timezone: String!
 }
 
 type Session {
@@ -20,6 +22,8 @@ type Session {
   end: LocalDateTime!
 
   event_type: String!
+
+  event_subtype: String!
 
   venue: String
 
@@ -44,6 +48,8 @@ type Speaker {
   url: String!
 
   avatar: String!
+
+  years: [Int!]!
 }
 
 type __Schema {

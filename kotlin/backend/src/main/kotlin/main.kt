@@ -2,13 +2,11 @@ import com.apollographql.execution.ktor.apolloModule
 import com.apollographql.execution.ktor.apolloSandboxModule
 import com.apollographql.execution.ktor.apolloSubscriptionModule
 import graphqlconf.ServiceExecutableSchemaBuilder
-import io.ktor.http.URLProtocol
-import io.ktor.http.path
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.server.request.header
-import io.ktor.server.request.port
-import io.ktor.server.util.url
+import io.ktor.http.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.request.*
+import io.ktor.server.util.*
 
 fun main(args: Array<String>) {
   embeddedServer(Netty, port = 8080) {

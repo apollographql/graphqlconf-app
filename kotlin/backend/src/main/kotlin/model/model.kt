@@ -11,6 +11,7 @@ class JsonSession(
   val event_start: String,
   val event_end: String,
   val event_type: String,
+  val event_subtype: String,
   val venue: String? = null,
   val id: String,
   val description: String,
@@ -19,7 +20,7 @@ class JsonSession(
   @Serializable
   class JsonSpeaker(
     val username: String,
-    val id: String
+    val id: String,
   )
 }
 
@@ -38,6 +39,7 @@ class JsonSpeaker(
   val location: String,
   val url: String,
   val avatar: String,
+  val years: List<Int> = emptyList(),
 )
 
 val json = Json {
