@@ -17,26 +17,13 @@ fun main(args: Array<String>) {
     apolloSubscriptionModule(executableSchema)
     // /sandbox/index.html route
     apolloSandboxModule(title = "GraphQLConf mobile API", sandboxPath = "/") { call ->
-      call.url {
-        /**
-         * Trying to guess if the client connected through HTTPS
-         */
-        val proto = call.request.header("x-forwarded-proto")
-        when (proto) {
-          "http" -> protocol = URLProtocol.HTTP
-          "https" -> protocol = URLProtocol.HTTPS
-        }
 
-        if (port != 8080) {
-          /**
-           * We are not running locally
-           */
-          when(protocol) {
-            URLProtocol.HTTP -> port = 80
-            URLProtocol.HTTPS -> port = 443
-          }
+      val referer = call.request.header("referer")
+      (referer ?: call.url()).let {
+        url {
+          takeFrom(parseUrl(it)!!)
+          path("/graphql")
         }
-        path("/graphql")
       }
     }
   }.start(wait = true)
