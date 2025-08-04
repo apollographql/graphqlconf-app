@@ -18,6 +18,7 @@ dependencies {
   implementation(libs.apollo.kotlin.execution.runtime)
   implementation(libs.apollo.kotlin.execution.ktor)
   implementation(libs.ktor.server.netty)
+  implementation(libs.ktor.forwarded.header)
   implementation(libs.kotlin.test)
   implementation(libs.kotlinx.datetime)
   implementation(libs.slf4j.simple)
