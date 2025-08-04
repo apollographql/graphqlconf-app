@@ -1,0 +1,6 @@
+subgraphs:
+  github:
+    routing_url: http://ignore
+    schema:
+      file: github.graphqls
+federation_version: =2.11.0

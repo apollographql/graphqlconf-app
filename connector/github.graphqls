@@ -1,0 +1,157 @@
+# This schema uses Apollo Connectors, a declarative programming model for
+# GraphQL that allows you to plug in your existing REST services directly into
+# a graph. To learn more, visit Apollo's documentation: 🔗https://www.apollographql.com/docs/graphos/schema-design/connectors
+
+extend schema
+  @link( # Enable this schema to use Apollo Federation features
+    url: "https://specs.apollo.dev/federation/v2.10"
+  )
+  @link( # Enable this schema to use Apollo Connectors
+    url: "https://specs.apollo.dev/connect/v0.2"
+    import: ["@connect", "@source"]
+  )
+
+@source(
+  name: "github"
+  http: {
+    baseURL: "https://graphql.github.io/"
+    headers: [
+      { name: "Accept", value: "application/vnd.github.json+json" }
+    ]
+  }
+)
+
+type Query {
+  schedule_2025: [SchedSession!]
+    @connect(
+      source: "github"
+      http: {
+        GET: "scripts/sync-sched/schedule-2025.json"
+      }
+      selection: """
+      id
+      active
+      pinned
+      name
+      description
+      invite_only
+      goers
+      seats
+      event: {
+        key: event_key
+        start: event_start
+        end: event_end
+        start_year: event_start_year
+        start_month: event_start_month
+        start_month_short: event_start_month_short
+        start_day: event_start_day
+        start_weekday: event_start_weekday
+        start_weekday_short: event_start_weekday_short
+        start_time: event_start_time
+        start_date: start_date
+        end_year: event_end_year
+        end_month: event_end_month
+        end_month_short: event_end_month_short
+        end_day: event_end_day
+        end_weekday: event_end_weekday
+        end_weekday_short: event_end_weekday_short
+        end_time: event_end_time
+        end_date: end_date
+        type: event_type
+        subtype: event_subtype
+        timezone: $("Europe/Amsterdam")
+        start_time_epoch: start_time_ts
+      }
+      venue: {
+        id: venue_id
+        name: venue
+      }
+      speakers {
+        username
+        name
+        about
+        position
+        company
+        avatar
+        years: _years
+        custom_order
+      }
+      """
+    )
+
+  speakers: [SchedSpeaker!]
+    @connect(
+      source: "github"
+      http: {
+        GET: "scripts/sync-sched/speakers.json"
+      }
+      selection: """
+      $.speakers {
+        username
+        name
+        about
+        position
+        company
+        avatar
+        years: _years
+        custom_order
+      }
+      """
+    )
+}
+
+type SchedSession {
+  id: String!
+  active: String
+  pinned: String
+  name: String
+  description: String
+  invite_only: String
+  goers: String
+  seats: String
+  event: SchedEvent
+  venue: SchedVenue
+  speakers: [SchedSpeaker!]
+}
+
+type SchedEvent {
+  key: String!
+  start: String
+  end: String
+  start_year: String
+  start_month: String
+  start_month_short: String
+  start_day: String
+  start_weekday: String
+  start_weekday_short: String
+  start_time: String
+  start_date: String
+  end_year: String
+  end_month: String
+  end_month_short: String
+  end_day: String
+  end_weekday: String
+  end_weekday_short: String
+  end_time: String
+  end_date: String
+  type: String
+  subtype: String
+  timezone: String!
+  start_time_epoch: Int
+}
+
+type SchedVenue {
+  id: String!
+  name: String
+}
+
+type SchedSpeaker {
+  username: String!
+  name: String
+  about: String
+  position: String
+  company: String
+  avatar: String
+  years: [Int!]
+  custom_order: Int
+}
