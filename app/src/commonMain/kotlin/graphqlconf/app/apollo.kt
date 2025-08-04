@@ -1,17 +1,26 @@
 package graphqlconf.app
 
-import apollo.compose.Adapter
-import apollo.compose.ApolloJsonElement
-import apollo.compose.Scalar
+import com.apollographql.apollo.api.Adapter
+import com.apollographql.apollo.api.CustomScalarAdapters
+import com.apollographql.apollo.api.json.JsonReader
+import com.apollographql.apollo.api.json.JsonWriter
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toJavaLocalDateTime
 
-@Scalar("LocalDateTime")
 object LocalDateTimeAdapter: Adapter<LocalDateTime> {
-  override fun fromJson(element: ApolloJsonElement): LocalDateTime {
-    return LocalDateTime.parse(element as String)
+  override fun fromJson(
+    reader: JsonReader,
+    customScalarAdapters: CustomScalarAdapters
+  ): LocalDateTime {
+    return LocalDateTime.parse(reader.nextString()!!)
   }
 
-  override fun toJson(value: LocalDateTime): ApolloJsonElement {
-    return value.toString()
+  override fun toJson(
+    writer: JsonWriter,
+    customScalarAdapters: CustomScalarAdapters,
+    value: LocalDateTime
+  ) {
+    writer.value(value.toString())
   }
+
 }
