@@ -24,9 +24,6 @@ import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.oh_no
 import org.jetbrains.compose.resources.stringResource
 
-internal val apolloClient = ApolloClient.Builder()
-  .serverUrl("https://main-546835115153.europe-west4.run.app/graphql")
-  .build()
 
 @Composable
 fun SessionList() {

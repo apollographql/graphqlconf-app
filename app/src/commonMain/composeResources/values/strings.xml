@@ -1,4 +1,7 @@
 <resources>
-    <!-- Common -->
-    <string name="oh_no">Oh no, something went wrong</string>
+  <!-- Common -->
+  <string name="oh_no">Oh no, something went wrong</string>
+  <string name="nav_destination_schedule">schedule</string>
+  <string name="nav_destination_speakers">speakers</string>
+  <string name="nav_destination_info">info</string>
 </resources>

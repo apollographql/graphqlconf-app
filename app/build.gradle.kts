@@ -5,6 +5,7 @@ plugins {
   id("com.apollographql.apollo")
   id("org.jetbrains.kotlin.multiplatform")
   id("org.jetbrains.kotlin.plugin.compose")
+  id("org.jetbrains.kotlin.plugin.serialization")
   id("org.jetbrains.compose")
   id("org.jetbrains.compose.hot-reload")
   id("com.gradleup.compat.patrouille")
@@ -31,10 +32,14 @@ kotlin {
       implementation(libs.kotlinx.datetime)
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.androidx.lifecycle.runtime.compose)
-      implementation(libs.androidx.activity.compose)
-      implementation(libs.androidx.core.splashscreen)
+      implementation(libs.androidx.navigation.compose)
 
       implementation(libs.components.ui.tooling.preview)
+    }
+
+    getByName("androidMain").dependencies {
+      implementation(libs.androidx.core.splashscreen)
+      implementation(libs.androidx.activity.compose)
     }
 
     getByName("commonTest").dependencies {

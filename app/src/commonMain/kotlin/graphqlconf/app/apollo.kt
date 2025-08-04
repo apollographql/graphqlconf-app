@@ -1,5 +1,6 @@
 package graphqlconf.app
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Adapter
 import com.apollographql.apollo.api.CustomScalarAdapters
 import com.apollographql.apollo.api.json.JsonReader
@@ -22,5 +23,8 @@ object LocalDateTimeAdapter: Adapter<LocalDateTime> {
   ) {
     writer.value(value.toString())
   }
-
 }
+
+internal val apolloClient = ApolloClient.Builder()
+  .serverUrl("https://main-546835115153.europe-west4.run.app/graphql")
+  .build()
