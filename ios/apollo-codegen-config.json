@@ -14,7 +14,7 @@
       }
     },
     "schemaTypes" : {
-      "path" : "../ConnectorAPI",
+      "path" : "ConnectorAPI",
       "moduleType" : {
         "swiftPackageManager" : {
         }

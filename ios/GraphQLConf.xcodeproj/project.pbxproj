@@ -34,9 +34,9 @@
 		E699EB7F2E2ED0550005A499 /* GraphQLConf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphQLConf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E699EB8C2E2ED0570005A499 /* GraphQLConfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphQLConfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E699EB962E2ED0570005A499 /* GraphQLConfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphQLConfUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6BDFAB22E41574C00F6637D /* apollo-codegen-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "apollo-codegen-config.json"; sourceTree = "<group>"; };
-		E6BDFAB32E41574C00F6637D /* operations.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = operations.graphql; sourceTree = "<group>"; };
-		E6BDFAB42E41574C00F6637D /* schema.graphqls */ = {isa = PBXFileReference; lastKnownFileType = text; path = schema.graphqls; sourceTree = "<group>"; };
+		E69D9E012E416B57005A5E3B /* apollo-codegen-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "apollo-codegen-config.json"; sourceTree = "<group>"; };
+		E69D9E022E416B57005A5E3B /* operations.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = operations.graphql; sourceTree = "<group>"; };
+		E69D9E032E416B57005A5E3B /* schema.graphqls */ = {isa = PBXFileReference; lastKnownFileType = text; path = schema.graphqls; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -117,9 +117,9 @@
 		E699EB762E2ED0550005A499 = {
 			isa = PBXGroup;
 			children = (
-				E6BDFAB22E41574C00F6637D /* apollo-codegen-config.json */,
-				E6BDFAB32E41574C00F6637D /* operations.graphql */,
-				E6BDFAB42E41574C00F6637D /* schema.graphqls */,
+				E69D9E012E416B57005A5E3B /* apollo-codegen-config.json */,
+				E69D9E022E416B57005A5E3B /* operations.graphql */,
+				E69D9E032E416B57005A5E3B /* schema.graphqls */,
 				E6BDF99E2E3C331000F6637D /* Fonts */,
 				E699EB812E2ED0550005A499 /* GraphQLConf */,
 				E699EB8F2E2ED0570005A499 /* GraphQLConfTests */,
