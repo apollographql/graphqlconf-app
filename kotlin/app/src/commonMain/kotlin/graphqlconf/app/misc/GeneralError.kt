@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.oh_no
@@ -16,6 +17,7 @@ fun GeneralError(message: String?) {
   Box(modifier = Modifier.fillMaxSize()) {
     Text(
       text = stringResource(Res.string.oh_no),
+      textAlign = TextAlign.Center,
       style = GraphqlConfTheme.typography.h1,
       color = GraphqlConfTheme.colors.primaryText,
       modifier = Modifier.align(Alignment.Center)

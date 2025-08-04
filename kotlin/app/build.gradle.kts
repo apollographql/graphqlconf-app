@@ -42,6 +42,7 @@ kotlin {
     getByName("androidMain").dependencies {
       implementation(libs.androidx.core.splashscreen)
       implementation(libs.androidx.activity.compose)
+      implementation(libs.ktor.client.okhttp)
     }
 
     getByName("commonTest").dependencies {
@@ -51,6 +52,7 @@ kotlin {
     getByName("jvmMain").dependencies {
       implementation(compose.desktop.currentOs)
       implementation(compose.desktop.common)
+      implementation(libs.ktor.client.okhttp)
 
       implementation(libs.kotlinx.coroutines.swing)
     }
@@ -72,7 +74,7 @@ apollo {
 
 compose.desktop {
   application {
-    mainClass = "graphqlconf.MainKt"
+    mainClass = "MainKt"
 
     nativeDistributions {
       targetFormats(TargetFormat.Dmg, TargetFormat.Deb)

@@ -83,7 +83,7 @@ class Session(
   val start: GraphQLLocalDateTime,
   val end: GraphQLLocalDateTime,
   val event_type: String,
-  val venue: String,
+  val venue: String?,
   val id: String,
   private val speakerUsernames: List<String>
 ) {

@@ -18,7 +18,6 @@ import graphqlconf.app.DateTimeFormatting
 import graphqlconf.app.apolloClient
 import graphqlconf.design.component.SessionCard
 
-
 @Composable
 fun SessionList(listState: LazyListState) {
   val responseState: State<ApolloResponse<GetSessionsQuery.Data>?> = remember {
@@ -41,7 +40,7 @@ fun SessionList(listState: LazyListState) {
               title = getSessionTitle(it.title),
               eventType = it.event_type,
               speakers = it.speakers.map { it.name },
-              venue = it.venue,
+              venue = it.venue ?: "",
               time = DateTimeFormatting.timeToTime(it.start, it.end),
               onClick = {},
             )

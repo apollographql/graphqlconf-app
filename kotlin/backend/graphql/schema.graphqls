@@ -21,7 +21,7 @@ type Session {
 
   event_type: String!
 
-  venue: String!
+  venue: String
 
   id: String!
 

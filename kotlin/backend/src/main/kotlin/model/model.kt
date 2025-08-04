@@ -11,7 +11,7 @@ class JsonSession(
   val event_start: String,
   val event_end: String,
   val event_type: String,
-  val venue: String,
+  val venue: String? = null,
   val id: String,
   val description: String,
   val speakers: List<JsonSpeaker> = emptyList()

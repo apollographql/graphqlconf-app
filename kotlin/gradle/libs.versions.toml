@@ -10,7 +10,8 @@ gratatouille = "0.1.1-SNAPSHOT-cc0251b8b2f1a34608de3c3542056ebd2689ec89"
 kgp = "2.2.0"
 ksp = "2.2.0-2.0.2"
 minSdk = "26"
-targetSdk = "35"
+targetSdk = "36"
+ktor = "3.2.3"
 
 [libraries]
 agp = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "agp" }
@@ -47,11 +48,18 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kgp" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
-kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.0"
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.1"
 kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.2.0"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-ktor-server-netty = "io.ktor:ktor-server-netty:3.2.2"
+ktor-server-netty = "io.ktor:ktor-server-netty:3.2.3"
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 librarian = "com.gradleup.librarian:com.gradleup.librarian.gradle.plugin:0.0.11-SNAPSHOT-e8ab4653f68118d36889519f430f1fcd118745e3"
 okhttp = "com.squareup.okhttp3:okhttp:5.1.0"
 slf4j-simple = "org.slf4j:slf4j-simple:2.0.17"

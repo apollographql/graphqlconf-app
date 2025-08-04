@@ -1,6 +1,7 @@
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import graphqlconf.app.App
+import graphqlconf.design.catalog.Gallery
 import java.io.File
 import java.util.*
 
@@ -24,10 +25,10 @@ fun main() = application {
       exitApplication()
     },
     state = windowState,
-    alwaysOnTop = true,
+    alwaysOnTop = false,
     title = "My App"
   ) {
-    App()
+    Gallery()
   }
 }
 

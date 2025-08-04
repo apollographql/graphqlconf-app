@@ -13,24 +13,21 @@ import graphqlconf.design.theme.GraphqlConfTheme
 
 @Composable
 fun App(isDarkTheme: Boolean = true) {
-  if (false) {
-    Gallery()
-  } else {
-    GraphqlConfTheme {
-      Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = GraphqlConfTheme.colors.background
+  GraphqlConfTheme {
+    Surface(
+      modifier = Modifier.fillMaxSize(),
+      color = GraphqlConfTheme.colors.background
+    ) {
+      val navController = rememberNavController()
+      NavHost(
+        navController = navController,
+        startDestination = MainScreen,
       ) {
-        val navController = rememberNavController()
-        NavHost(
-          navController = navController,
-          startDestination = MainScreen,
-        ) {
-          composable<MainScreen> {
-            graphqlconf.app.screen.MainScreen()
-          }
+        composable<MainScreen> {
+          graphqlconf.app.screen.MainScreen()
         }
       }
     }
   }
 }
+

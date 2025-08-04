@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import graphqlconf.design.component.SessionCardPreview
+import graphqlconf.design.component.SpeakerCardPreview
 
 
 @Composable
@@ -25,6 +26,7 @@ fun Gallery() {
     CompositionLocalProvider(LocalDensity provides Density(densityFloat)) {
       Column(Modifier.verticalScroll(rememberScrollState())) {
         SessionCardPreview()
+        SpeakerCardPreview()
       }
     }
   }
