@@ -35,6 +35,8 @@ import coil3.request.crossfade
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
+import graphqlconf_app.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -94,72 +96,62 @@ fun SpeakerAvatar(
   index: Int
 ) {
   Box(modifier = modifier.aspectRatio(1f)) {
-    SubcomposeAsyncImage(
-      model = avatar.fixIfNeeded(),
-      contentDescription = null
+    AsyncImage(
+      model = avatar,
+      contentDescription = null,
+      placeholder = ColorPainter(GraphqlConfTheme.colors.background),
+      error = ColorPainter(GraphqlConfTheme.colors.background),
+    )
+    Canvas(modifier = Modifier.fillMaxSize()) {
+      drawRect(color = ColorValues.secondaryLighter.copy(alpha = 0.5f), topLeft = Offset(0f, 0f), size = size)
+    }
+    Canvas(
+      modifier = Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+        .clipToBounds()
     ) {
-      val state by painter.state.collectAsState()
-      if (state is AsyncImagePainter.State.Success) {
-        SubcomposeAsyncImageContent()
-        Canvas(modifier = Modifier.fillMaxSize()) {
-          drawRect(color = ColorValues.secondaryLighter.copy(alpha = 0.5f), topLeft = Offset(0f, 0f), size = size)
+      var i = 0f
+      while (i < size.width) {
+        drawRect(
+          color = Color(0xffc3f655),
+          topLeft = Offset(i, 0f),
+          size = Size(12.dp.value, size.height)
+        )
+        i += 2 * 12.dp.value
+      }
+      when (index % 2) {
+        0 -> {
+          val i = (index / 2)
+          val x = (i % 2)
+          val y = (i + 1) % 2
+          drawRect(
+            brush = Brush.radialGradient(
+              colors = listOf(Color.White, Color.Transparent),
+              center = Offset(x * size.width, y * size.height),
+              radius = size.width / 2,
+              tileMode = TileMode.Clamp
+            ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
+          )
         }
-        Canvas(
-          modifier = Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-            .clipToBounds()
-        ) {
-          var i = 0f
-          while (i < size.width) {
-            drawRect(
-              color = Color(0xffc3f655),
-              topLeft = Offset(i, 0f),
-              size = Size(12.dp.value, size.height)
-            )
-            i += 2 * 12.dp.value
-          }
-          when (index % 2) {
-            0 -> {
-              val i = (index / 2)
-              val x = (i % 2)
-              val y = (i + 1) % 2
-              drawRect(
-                brush = Brush.radialGradient(
-                  colors = listOf(Color.White, Color.Transparent),
-                  center = Offset(x * size.width, y * size.height),
-                  radius = size.width / 2,
-                  tileMode = TileMode.Clamp
-                ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
-              )
-            }
 
-            1 -> {
-              val i = (index / 2)
-              val x = (i % 2)
-              val y = (i + 1) % 2
+        1 -> {
+          val i = (index / 2)
+          val x = (i % 2)
+          val y = (i + 1) % 2
 
-              drawRect(
-                brush = Brush.linearGradient(
-                  colors = listOf(Color.White, Color.Transparent),
-                  start = Offset(x * size.width, y * size.height),
-                  end = Offset(size.width/2, size.height/2),
-                  tileMode = TileMode.Clamp
-                ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
-              )
-            }
-          }
+          drawRect(
+            brush = Brush.linearGradient(
+              colors = listOf(Color.White, Color.Transparent),
+              start = Offset(x * size.width, y * size.height),
+              end = Offset(size.width/2, size.height/2),
+              tileMode = TileMode.Clamp
+            ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
+          )
         }
       }
     }
   }
 }
 
-private fun String.fixIfNeeded(): String {
-  return if (startsWith("//")) {
-    "http:$this"
-  } else {
-    this
-  }
-}
 
 @Preview
 @Composable

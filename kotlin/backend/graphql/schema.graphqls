@@ -47,9 +47,11 @@ type Speaker {
 
   url: String!
 
+  years: [Int!]!
+
   avatar: String!
 
-  years: [Int!]!
+  sessions: [Session!]!
 }
 
 type __Schema {
