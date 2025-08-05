@@ -15,26 +15,20 @@ struct SpeakerListCellView: View {
       }
 
       VStack(spacing: 0) {
-        if let name = speaker.name {
-          Text(name)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.HostGrotesk.large)
-            .foregroundStyle(Theme.primaryText)
-        }
+        Text(speaker.name)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .font(.HostGrotesk.large)
+          .foregroundStyle(Theme.primaryText)
 
-        if let workBio = speaker.formattedWorkBio {
-          Text(workBio)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.HostGrotesk.medium)
-            .foregroundStyle(Theme.primaryText)
-        }
+        Text(speaker.formattedWorkBio)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .font(.HostGrotesk.medium)
+          .foregroundStyle(Theme.primaryText)
 
         Spacer()
       }
 
-      if let about = speaker.about {
-
-      }
+      Text("About")
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .padding(.all, 16)

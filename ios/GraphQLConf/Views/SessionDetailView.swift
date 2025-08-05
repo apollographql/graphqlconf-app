@@ -3,8 +3,8 @@ import ConnectorAPI
 
 struct SessionDetailView: View {
 
-  let session: SessionFragment
-  
+  let session: AugmentedSessionFragment
+
   var body: some View {
     ScrollView {
       VStack {
@@ -12,47 +12,45 @@ struct SessionDetailView: View {
           EventTypeView(eventType: eventType)
         }
         
-        Text(session.formattedName)
+        Text(session.sessionFragment.title)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
           .multilineTextAlignment(.leading)
           .font(.HostGrotesk.h3)
           .foregroundStyle(Theme.primaryText)
         Spacer(minLength: 16)
 
-        if let dateTime = session.formattedDateTime {
-          Text(dateTime)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .font(.HostGrotesk.medium)
-            .foregroundStyle(Theme.primaryText)
-        }
-        if let venueName = session.venue?.name {
+        Text(session.formattedDateTime)
+          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+          .font(.HostGrotesk.medium)
+          .foregroundStyle(Theme.primaryText)
+        if let venueName = session.sessionFragment.venue {
           Text(venueName)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .font(.HostGrotesk.medium)
             .foregroundStyle(Theme.primaryText)
         }
 
-        if let description = session.description, !description.isEmpty {
+        if !session.sessionFragment.description.isEmpty {
           Spacer(minLength: 20)
           Text("Description")
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .font(.HostGrotesk.h3)
             .foregroundStyle(Theme.primaryText)
-          Text(description)
+          Text(session.sessionFragment.description)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .multilineTextAlignment(.leading)
             .font(.HostGrotesk.medium)
             .foregroundStyle(Theme.primaryText)
         }
 
-        if let speakers = session.speakers {
+        if !session.sessionFragment.speakers.isEmpty {
           Spacer(minLength: 20)
           Text("Speakers")
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .font(.HostGrotesk.h3)
             .foregroundStyle(Theme.primaryText)
           LazyVStack(spacing: 0) {
-            ForEach(speakers, id: \.username) { speaker in
+            ForEach(session.sessionFragment.speakers, id: \.username) { speaker in
               SessionDetailSpeakerCellView(speaker: speaker)
             }
           }

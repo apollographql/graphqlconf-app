@@ -21,10 +21,8 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
     switch typename {
     case "Query": return ConnectorAPI.Objects.Query
-    case "SchedEvent": return ConnectorAPI.Objects.SchedEvent
-    case "SchedSession": return ConnectorAPI.Objects.SchedSession
-    case "SchedSpeaker": return ConnectorAPI.Objects.SchedSpeaker
-    case "SchedVenue": return ConnectorAPI.Objects.SchedVenue
+    case "Session": return ConnectorAPI.Objects.Session
+    case "Speaker": return ConnectorAPI.Objects.Speaker
     default: return nil
     }
   }

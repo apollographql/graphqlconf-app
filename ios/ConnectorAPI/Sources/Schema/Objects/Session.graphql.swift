@@ -4,9 +4,9 @@
 import ApolloAPI
 
 public extension Objects {
-  static let SchedSpeaker = ApolloAPI.Object(
-    typename: "SchedSpeaker",
+  static let Session = ApolloAPI.Object(
+    typename: "Session",
     implementedInterfaces: [],
-    keyFields: ["username"]
+    keyFields: ["id"]
   )
 }

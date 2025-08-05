@@ -3,14 +3,14 @@ import ConnectorAPI
 
 struct SessionListView: View {
 
-  @Binding var schedule: [[SessionFragment]]
+  @Binding var schedule: [[AugmentedSessionFragment]]
 
   var body: some View {
     ScrollView {
       LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
         ForEach(schedule, id: \.self) { section in
           Section {
-            ForEach(section) { session in
+            ForEach(section, id: \.self) { session in
               NavigationLink(destination: SessionDetailView(session: session)) {
                 SessionListCellView(session: session)
               }

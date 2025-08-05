@@ -3,7 +3,7 @@ import ConnectorAPI
 
 struct SessionListCellView: View {
 
-  let session: SessionFragment
+  let session: AugmentedSessionFragment
 
   var body: some View {
     VStack {
@@ -11,36 +11,32 @@ struct SessionListCellView: View {
         EventTypeView(eventType: eventType)
       }
 
-      Text(session.formattedName)
+      Text(session.sessionFragment.title)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .multilineTextAlignment(.leading)
         .font(.HostGrotesk.large)
         .foregroundStyle(Theme.primaryText)
 
-      if let speakers = session.speakers?.compactMap({ $0.name }) {
-        Text(speakers.joined(separator: ", "))
+      if !session.sessionFragment.speakers.isEmpty {
+        Text(session.joinedSpeakers)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
           .font(.HostGrotesk.medium)
           .foregroundStyle(Theme.primaryText)
       }
 
-      if session.venue?.name != nil || (session.event?.start_time != nil && session.event?.end_time != nil) {
-        Spacer(minLength: 16)
-        HStack {
-          if let venueName = session.venue?.name {
-            Text(venueName)
-              .frame(alignment: .leading)
-              .font(.HostGrotesk.medium)
-              .foregroundStyle(Theme.primaryText)
-          }
-          Spacer()
-          if let startTime = session.event?.start_time, let endTime = session.event?.end_time {
-            Text("\(startTime) - \(endTime)")
-              .frame(alignment: .trailing)
-              .font(.HostGrotesk.medium)
-              .foregroundStyle(Theme.primaryText)
-          }
+      Spacer(minLength: 16)
+      HStack {
+        if let venueName = session.sessionFragment.venue {
+          Text(venueName)
+            .frame(alignment: .leading)
+            .font(.HostGrotesk.medium)
+            .foregroundStyle(Theme.primaryText)
         }
+        Spacer()
+        Text(session.formattedStartEndTime)
+          .frame(alignment: .trailing)
+          .font(.HostGrotesk.medium)
+          .foregroundStyle(Theme.primaryText)
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)

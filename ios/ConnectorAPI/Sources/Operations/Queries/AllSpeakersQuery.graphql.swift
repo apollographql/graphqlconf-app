@@ -19,13 +19,13 @@ public struct AllSpeakersQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("speakers", [Speaker]?.self),
+      .field("speakers", [Speaker].self),
     ] }
 
-    public var speakers: [Speaker]? { __data["speakers"] }
+    public var speakers: [Speaker] { __data["speakers"] }
 
     public init(
-      speakers: [Speaker]? = nil
+      speakers: [Speaker]
     ) {
       self.init(_dataDict: DataDict(
         data: [
@@ -40,24 +40,24 @@ public struct AllSpeakersQuery: GraphQLQuery {
 
     /// Speaker
     ///
-    /// Parent Type: `SchedSpeaker`
+    /// Parent Type: `Speaker`
     public struct Speaker: ConnectorAPI.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.SchedSpeaker }
+      public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Speaker }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .fragment(SpeakerFragment.self),
       ] }
 
       public var username: String { __data["username"] }
-      public var name: String? { __data["name"] }
-      public var about: String? { __data["about"] }
-      public var company: String? { __data["company"] }
-      public var position: String? { __data["position"] }
-      public var avatar: String? { __data["avatar"] }
-      public var years: [Int]? { __data["years"] }
+      public var name: String { __data["name"] }
+      public var about: String { __data["about"] }
+      public var company: String { __data["company"] }
+      public var position: String { __data["position"] }
+      public var avatar: String { __data["avatar"] }
+      public var years: [Int] { __data["years"] }
 
       public struct Fragments: FragmentContainer {
         public let __data: DataDict
@@ -68,16 +68,16 @@ public struct AllSpeakersQuery: GraphQLQuery {
 
       public init(
         username: String,
-        name: String? = nil,
-        about: String? = nil,
-        company: String? = nil,
-        position: String? = nil,
-        avatar: String? = nil,
-        years: [Int]? = nil
+        name: String,
+        about: String,
+        company: String,
+        position: String,
+        avatar: String,
+        years: [Int]
       ) {
         self.init(_dataDict: DataDict(
           data: [
-            "__typename": ConnectorAPI.Objects.SchedSpeaker.typename,
+            "__typename": ConnectorAPI.Objects.Speaker.typename,
             "username": username,
             "name": name,
             "about": about,

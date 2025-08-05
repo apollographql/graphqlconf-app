@@ -1,67 +1,36 @@
 directive @defer(label: String, if: Boolean! = true) on FRAGMENT_SPREAD | INLINE_FRAGMENT
 
+scalar LocalDateTime
+
 type Query {
-  schedule_2025: [SchedSession!]
-  speakers: [SchedSpeaker!]
-}
-
-type SchedEvent {
-  key: String!
-  start: String
-  end: String
-  start_year: String
-  start_month: String
-  start_month_short: String
-  start_day: String
-  start_weekday: String
-  start_weekday_short: String
-  start_time: String
-  start_date: String
-  end_year: String
-  end_month: String
-  end_month_short: String
-  end_day: String
-  end_weekday: String
-  end_weekday_short: String
-  end_time: String
-  end_date: String
-  type: String
-  subtype: String
+  sessions: [Session!]!
+  speakers: [Speaker!]!
   timezone: String!
-  start_time_epoch: Int
 }
 
-type SchedSession {
+type Session {
+  title: String!
+  description: String!
+  start: LocalDateTime!
+  end: LocalDateTime!
+  event_type: String!
+  event_subtype: String!
+  venue: String
   id: String!
-  active: String
-  pinned: String
-  name: String
-  description: String
-  invite_only: String
-  goers: String
-  seats: String
-  event: SchedEvent
-  venue: SchedVenue
-  speakers: [SchedSpeaker!]
+  speakers: [Speaker!]!
 }
 
-type SchedSpeaker {
+type Speaker {
   username: String!
-  name: String
-  about: String
-  position: String
-  company: String
-  avatar: String
-  years: [Int!]
-  custom_order: Int
+  company: String!
+  position: String!
+  name: String!
+  about: String!
+  location: String!
+  url: String!
+  avatar: String!
+  years: [Int!]!
 }
 
-type SchedVenue {
-  id: String!
-  name: String
-}
-
-extend type SchedEvent @typePolicy(keyFields: "key")
-extend type SchedSession @typePolicy(keyFields: "id")
-extend type SchedSpeaker @typePolicy(keyFields: "username")
-extend type SchedVenue @typePolicy(keyFields: "id")
+extend type Session @typePolicy(keyFields: "id")
+extend type Speaker @typePolicy(keyFields: "username")

@@ -3,11 +3,11 @@
 
 @_exported import ApolloAPI
 
-public struct AllEventsScheduleQuery: GraphQLQuery {
-  public static let operationName: String = "AllEventsSchedule"
+public struct AllSessionsQuery: GraphQLQuery {
+  public static let operationName: String = "AllSessions"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query AllEventsSchedule { schedule_2025 { __typename ...SessionFragment } }"#,
+      #"query AllSessions { sessions { __typename ...SessionFragment } }"#,
       fragments: [SessionFragment.self]
     ))
 
@@ -19,44 +19,46 @@ public struct AllEventsScheduleQuery: GraphQLQuery {
 
     public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Query }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("schedule_2025", [Schedule_2025]?.self),
+      .field("sessions", [Session].self),
     ] }
 
-    public var schedule_2025: [Schedule_2025]? { __data["schedule_2025"] }
+    public var sessions: [Session] { __data["sessions"] }
 
     public init(
-      schedule_2025: [Schedule_2025]? = nil
+      sessions: [Session]
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ConnectorAPI.Objects.Query.typename,
-          "schedule_2025": schedule_2025._fieldData,
+          "sessions": sessions._fieldData,
         ],
         fulfilledFragments: [
-          ObjectIdentifier(AllEventsScheduleQuery.Data.self)
+          ObjectIdentifier(AllSessionsQuery.Data.self)
         ]
       ))
     }
 
-    /// Schedule_2025
+    /// Session
     ///
-    /// Parent Type: `SchedSession`
-    public struct Schedule_2025: ConnectorAPI.SelectionSet, Identifiable {
+    /// Parent Type: `Session`
+    public struct Session: ConnectorAPI.SelectionSet, Identifiable {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.SchedSession }
+      public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Session }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .fragment(SessionFragment.self),
       ] }
 
       public var id: String { __data["id"] }
-      public var event: Event? { __data["event"] }
-      public var name: String? { __data["name"] }
-      public var description: String? { __data["description"] }
-      public var speakers: [Speaker]? { __data["speakers"] }
-      public var venue: Venue? { __data["venue"] }
+      public var title: String { __data["title"] }
+      public var description: String { __data["description"] }
+      public var start: ConnectorAPI.LocalDateTime { __data["start"] }
+      public var end: ConnectorAPI.LocalDateTime { __data["end"] }
+      public var event_type: String { __data["event_type"] }
+      public var venue: String? { __data["venue"] }
+      public var speakers: [Speaker] { __data["speakers"] }
 
       public struct Fragments: FragmentContainer {
         public let __data: DataDict
@@ -67,34 +69,34 @@ public struct AllEventsScheduleQuery: GraphQLQuery {
 
       public init(
         id: String,
-        event: Event? = nil,
-        name: String? = nil,
-        description: String? = nil,
-        speakers: [Speaker]? = nil,
-        venue: Venue? = nil
+        title: String,
+        description: String,
+        start: ConnectorAPI.LocalDateTime,
+        end: ConnectorAPI.LocalDateTime,
+        event_type: String,
+        venue: String? = nil,
+        speakers: [Speaker]
       ) {
         self.init(_dataDict: DataDict(
           data: [
-            "__typename": ConnectorAPI.Objects.SchedSession.typename,
+            "__typename": ConnectorAPI.Objects.Session.typename,
             "id": id,
-            "event": event._fieldData,
-            "name": name,
+            "title": title,
             "description": description,
+            "start": start,
+            "end": end,
+            "event_type": event_type,
+            "venue": venue,
             "speakers": speakers._fieldData,
-            "venue": venue._fieldData,
           ],
           fulfilledFragments: [
-            ObjectIdentifier(AllEventsScheduleQuery.Data.Schedule_2025.self),
+            ObjectIdentifier(AllSessionsQuery.Data.Session.self),
             ObjectIdentifier(SessionFragment.self)
           ]
         ))
       }
 
-      public typealias Event = SessionFragment.Event
-
       public typealias Speaker = SessionFragment.Speaker
-
-      public typealias Venue = SessionFragment.Venue
     }
   }
 }

@@ -7,12 +7,12 @@ struct SessionDetailSpeakerCellView: View {
 
   var body: some View {
     VStack {
-      Text(speaker.formattedName)
+      Text(speaker.name)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .font(.HostGrotesk.xxlarge)
         .foregroundStyle(Theme.primaryText)
 
-      if let workBio = speaker.workBio {
+      if let workBio = speaker.formattedWorkBio {
         Text(workBio)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
           .font(.HostGrotesk.medium)

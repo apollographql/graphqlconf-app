@@ -15,14 +15,7 @@ class SpeakerViewModel: ObservableObject {
         guard let data = response.data?.speakers else { return }
 
         let sortedSpeakers = data.compactMap({ $0.fragments.speakerFragment })
-          .sorted { speaker1, speaker2 in
-            if let name1 = speaker1.name, let name2 = speaker2.name {
-              return name1 < name2
-            }
-
-          // Last resort: leave element where it is
-          return false
-        }
+          .sorted { $0.name < $1.name }
         let sendableSpeakers = sortedSpeakers
 
         await MainActor.run {
