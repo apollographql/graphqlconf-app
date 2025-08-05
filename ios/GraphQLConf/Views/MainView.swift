@@ -7,17 +7,17 @@ struct MainView: View {
       TabView {
         ScheduleView()
           .tabItem {
-            Image(systemName: "clock")
+            Image(.calendar)
           }
 
         SpeakerView()
           .tabItem {
-            Image(systemName: "person.2")
+            Image(.people)
           }
 
         AboutView()
           .tabItem {
-            Image(systemName: "info.square")
+            Image(.info)
           }
       }
       .tint(Theme.tint)
