@@ -1,7 +1,13 @@
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.crossfade
 import graphqlconf.app.App
 import graphqlconf.design.catalog.Gallery
+import okhttp3.OkHttpClient
+import okio.FileSystem
 import java.io.File
 import java.util.*
 
@@ -11,6 +17,27 @@ private const val WINDOW_HEIGHT = "window.height"
 private const val WINDOW_X = "window.x"
 private const val WINDOW_Y = "window.y"
 private const val WINDOW_IS_MAXIMIZED = "window.isMaximized"
+
+private fun debugImageLoading() {
+  FileSystem.SYSTEM_TEMPORARY_DIRECTORY.toFile().deleteRecursively()
+  SingletonImageLoader.setSafe {
+    ImageLoader.Builder(it)
+      .crossfade(true)
+      .components {
+        add(
+          OkHttpNetworkFetcherFactory(
+            callFactory = {
+              OkHttpClient.Builder()
+                .addInterceptor {
+                  it.proceed(it.request())
+                }.build()
+            }
+          )
+        )
+      }
+      .build()
+  }
+}
 
 fun main() = application {
   val windowState = rememberWindowState(
@@ -28,7 +55,8 @@ fun main() = application {
     alwaysOnTop = false,
     title = "My App"
   ) {
-    Gallery()
+    App()
+    //Gallery()
   }
 }
 
