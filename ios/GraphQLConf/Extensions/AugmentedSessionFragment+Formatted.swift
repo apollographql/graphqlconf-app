@@ -40,7 +40,7 @@ extension AugmentedSessionFragment {
 
   /// Event start formatted as `<month> <day>, <start time> - <end time>`
   var formattedDateTime: String {
-    DateFormatter.sharedDateWriter.dateFormat = "MMMM dd"
+    DateFormatter.sharedDateWriter.dateFormat = "MMMM d"
     let weekdayMonthString = DateFormatter.sharedDateWriter.string(from: self.startDate)
 
     DateFormatter.sharedDateWriter.dateFormat = "h:mm a"

@@ -20,6 +20,7 @@ struct SessionListCellView: View {
       if !session.sessionFragment.speakers.isEmpty {
         Text(session.joinedSpeakers)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+          .multilineTextAlignment(.leading)
           .font(.HostGrotesk.medium)
           .foregroundStyle(Theme.primaryText)
       }
@@ -40,7 +41,7 @@ struct SessionListCellView: View {
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .padding(.all, 16)
+    .padding(.all, 10)
     .background {
       Rectangle()
         .stroke(Theme.cellStroke)
