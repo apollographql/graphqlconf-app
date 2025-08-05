@@ -58,7 +58,7 @@ class Query {
     val speakersWithSessions = allSessions.flatMap { it.speakers }.map { it.username }.distinct().toSet()
     return allSpeakers.filter { speakersWithSessions.contains(it.username) }.map {
       it.toGraphQLSpeaker()
-    }
+    }.sortedBy { it.name }
   }
 
   val timezone = "Europe/Amsterdam"

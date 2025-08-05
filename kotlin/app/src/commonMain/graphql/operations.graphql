@@ -25,6 +25,7 @@ query GetSpeakers {
     years
     sessions {
       event_type
+      event_subtype
     }
   }
 }

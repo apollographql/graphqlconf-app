@@ -41,7 +41,7 @@ fun SpeakerList() {
               company = it.company,
               about = it.about,
               avatar = it.avatar,
-              eventTypes = it.sessions.map { it.event_type },
+              eventTypes = it.sessions.map { it.event_subtype },
               index = index,
               onClick = {}
             )
