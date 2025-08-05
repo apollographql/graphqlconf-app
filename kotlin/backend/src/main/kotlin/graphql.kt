@@ -120,7 +120,17 @@ class Speaker(
   val about: String,
   val location: String,
   val url: String,
-  val avatar: String,
+  avatar: String,
   val years: List<Int>
-)
+) {
+  val avatar = avatar.fixIfNeeded()
+
+  private fun String.fixIfNeeded(): String {
+    return if (startsWith("//")) {
+      "http:$this"
+    } else {
+      this
+    }
+  }
+}
 
