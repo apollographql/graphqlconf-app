@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
@@ -58,24 +59,51 @@ fun SpeakerCard(
   avatar: String,
   eventTypes: List<String>,
   index: Int,
+  modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
-  val borderColor = GraphqlConfTheme.colors.strokeHalf
+  Box(
+    modifier = modifier
+      .border(width = 1.dp, color = GraphqlConfTheme.colors.strokeHalf)
+      .clickable(onClick = onClick)
+      .fillMaxWidth()
+      .height(IntrinsicSize.Min)
+      .background(GraphqlConfTheme.colors.surface)
+  ) {
+    SpeakerCardContent(
+      name = name,
+      position = position,
+      company = company,
+      about = about,
+      avatar = avatar,
+      eventTypes = eventTypes,
+      index = index,
+    )
+  }
+}
+
+@Composable
+fun SpeakerCardContent(
+  name: String,
+  position: String,
+  company: String,
+  about: String,
+  avatar: String,
+  eventTypes: List<String>,
+  index: Int,
+  modifier: Modifier = Modifier,
+) {
   val textColor = GraphqlConfTheme.colors.primaryText
 
   Row(
-    modifier = Modifier
-      .border(width = 1.dp, color = borderColor)
-      .clickable(onClick = onClick)
+    modifier = modifier
       .fillMaxWidth()
-      .fillMaxHeight()
-      .background(GraphqlConfTheme.colors.surface)
+      .height(IntrinsicSize.Min)
       .padding(16.dp)
   ) {
     SpeakerAvatar(
       avatar = avatar,
       modifier = Modifier.size(92.dp),
-      eventTypes = eventTypes,
       index = index,
     )
     Spacer(modifier = Modifier.width(16.dp))
@@ -108,7 +136,6 @@ fun SpeakerCard(
 fun SpeakerAvatar(
   avatar: String,
   modifier: Modifier = Modifier,
-  eventTypes: List<String>,
   index: Int
 ) {
   Box(modifier = modifier.aspectRatio(1f)) {

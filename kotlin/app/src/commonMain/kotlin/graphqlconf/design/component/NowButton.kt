@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -62,7 +63,11 @@ fun NowButton(
   enabled: Boolean = state != NowButtonState.Current,
 ) {
   val active = state != NowButtonState.Current
-  val textColor = ColorValues.white100
+  val textColor by animateColorAsState(
+    if (active) ColorValues.white100
+    else GraphqlConfTheme.colors.strokeHalf,
+    ColorSpringSpec,
+  )
   val background by animateColorAsState(
     if (active) ColorValues.primaryBase
     else GraphqlConfTheme.colors.surface,
@@ -93,13 +98,13 @@ fun NowButton(
       },
       modifier = Modifier.height(16.dp)
     ) { targetState ->
-      if (targetState == NowButtonState.Current) return@AnimatedContent
       Spacer(Modifier.width(2.dp))
       Icon(
         painter = painterResource(Res.drawable.arrow_down),
         contentDescription = null,
         modifier = Modifier
           .size(16.dp)
+          .alpha(if (targetState == NowButtonState.Current) 0f else 1f)
           .rotate(if (targetState == NowButtonState.Before) 0f else 180f),
         tint = textColor,
       )
