@@ -206,7 +206,7 @@ class Speaker(
 
   private fun String.fixIfNeeded(): String {
     return if (startsWith("//")) {
-      "http:$this"
+      "https:$this"
     } else {
       this
     }
