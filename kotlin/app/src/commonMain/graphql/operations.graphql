@@ -1,15 +1,28 @@
-query GetSessions {
-  sessions {
-    id
-    title
-    description
-    speakers {
-      name
+query GetScheduleItems {
+  scheduleItems {
+    ... on DayHeader {
+      date
+      title
     }
-    venue
-    event_type
-    start
-    end
+    ... on TimeHeader {
+      slotStart: start
+      slotEnd: end
+    }
+    ... on Session {
+      id
+      title
+      description
+      speakers {
+        name
+      }
+      room {
+        name
+        floor
+      }
+      event_type
+      start
+      end
+    }
   }
 }
 

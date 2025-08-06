@@ -3,7 +3,6 @@ package graphqlconf.app.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,14 +10,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.dp
-import graphqlconf.app.misc.SessionList
+import graphqlconf.app.misc.Schedule
 import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
 import graphqlconf.app.misc.MainHeaderTitleBar
 import graphqlconf.design.component.NowButton
 import graphqlconf.design.component.NowButtonState
-import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.nav_destination_schedule
 import kotlinx.coroutines.launch
@@ -75,7 +72,7 @@ fun ScheduleScreen() {
       }
     )
 
-    SessionList(listState)
+    Schedule(listState)
   }
 }
 

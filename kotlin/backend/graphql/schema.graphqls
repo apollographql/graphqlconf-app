@@ -10,6 +10,8 @@ scalar LocalTime
 
 type DayHeader {
   date: LocalDate!
+
+  title: String!
 }
 
 type Query {

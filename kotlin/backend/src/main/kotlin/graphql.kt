@@ -207,7 +207,7 @@ private fun JsonSession.toGraphQLSession(): Session {
 }
 
 sealed interface ScheduleItem
-class DayHeader(val date: GraphQLLocalDate) : ScheduleItem
+class DayHeader(val date: GraphQLLocalDate, val title: String) : ScheduleItem
 class TimeHeader(val start: GraphQLLocalTime, val end: GraphQLLocalTime) : ScheduleItem
 
 private fun String.toRoom(): Room? {
@@ -256,6 +256,7 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
   val items = mutableListOf<ScheduleItem>()
 
   var lastDate: LocalDate? = null
+  var dayIndex = 1
   /**
    * List of time slots created by the notebook and then tweaked manually.
    */
@@ -299,8 +300,9 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
     val end = dateFormat.parse(it.second)
     val date = start.date
     if (lastDate == null || lastDate != date) {
-      items.add(DayHeader(date))
+      items.add(DayHeader(date, "Day $dayIndex"))
       lastDate = date
+      dayIndex++
     }
     items.add(TimeHeader(start.time, end.time))
     items.addAll(
