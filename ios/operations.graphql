@@ -15,11 +15,7 @@ fragment SessionFragment on Session {
   event_type
   venue
   speakers {
-    id
-    name
-    company
-    position
-    avatar
+    ...SpeakerFragment
   }
 }
 

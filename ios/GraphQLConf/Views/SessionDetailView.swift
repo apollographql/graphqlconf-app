@@ -57,7 +57,9 @@ struct SessionDetailView: View {
             .foregroundStyle(Theme.primaryText)
           LazyVStack(spacing: 0) {
             ForEach(session.sessionFragment.speakers, id: \.id) { speaker in
-              SessionDetailSpeakerCellView(speaker: speaker)
+              NavigationLink(destination: SpeakerDetailView(speaker: speaker.fragments.speakerFragment)) {
+                SpeakerListCellView(speaker: speaker.fragments.speakerFragment)
+              }
             }
           }
         }

@@ -5,7 +5,7 @@
 
 public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable {
   public static var fragmentDefinition: StaticString {
-    #"fragment SessionFragment on Session { __typename id title description start end event_type venue speakers { __typename id name company position avatar } }"#
+    #"fragment SessionFragment on Session { __typename id title description start end event_type venue speakers { __typename ...SpeakerFragment } }"#
   }
 
   public let __data: DataDict
@@ -72,37 +72,47 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Speaker }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("__typename", String.self),
-      .field("id", ConnectorAPI.ID.self),
-      .field("name", String.self),
-      .field("company", String.self),
-      .field("position", String.self),
-      .field("avatar", String.self),
+      .fragment(SpeakerFragment.self),
     ] }
 
     public var id: ConnectorAPI.ID { __data["id"] }
     public var name: String { __data["name"] }
+    public var about: String { __data["about"] }
     public var company: String { __data["company"] }
     public var position: String { __data["position"] }
     public var avatar: String { __data["avatar"] }
+    public var years: [Int] { __data["years"] }
+
+    public struct Fragments: FragmentContainer {
+      public let __data: DataDict
+      public init(_dataDict: DataDict) { __data = _dataDict }
+
+      public var speakerFragment: SpeakerFragment { _toFragment() }
+    }
 
     public init(
       id: ConnectorAPI.ID,
       name: String,
+      about: String,
       company: String,
       position: String,
-      avatar: String
+      avatar: String,
+      years: [Int]
     ) {
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ConnectorAPI.Objects.Speaker.typename,
           "id": id,
           "name": name,
+          "about": about,
           "company": company,
           "position": position,
           "avatar": avatar,
+          "years": years,
         ],
         fulfilledFragments: [
-          ObjectIdentifier(SessionFragment.Speaker.self)
+          ObjectIdentifier(SessionFragment.Speaker.self),
+          ObjectIdentifier(SpeakerFragment.self)
         ]
       ))
     }

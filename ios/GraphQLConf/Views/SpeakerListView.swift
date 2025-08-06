@@ -9,7 +9,9 @@ struct SpeakerListView: View {
     ScrollView {
       LazyVStack(spacing: 16) {
         ForEach(speakers, id: \.self) { speaker in
-          SpeakerListCellView(speaker: speaker)
+          NavigationLink(destination: SpeakerDetailView(speaker: speaker)) {
+            SpeakerListCellView(speaker: speaker)
+          }
         }
       }
       .padding(.all, 16)

@@ -38,7 +38,7 @@ struct SessionListCellView: View {
 
       Spacer(minLength: 16)
       HStack {
-        if let venueName = session.sessionFragment.venue {
+        if let venueName = session.sessionFragment.venue { // Not changing to `Room` object yet
           Text(venueName)
             .frame(alignment: .leading)
             .multilineTextAlignment(.leading)

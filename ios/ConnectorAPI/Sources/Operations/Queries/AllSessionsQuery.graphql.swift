@@ -8,7 +8,7 @@ public struct AllSessionsQuery: GraphQLQuery {
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
       #"query AllSessions { sessions { __typename ...SessionFragment } }"#,
-      fragments: [SessionFragment.self]
+      fragments: [SessionFragment.self, SpeakerFragment.self]
     ))
 
   public init() {}

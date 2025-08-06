@@ -64,9 +64,11 @@ class ScheduleViewModel: ObservableObject {
                   SessionFragment.Speaker(
                     id: "calvincestari",
                     name: "Calvin Cestari",
+                    about: "",
                     company: "Apollo",
                     position: "Software Engineer",
-                    avatar: ""
+                    avatar: "",
+                    years: []
                   )
                 ]
               ),

@@ -12,6 +12,7 @@ enum Theme: ShapeStyle {
   case mainBackground
   case cellBackground
   case cellStroke
+  case avatarOverlay
 
   func resolve(in environment: EnvironmentValues) -> some ShapeStyle {
     if environment.colorScheme == .dark {
@@ -29,6 +30,7 @@ enum Theme: ShapeStyle {
     case .mainBackground: return Color(hex: 0xfafcf4)
     case .cellBackground: return Color(hex: 0xffffff)
     case .cellStroke: return Color(hex: 0xe7e9e3)
+    case .avatarOverlay: return Color(hex: 0x85B913).opacity(0.2)
     }
   }
 
