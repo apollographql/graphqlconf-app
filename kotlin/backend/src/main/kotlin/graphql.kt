@@ -24,7 +24,7 @@ typealias GraphQLLocalDateTime = LocalDateTime
 
 @GraphQLScalar(LocalDateCoercing::class)
 @GraphQLName("LocalDate")
-typealias GraphQLLocalDate = LocalTime
+typealias GraphQLLocalDate = LocalDate
 
 @GraphQLScalar(LocalTimeCoercing::class)
 @GraphQLName("LocalTime")
