@@ -308,7 +308,7 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
     items.addAll(
       // could be optimized but 🤷‍♂️
       sessions.filter {
-        it.start in start..end
+        it.start in start..<end
       }.sortedBy {
         it.start.toString() + (it.room?.rank ?: Int.MAX_VALUE).toString()
       }

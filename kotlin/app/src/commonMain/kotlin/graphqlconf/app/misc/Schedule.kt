@@ -44,9 +44,10 @@ fun Schedule(listState: LazyListState) {
             }
             it.onTimeHeader != null -> {
               Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 text = DateTimeFormatting.timeToTime(it.onTimeHeader.slotStart, it.onTimeHeader.slotEnd),
                 color = GraphqlConfTheme.colors.primaryText,
-                style = GraphqlConfTheme.typography.h2,
+                style = GraphqlConfTheme.typography.h3,
               )
             }
             it.onSession != null -> {
