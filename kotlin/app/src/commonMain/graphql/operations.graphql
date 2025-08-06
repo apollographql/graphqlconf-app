@@ -1,12 +1,12 @@
 query GetScheduleItems {
   scheduleItems {
+    start
+    end
     ... on DayHeader {
-      date
       title
     }
     ... on TimeHeader {
-      slotStart: start
-      slotEnd: end
+      __typename
     }
     ... on Session {
       id
@@ -20,8 +20,6 @@ query GetScheduleItems {
         floor
       }
       event_type
-      start
-      end
     }
   }
 }
