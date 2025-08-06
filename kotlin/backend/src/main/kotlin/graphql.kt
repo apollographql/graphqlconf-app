@@ -7,7 +7,9 @@ import com.apollographql.apollo.execution.ExternalValue
 import com.apollographql.execution.annotation.GraphQLName
 import com.apollographql.execution.annotation.GraphQLQuery
 import com.apollographql.execution.annotation.GraphQLScalar
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -19,6 +21,14 @@ import model.allSpeakers
 @GraphQLScalar(LocalDateTimeCoercing::class)
 @GraphQLName("LocalDateTime")
 typealias GraphQLLocalDateTime = LocalDateTime
+
+@GraphQLScalar(LocalDateCoercing::class)
+@GraphQLName("LocalDate")
+typealias GraphQLLocalDate = LocalTime
+
+@GraphQLScalar(LocalTimeCoercing::class)
+@GraphQLName("LocalTime")
+typealias GraphQLLocalTime = LocalTime
 
 internal val dateFormat = LocalDateTime.Format {
   year()
@@ -46,12 +56,61 @@ object LocalDateTimeCoercing : Coercing<LocalDateTime> {
   }
 }
 
+object LocalDateCoercing : Coercing<LocalDate> {
+  override fun serialize(internalValue: LocalDate): ExternalValue {
+    return internalValue.toString()
+  }
+
+  override fun deserialize(value: ExternalValue): LocalDate {
+    return LocalDate.parse((value as String))
+  }
+
+  override fun parseLiteral(value: GQLValue): LocalDate {
+    return LocalDate.parse((value as GQLStringValue).value)
+  }
+}
+
+object LocalTimeCoercing : Coercing<LocalTime> {
+  override fun serialize(internalValue: LocalTime): ExternalValue {
+    return internalValue.toString()
+  }
+
+  override fun deserialize(value: ExternalValue): LocalTime {
+    return LocalTime.parse((value as String))
+  }
+
+  override fun parseLiteral(value: GQLValue): LocalTime {
+    return LocalTime.parse((value as GQLStringValue).value)
+  }
+}
+
+class Room(
+  val name: String,
+  val rank: Int,
+  val floor: Int,
+)
+
 @GraphQLQuery
 class Query {
   fun sessions(): List<Session> {
     return allSessions.map {
       it.toGraphQLSession()
     }
+  }
+
+  /**
+   * Returns a list of ScheduleItems to be displayed in the UI.
+   *
+   * ScheduleItems introduce day headers as well as time headers.
+   * They also make sure the sessions are sorted by start time/room and group them by time slot.
+   *
+   * A time slot is a manually configured time range. It usually corresponds to a 30-minute slot where 3 sessions can happen in parallel.
+   * Because some sessions are shorter, several of them may fit into a single time slot.
+   *
+   * ScheduleItems also filter out some
+   */
+  fun scheduleItems(): List<ScheduleItem> {
+    return buildItems(sessions())
   }
 
   fun speakers(): List<Speaker> {
@@ -71,10 +130,11 @@ class Session(
   val end: GraphQLLocalDateTime,
   val event_type: String,
   val event_subtype: String,
+  @Deprecated("Use room instead")
   val venue: String?,
   val id: String,
   private val speakerUsernames: List<String>
-) {
+) : ScheduleItem {
   val speakers: List<Speaker>
     get() {
       return allSpeakers.filter {
@@ -83,6 +143,9 @@ class Session(
         it.toGraphQLSpeaker()
       }
     }
+
+  @Suppress("DEPRECATION")
+  val room: Room? = venue?.toRoom()
 }
 
 private fun JsonSpeaker.toGraphQLSpeaker(): Speaker {
@@ -143,3 +206,112 @@ private fun JsonSession.toGraphQLSession(): Session {
   )
 }
 
+sealed interface ScheduleItem
+class DayHeader(val date: GraphQLLocalDate) : ScheduleItem
+class TimeHeader(val start: GraphQLLocalTime, val end: GraphQLLocalTime) : ScheduleItem
+
+private fun String.toRoom(): Room? {
+  return when (this) {
+    "Grote Zaal - 2nd Floor" -> Room(
+      name = "Grote Zaal",
+      rank = 0,
+      floor = 2
+    )
+
+    "IJzaal - 5th Floor" -> Room(
+      name = "IJzaal",
+      rank = 1,
+      floor = 5
+    )
+
+    "Studio - 5th Floor" -> Room(
+      name = "Studio",
+      rank = 2,
+      floor = 5
+    )
+
+    "BG Foyer - Ground Floor" -> Room(
+      name = "BG foyer",
+      rank = 3,
+      floor = 0
+    )
+
+    "Foyer Grote Zaal - 2nd Floor" -> Room(
+      name = "Foyer Grote Zaal",
+      rank = 4,
+      floor = 2
+    )
+
+    "Workspace - 2nd Floor" -> Room(
+      name = "Workspace",
+      rank = 5,
+      floor = 2
+    )
+
+    else -> null
+  }
+}
+
+fun buildItems(sessions: List<Session>): List<ScheduleItem> {
+  val items = mutableListOf<ScheduleItem>()
+
+  var lastDate: LocalDate? = null
+  /**
+   * List of time slots created by the notebook and then tweaked manually.
+   */
+  listOf(
+    "2025-09-08 08:00" to "2025-09-08 09:00", // edited (registration)
+    "2025-09-08 09:00" to "2025-09-08 10:20", // edited (keynotes)
+    "2025-09-08 10:20" to "2025-09-08 10:45", // edited (removed solutions showcase)
+    "2025-09-08 10:45" to "2025-09-08 11:15",
+    "2025-09-08 11:25" to "2025-09-08 11:55",
+    "2025-09-08 12:05" to "2025-09-08 12:35",
+    "2025-09-08 12:35" to "2025-09-08 13:45",
+    "2025-09-08 13:45" to "2025-09-08 14:15",
+    "2025-09-08 14:25" to "2025-09-08 14:55",
+    "2025-09-08 15:05" to "2025-09-08 15:35",
+    "2025-09-08 15:55" to "2025-09-08 16:25",
+    "2025-09-08 16:35" to "2025-09-08 17:05",
+    "2025-09-08 17:15" to "2025-09-08 17:45",
+    "2025-09-08 17:45" to "2025-09-08 18:45",
+    "2025-09-09 08:00" to "2025-09-09 09:00", // edited (registration)
+    "2025-09-09 09:00" to "2025-09-09 10:30",
+    "2025-09-09 10:45" to "2025-09-09 11:25",
+    "2025-09-09 11:35" to "2025-09-09 12:15",
+    "2025-09-09 12:15" to "2025-09-09 14:15",
+    "2025-09-09 14:15" to "2025-09-09 14:55",
+    "2025-09-09 15:05" to "2025-09-09 15:45",
+    "2025-09-09 16:00" to "2025-09-09 16:40",
+    "2025-09-09 16:50" to "2025-09-09 17:30",
+    "2025-09-10 08:00" to "2025-09-10 09:00", // edited (registration)
+    "2025-09-10 09:00" to "2025-09-10 09:30",
+    "2025-09-10 09:40" to "2025-09-10 10:10",
+    "2025-09-10 10:20" to "2025-09-10 10:50",
+    "2025-09-10 11:15" to "2025-09-10 11:45",
+    "2025-09-10 11:55" to "2025-09-10 12:25",
+    "2025-09-10 12:25" to "2025-09-10 13:40",
+    "2025-09-10 13:40" to "2025-09-10 14:10",
+    "2025-09-10 14:20" to "2025-09-10 14:50",
+    "2025-09-10 15:00" to "2025-09-10 15:30",
+    "2025-09-10 15:50" to "2025-09-10 16:20",
+  ).forEach {
+    val start = dateFormat.parse(it.first)
+    val end = dateFormat.parse(it.second)
+    val date = start.date
+    if (lastDate == null || lastDate != date) {
+      items.add(DayHeader(date))
+      lastDate = date
+    }
+    items.add(TimeHeader(start.time, end.time))
+    items.addAll(
+      // could be optimized but 🤷‍♂️
+      sessions.filter {
+        it.start in start..end
+      }.sortedBy {
+        it.start.toString() + (it.room?.rank ?: Int.MAX_VALUE).toString()
+      }
+    )
+  }
+
+  return items
+}

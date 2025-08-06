@@ -114,3 +114,17 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
   }
 }
+
+tasks.register("allJar", Jar::class.java) {
+  from(tasks.named("jvmJar").map { zipTree((it as Jar).archiveFile) })
+  from(configurations.getByName("jvmRuntimeClasspath").map { if (it.isDirectory) it else zipTree(it) })
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  this.archiveFileName.set("all.jar")
+  manifest {
+    attributes(
+      "Main-Class" to "MainKt"
+    )
+  }
+}
+

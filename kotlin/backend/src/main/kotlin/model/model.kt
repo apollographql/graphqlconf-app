@@ -1,12 +1,16 @@
 package model
 
+import dateFormat
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.atTime
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import kotlin.collections.filter
 
 @Serializable
-class JsonSession(
+data class JsonSession(
   val name: String,
   val event_start: String,
   val event_end: String,
@@ -50,7 +54,15 @@ val json = Json {
 val allSessions: List<JsonSession> by lazy {
   JsonSession::class.java.classLoader.getResourceAsStream("schedule-2025.json")!!.use {
     json.decodeFromStream<List<JsonSession>>(it)
-  }
+  }.filter { it.venue != "Workspace - 2nd Floor" } // Filter out sessions in the workspace as they seem to be very long
+    .map {
+      if (it.name == "Registration + Badge Pick-up") {
+        // Set the end time to 9:00am to match the schedule even if technically people can still pick up their badges after that
+        it.copy(event_end = dateFormat.parse(it.event_end).date.atTime(LocalTime(9, 0)).let { dateFormat.format(it) })
+      } else {
+        it
+      }
+    }
 }
 
 @ExperimentalSerializationApi

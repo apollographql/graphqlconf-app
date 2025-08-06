@@ -2,14 +2,43 @@ schema {
   query: Query
 }
 
+scalar LocalDate
+
 scalar LocalDateTime
+
+scalar LocalTime
+
+type DayHeader {
+  date: LocalDate!
+}
 
 type Query {
   sessions: [Session!]!
 
+  """
+   Returns a list of ScheduleItems to be displayed in the UI.
+
+   ScheduleItems introduce day headers as well as time headers.
+   They also make sure the sessions are sorted by start time/room and group them by time slot.
+
+   A time slot is a manually configured time range. It usually corresponds to a 30-minute slot where 3 sessions can happen in parallel.
+   Because some sessions are shorter, several of them may fit into a single time slot.
+
+   ScheduleItems also filter out some
+  """
+  scheduleItems: [ScheduleItem!]!
+
   speakers: [Speaker!]!
 
   timezone: String!
+}
+
+type Room {
+  name: String!
+
+  rank: Int!
+
+  floor: Int!
 }
 
 type Session {
@@ -25,11 +54,13 @@ type Session {
 
   event_subtype: String!
 
-  venue: String
+  venue: String @deprecated(reason: "Use room instead")
 
   id: String!
 
   speakers: [Speaker!]!
+
+  room: Room
 }
 
 type Speaker {
@@ -53,6 +84,14 @@ type Speaker {
 
   sessions: [Session!]!
 }
+
+type TimeHeader {
+  start: LocalTime!
+
+  end: LocalTime!
+}
+
+union ScheduleItem = Session|DayHeader|TimeHeader
 
 type __Schema {
   description: String

@@ -17,6 +17,8 @@ import graphqlconf.api.GetSessionsQuery
 import graphqlconf.app.DateTimeFormatting
 import graphqlconf.app.apolloClient
 import graphqlconf.design.component.SessionCard
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 @Composable
 fun SessionList(listState: LazyListState) {
