@@ -25,6 +25,5 @@ fun InfoScreen() {
       },
     )
 
-    Schedule(listState)
   }
 }

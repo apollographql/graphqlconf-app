@@ -27,15 +27,10 @@ import graphqlconf_app.app.generated.resources.nav_destination_schedule
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.UtcOffset
-import kotlinx.datetime.atDate
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
-import java.time.Instant
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Suppress("UnrememberedMutableState")
 @Composable
@@ -63,7 +58,10 @@ fun ScheduleScreen() {
                 state = nowButtonState,
                 onClick = {
                   scope.launch {
-                    listState.animateScrollToItem(state.firstActiveIndex)
+                    val index = computeNowIndex(responseState)
+                    if (index != null) {
+                      listState.animateScrollToItem(index)
+                    }
                   }
                 }
               )
@@ -89,19 +87,70 @@ private fun computeNowButtonState(
   if (response.data == null) return null
 
   val items = response.data!!.scheduleItems
-  val first = items.get(listState.firstVisibleItemIndex)
-  val last = items.get(listState.lastVisibleItemIndex)
 
-  val now = LocalDateTime(2025, 9, 8, 11, 0).toInstant(UtcOffset.ZERO)//Clock.System.now()
-
-  val listStart = when {
-    first.onDayHeader != null -> first.onDayHeader.date.atTime(8, 0).toInstant(TimeZone.of("Europe/Amsterdam"))
-    first.onTimeHeader != null -> first.onTimeHeader.slotStart.atDate()
-    else -> null
-
+  val firstVisibleItemIndex = listState.firstVisibleItemIndex
+  if (firstVisibleItemIndex == -1) {
+    // No list visible
+    return null
   }
 
+  val now = now()
+
+  val first = items.first()
+  if (first.start.toInstant(amsterdamTimeZone) > now) {
+    // The conference has not started yet.
+    return null
+  }
+  val last = items.last()
+  if (last.end.toInstant(amsterdamTimeZone) < now) {
+    // The conference is over.
+    return null
+  }
+
+  val firstVisible = items.get(firstVisibleItemIndex)
+
+
+  val visibleStart = firstVisible.start.toInstant(amsterdamTimeZone)
+  val visibleEnd = firstVisible.end.toInstant(amsterdamTimeZone)
+  return when {
+    now < visibleStart -> {
+      NowButtonState.After
+    }
+    now in visibleStart..<visibleEnd -> {
+      NowButtonState.Current
+    }
+    else -> {
+      NowButtonState.Before
+    }
+  }
 }
+
+@OptIn(ExperimentalTime::class)
+fun now(): Instant {
+  return LocalDateTime(2025, 9, 8, 11, 0).toInstant(amsterdamTimeZone)//Clock.System.now()
+}
+
+@OptIn(ExperimentalTime::class)
+private fun computeNowIndex(
+  responseState: State<ApolloResponse<GetScheduleItemsQuery.Data>?>,
+): Int? {
+  val response = responseState.value ?: return null
+  if (response.data == null) return null
+
+
+  val ret = response.data!!.scheduleItems.indexOfFirst {
+    it.onTimeHeader != null && now() in it.start.toInstant(amsterdamTimeZone)..<it.end.toInstant(amsterdamTimeZone)
+  }
+
+  if (ret == -1) {
+    return null
+  } else {
+    return ret
+  }
+}
+
+
+val amsterdamTimeZone = TimeZone.of("Europe/Amsterdam")
 
 private val LazyListState.lastVisibleItemIndex
   get() = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1

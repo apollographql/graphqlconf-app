@@ -41,12 +41,17 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private val NowButtonShape = RoundedCornerShape(
-    topEndPercent = 50,
-    bottomEndPercent = 50,
+  topEndPercent = 50,
+  bottomEndPercent = 50,
 )
 
 enum class NowButtonState {
-    Before, Current, After,
+  /**
+   * The current time is before what is displayed in the list
+   */
+  Before,
+  Current,
+  After,
 }
 
 @Composable
@@ -56,50 +61,50 @@ fun NowButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = state != NowButtonState.Current,
 ) {
-    val active = state != NowButtonState.Current
-    val textColor = ColorValues.white100
-    val background by animateColorAsState(
-        if (active) ColorValues.primaryBase
-        else GraphqlConfTheme.colors.surface,
-        ColorSpringSpec,
+  val active = state != NowButtonState.Current
+  val textColor = ColorValues.white100
+  val background by animateColorAsState(
+    if (active) ColorValues.primaryBase
+    else GraphqlConfTheme.colors.surface,
+    ColorSpringSpec,
+  )
+
+  Row(
+    modifier = modifier
+      .clip(NowButtonShape)
+      .clickable(onClick = onClick, enabled = enabled)
+      .background(background)
+      .width(72.dp)
+      .heightIn(min = 36.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.Center,
+  ) {
+    Text(
+      text = stringResource(Res.string.now).uppercase(),
+      style = GraphqlConfTheme.typography.badge,
+      color = textColor,
     )
 
-    Row(
-        modifier = modifier
-            .clip(NowButtonShape)
-            .clickable(onClick = onClick, enabled = enabled)
-            .background(background)
-            .width(72.dp)
-            .heightIn(min = 36.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Text(
-            text = stringResource(Res.string.now).uppercase(),
-            style = GraphqlConfTheme.typography.badge,
-            color = textColor,
-        )
-
-        AnimatedContent(
-            targetState = state,
-            transitionSpec = {
-                (fadeIn() + expandHorizontally(clip = false, expandFrom = Alignment.Start)) togetherWith
-                        (fadeOut() + shrinkHorizontally(clip = false, shrinkTowards = Alignment.Start))
-            },
-            modifier = Modifier.height(16.dp)
-        ) { targetTime ->
-            if (targetTime == NowButtonState.Current) return@AnimatedContent
-            Spacer(Modifier.width(2.dp))
-            Icon(
-                painter = painterResource(Res.drawable.arrow_down),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(16.dp)
-                    .rotate(if (targetTime == NowButtonState.Before) 0f else 180f),
-                tint = textColor,
-            )
-        }
+    AnimatedContent(
+      targetState = state,
+      transitionSpec = {
+        (fadeIn() + expandHorizontally(clip = false, expandFrom = Alignment.Start)) togetherWith
+          (fadeOut() + shrinkHorizontally(clip = false, shrinkTowards = Alignment.Start))
+      },
+      modifier = Modifier.height(16.dp)
+    ) { targetState ->
+      if (targetState == NowButtonState.Current) return@AnimatedContent
+      Spacer(Modifier.width(2.dp))
+      Icon(
+        painter = painterResource(Res.drawable.arrow_down),
+        contentDescription = null,
+        modifier = Modifier
+          .size(16.dp)
+          .rotate(if (targetState == NowButtonState.Before) 0f else 180f),
+        tint = textColor,
+      )
     }
+  }
 }
 
 internal val ColorSpringSpec = spring<Color>(DampingRatioNoBouncy, StiffnessMediumLow)
@@ -107,9 +112,9 @@ internal val ColorSpringSpec = spring<Color>(DampingRatioNoBouncy, StiffnessMedi
 @Preview
 @Composable
 internal fun NowButtonPreview() {
-    PreviewHelper {
-        NowButton(NowButtonState.Before, {})
-        NowButton(NowButtonState.Current, {})
-        NowButton(NowButtonState.After, {})
-    }
+  PreviewHelper {
+    NowButton(NowButtonState.Before, {})
+    NowButton(NowButtonState.Current, {})
+    NowButton(NowButtonState.After, {})
+  }
 }
