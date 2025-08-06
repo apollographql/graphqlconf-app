@@ -31,7 +31,7 @@ struct SpeakerListCellView: View {
       Text("About")
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .padding(.all, 16)
+    .padding(.all, 12)
     .background {
       Rectangle()
         .stroke(Theme.cellStroke)

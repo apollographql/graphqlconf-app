@@ -23,12 +23,12 @@ struct SessionDetailView: View {
           VStack {
             Text(session.formattedDateTime)
               .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-              .font(.HostGrotesk.medium)
+              .font(.HostGrotesk.large)
               .foregroundStyle(Theme.primaryText)
             if let venueName = session.sessionFragment.venue {
               Text(venueName)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                .font(.HostGrotesk.medium)
+                .font(.HostGrotesk.large)
                 .foregroundStyle(Theme.primaryText)
             }
           }
@@ -45,7 +45,7 @@ struct SessionDetailView: View {
           Text(session.sessionFragment.description)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .multilineTextAlignment(.leading)
-            .font(.HostGrotesk.medium)
+            .font(.HostGrotesk.large)
             .foregroundStyle(Theme.primaryText)
         }
 

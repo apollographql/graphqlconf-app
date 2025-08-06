@@ -19,7 +19,7 @@ struct SessionListCellView: View {
         Text(session.sessionFragment.title)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
           .multilineTextAlignment(.leading)
-          .font(.HostGrotesk.large)
+          .font(.HostGrotesk.xlarge)
           .foregroundStyle(Theme.primaryText)
 
         if session.formattedEventType == nil {
@@ -32,7 +32,7 @@ struct SessionListCellView: View {
         Text(session.joinedSpeakers)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
           .multilineTextAlignment(.leading)
-          .font(.HostGrotesk.medium)
+          .font(.HostGrotesk.large)
           .foregroundStyle(Theme.primaryText)
       }
 
@@ -41,18 +41,19 @@ struct SessionListCellView: View {
         if let venueName = session.sessionFragment.venue {
           Text(venueName)
             .frame(alignment: .leading)
-            .font(.HostGrotesk.medium)
+            .multilineTextAlignment(.leading)
+            .font(.HostGrotesk.large)
             .foregroundStyle(Theme.primaryText)
         }
         Spacer()
         Text(session.formattedStartEndTime)
           .frame(alignment: .trailing)
-          .font(.HostGrotesk.medium)
+          .font(.HostGrotesk.large)
           .foregroundStyle(Theme.primaryText)
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .padding(.all, 10)
+    .padding(.all, 12)
     .background {
       Rectangle()
         .stroke(Theme.cellStroke)
