@@ -4,10 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -82,14 +84,7 @@ fun SessionScreen(id: String, onBack: () -> Unit) {
         return@ApolloWrapper
       }
       Column {
-        Row(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .background(ColorValues.primaryBase)
-            .height(IntrinsicSize.Min)
-        ) {
-          VerticalDivider(color = ColorValues.secondaryLight, thickness = 1.dp)
+        PaddingRow(Modifier.height(IntrinsicSize.Min)) {
           Column(modifier = Modifier.weight(1f).padding(horizontal = 8.dp)) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -144,26 +139,42 @@ fun SessionScreen(id: String, onBack: () -> Unit) {
                 modifier = Modifier.align(Alignment.CenterVertically),
               )
             }
-
+            Spacer(modifier = Modifier.height(16.dp))
           }
-          VerticalDivider(color = ColorValues.secondaryLight, thickness = 1.dp)
         }
         HorizontalDivider(color = ColorValues.secondaryLight, thickness = 1.dp)
-        Text(
-          text = stringResource(Res.string.session_description),
-          color = GraphqlConfTheme.colors.primaryText,
-          style = GraphqlConfTheme.typography.bodyMedium,
-        )
-        Spacer(
-          modifier = Modifier.height(16.dp)
-        )
-        Text(
-          text = session.description,
-          color = GraphqlConfTheme.colors.primaryText,
-          style = GraphqlConfTheme.typography.bodyMedium,
-          modifier = Modifier.weight(1f)
-        )
+        if (session.description.isNotEmpty()) {
+          PaddingRow(modifier = Modifier.fillMaxSize()) {
+            Text(
+              text = stringResource(Res.string.session_description),
+              color = GraphqlConfTheme.colors.primaryText,
+              style = GraphqlConfTheme.typography.bodyMedium,
+            )
+            Spacer(
+              modifier = Modifier.height(16.dp)
+            )
+            Text(
+              text = session.description,
+              color = GraphqlConfTheme.colors.primaryText,
+              style = GraphqlConfTheme.typography.bodyMedium,
+              modifier = Modifier.weight(1f)
+            )
+          }
+        }
       }
     }
+  }
+}
+
+@Composable
+private fun PaddingRow(modifier: Modifier, content: @Composable () -> Unit) {
+  Row(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(horizontal = 16.dp)
+  ) {
+    VerticalDivider(color = ColorValues.secondaryLight, thickness = 1.dp)
+    content()
+    VerticalDivider(color = ColorValues.secondaryLight, thickness = 1.dp)
   }
 }
