@@ -25,6 +25,7 @@ import graphqlconf.design.component.NowButtonState
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.nav_destination_schedule
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
@@ -129,7 +130,7 @@ private fun computeNowButtonState(
 
 @OptIn(ExperimentalTime::class)
 fun now(): Instant {
-  return Clock.System.now()
+  return LocalDateTime(2025,9,8,11,0).toInstant(amsterdamTimeZone)//Clock.System.now()
 }
 
 @OptIn(ExperimentalTime::class)
@@ -138,7 +139,6 @@ private fun computeNowIndex(
 ): Int? {
   val response = responseState.value ?: return null
   if (response.data == null) return null
-
 
   val ret = response.data!!.scheduleItems.indexOfFirst {
     it.onTimeHeader != null && now() in it.start.toInstant(amsterdamTimeZone)..<it.end.toInstant(amsterdamTimeZone)

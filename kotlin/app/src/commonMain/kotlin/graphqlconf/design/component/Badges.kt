@@ -22,6 +22,7 @@ fun Badges(eventTypes: List<String>, modifier: Modifier = Modifier) {
           text =  eventType.uppercase(),
           color = GraphqlConfTheme.colors.primaryText,
           style = GraphqlConfTheme.typography.badge,
+          maxLines = 1,
           modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
         )
         Spacer(modifier = Modifier.padding(horizontal = 4.dp))
