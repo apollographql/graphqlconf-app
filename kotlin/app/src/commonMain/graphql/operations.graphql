@@ -22,5 +22,10 @@ query GetSpeakers {
     name
     position
     url
+    years
+    sessions {
+      event_type
+      event_subtype
+    }
   }
 }

@@ -25,6 +25,7 @@ apollo-kotlin-execution-ktor = { module = "com.apollographql.execution:apollo-ex
 apollo-kotlin-execution-runtime = { module = "com.apollographql.execution:apollo-execution-runtime" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 compat-patrouille = { module = "com.gradleup.compat.patrouille:com.gradleup.compat.patrouille.gradle.plugin", version.ref = "compat-patrouille" }
 components-ui-tooling-preview = { module = "org.jetbrains.compose.components:components-ui-tooling-preview", version.ref = "compose" }
 compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kgp" }

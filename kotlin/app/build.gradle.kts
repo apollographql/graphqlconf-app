@@ -53,6 +53,7 @@ kotlin {
       implementation(compose.desktop.currentOs)
       implementation(compose.desktop.common)
       implementation(libs.ktor.client.okhttp)
+      implementation(libs.coil.network.okhttp)
 
       implementation(libs.kotlinx.coroutines.swing)
     }

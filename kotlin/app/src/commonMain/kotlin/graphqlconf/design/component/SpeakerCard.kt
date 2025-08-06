@@ -2,6 +2,7 @@ package graphqlconf.design.component
 
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
@@ -18,11 +21,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -35,6 +41,12 @@ import coil3.request.crossfade
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
+import graphqlconf_app.app.generated.resources.Res
+import graphqlconf_app.app.generated.resources.speaker_photo
+import graphqlconf_app.app.generated.resources.user
+import graphqlconf_app.app.generated.resources.users
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -44,6 +56,7 @@ fun SpeakerCard(
   company: String,
   about: String,
   avatar: String,
+  eventTypes: List<String>,
   index: Int,
   onClick: () -> Unit,
 ) {
@@ -55,15 +68,17 @@ fun SpeakerCard(
       .border(width = 1.dp, color = borderColor)
       .clickable(onClick = onClick)
       .fillMaxWidth()
+      .fillMaxHeight()
       .background(GraphqlConfTheme.colors.surface)
       .padding(16.dp)
   ) {
     SpeakerAvatar(
-      avatar,
-      modifier = Modifier.width(92.dp),
-      index,
+      avatar = avatar,
+      modifier = Modifier.size(92.dp),
+      eventTypes = eventTypes,
+      index = index,
     )
-    Spacer(modifier = Modifier.width(8.dp))
+    Spacer(modifier = Modifier.width(16.dp))
     Column(modifier = Modifier.fillMaxSize()) {
       Text(
         text = name,
@@ -71,17 +86,19 @@ fun SpeakerCard(
         color = textColor
       )
       Text(
-        text = "$position, $company",
+        text = listOf(position, company).joinToString(", "),
         style = GraphqlConfTheme.typography.bodySmall,
         color = textColor
       )
-      Spacer(Modifier.weight(1f))
+      Badges(eventTypes = eventTypes, modifier = Modifier.padding(vertical = 8.dp))
       Text(
         text = about,
         style = GraphqlConfTheme.typography.bodySmall,
         color = textColor,
-        maxLines = 2,
         overflow = TextOverflow.Ellipsis,
+        minLines = 3,
+        maxLines = 3,
+        modifier = Modifier.fillMaxWidth()
       )
     }
   }
@@ -91,75 +108,79 @@ fun SpeakerCard(
 fun SpeakerAvatar(
   avatar: String,
   modifier: Modifier = Modifier,
+  eventTypes: List<String>,
   index: Int
 ) {
   Box(modifier = modifier.aspectRatio(1f)) {
-    SubcomposeAsyncImage(
-      model = avatar.fixIfNeeded(),
-      contentDescription = null
+    val loaded = remember {  mutableStateOf(false) }
+    val colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.1f) })
+    AsyncImage(
+      model = avatar,
+      contentDescription = stringResource(Res.string.speaker_photo),
+      contentScale = ContentScale.Crop,
+      onSuccess = { loaded.value = true },
+      colorFilter = colorFilter
+    )
+    if (!loaded.value) {
+      Image(
+        painter = painterResource(Res.drawable.user),
+        contentDescription = stringResource(Res.string.speaker_photo),
+        modifier = Modifier.background(ColorValues.white70).fillMaxSize(),
+        contentScale = ContentScale.Crop,
+        colorFilter = colorFilter,
+        alpha = 0.4f
+      )
+    }
+    Canvas(modifier = Modifier.fillMaxSize()) {
+      drawRect(color = ColorValues.secondaryLighter.copy(alpha = 1f), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.Multiply)
+    }
+    Canvas(
+      modifier = Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+        .clipToBounds()
     ) {
-      val state by painter.state.collectAsState()
-      if (state is AsyncImagePainter.State.Success) {
-        SubcomposeAsyncImageContent()
-        Canvas(modifier = Modifier.fillMaxSize()) {
-          drawRect(color = ColorValues.secondaryLighter.copy(alpha = 0.5f), topLeft = Offset(0f, 0f), size = size)
+      var i = 0f
+      while (i < size.width) {
+        drawRect(
+          color = Color(0xffc3f655),
+          topLeft = Offset(i, 0f),
+          size = Size(12.dp.value, size.height)
+        )
+        i += 2 * 12.dp.value
+      }
+      when (index % 2) {
+        0 -> {
+          val i = (index / 2)
+          val x = (i % 2)
+          val y = (i + 1) % 2
+          drawRect(
+            brush = Brush.radialGradient(
+              colors = listOf(Color.White, Color.Transparent),
+              center = Offset(x * size.width, y * size.height),
+              radius = size.width / 2,
+              tileMode = TileMode.Clamp
+            ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
+          )
         }
-        Canvas(
-          modifier = Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-            .clipToBounds()
-        ) {
-          var i = 0f
-          while (i < size.width) {
-            drawRect(
-              color = Color(0xffc3f655),
-              topLeft = Offset(i, 0f),
-              size = Size(12.dp.value, size.height)
-            )
-            i += 2 * 12.dp.value
-          }
-          when (index % 2) {
-            0 -> {
-              val i = (index / 2)
-              val x = (i % 2)
-              val y = (i + 1) % 2
-              drawRect(
-                brush = Brush.radialGradient(
-                  colors = listOf(Color.White, Color.Transparent),
-                  center = Offset(x * size.width, y * size.height),
-                  radius = size.width / 2,
-                  tileMode = TileMode.Clamp
-                ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
-              )
-            }
 
-            1 -> {
-              val i = (index / 2)
-              val x = (i % 2)
-              val y = (i + 1) % 2
+        1 -> {
+          val i = (index / 2)
+          val x = (i % 2)
+          val y = (i + 1) % 2
 
-              drawRect(
-                brush = Brush.linearGradient(
-                  colors = listOf(Color.White, Color.Transparent),
-                  start = Offset(x * size.width, y * size.height),
-                  end = Offset(size.width/2, size.height/2),
-                  tileMode = TileMode.Clamp
-                ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
-              )
-            }
-          }
+          drawRect(
+            brush = Brush.linearGradient(
+              colors = listOf(Color.White, Color.Transparent),
+              start = Offset(x * size.width, y * size.height),
+              end = Offset(size.width/2, size.height/2),
+              tileMode = TileMode.Clamp
+            ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
+          )
         }
       }
     }
   }
 }
 
-private fun String.fixIfNeeded(): String {
-  return if (startsWith("//")) {
-    "http:$this"
-  } else {
-    this
-  }
-}
 
 @Preview
 @Composable
@@ -172,6 +193,7 @@ fun SpeakerCardPreview() {
       about = "Anthony Miller leads the development of Apollo GraphQL’s iOS client library. He has a passion for client-side infrastructure, quality API design, and writing far too many unit tests. Outside of Apollo, Anthony enjoys board gaming with friends, watching movies, and relaxing by the pool.",
       avatar = "https://avatars.sched.co/5/01/21066803/avatar.jpg.320x320px.jpg?46c",
       index = 1,
+      eventTypes = listOf("keynote sessions", "unconference"),
       onClick = { }
     )
   }

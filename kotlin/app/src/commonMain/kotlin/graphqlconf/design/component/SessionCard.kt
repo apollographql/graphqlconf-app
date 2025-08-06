@@ -43,18 +43,7 @@ fun SessionCard(
       .background(backgroundColor)
   ) {
     Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)) {
-      if (eventType != null ) {
-        val color = eventColor(eventType)
-        if (color != null) {
-          Text(
-            text =  eventType.uppercase(),
-            color = textColor,
-            style = GraphqlConfTheme.typography.badge,
-            modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
-          )
-          Spacer(modifier = Modifier.height(8.dp))
-        }
-      }
+      Badges(eventTypes = listOfNotNull(eventType), modifier = Modifier.padding(bottom = 8.dp))
       Text(
         text = title,
         style = GraphqlConfTheme.typography.bodyLarge,

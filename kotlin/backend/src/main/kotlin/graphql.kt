@@ -11,6 +11,8 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.serialization.ExperimentalSerializationApi
+import model.JsonSession
+import model.JsonSpeaker
 import model.allSessions
 import model.allSpeakers
 
@@ -48,34 +50,15 @@ object LocalDateTimeCoercing : Coercing<LocalDateTime> {
 class Query {
   fun sessions(): List<Session> {
     return allSessions.map {
-      Session(
-        id = it.id,
-        title = it.name,
-        description = it.description,
-        start = dateFormat.parse(it.event_start),
-        end = dateFormat.parse(it.event_end),
-        event_type = it.event_type,
-        venue = it.venue,
-        speakerUsernames = it.speakers.map { it.username },
-        event_subtype = it.event_subtype,
-      )
+      it.toGraphQLSession()
     }
   }
 
   fun speakers(): List<Speaker> {
-    return allSpeakers.map {
-      Speaker(
-        username = it.username,
-        company = it.company,
-        position = it.position,
-        name = it.name,
-        about = it.about,
-        location = it.location,
-        url = it.url,
-        avatar = it.avatar,
-        years = it.years
-      )
-    }
+    val speakersWithSessions = allSessions.flatMap { it.speakers }.map { it.username }.distinct().toSet()
+    return allSpeakers.filter { speakersWithSessions.contains(it.username) }.map {
+      it.toGraphQLSpeaker()
+    }.sortedBy { it.name }
   }
 
   val timezone = "Europe/Amsterdam"
@@ -97,19 +80,23 @@ class Session(
       return allSpeakers.filter {
         it.username in speakerUsernames
       }.map {
-        Speaker(
-          username = it.username,
-          company = it.company,
-          position = it.position,
-          name = it.name,
-          about = it.about,
-          location = it.location,
-          url = it.url,
-          avatar = it.avatar,
-          years = it.years
-        )
+        it.toGraphQLSpeaker()
       }
     }
+}
+
+private fun JsonSpeaker.toGraphQLSpeaker(): Speaker {
+  return Speaker(
+    username = username,
+    company = company,
+    position = position,
+    name = name,
+    about = about,
+    location = location,
+    url = url,
+    avatar = avatar,
+    years = years
+  )
 }
 
 class Speaker(
@@ -120,7 +107,39 @@ class Speaker(
   val about: String,
   val location: String,
   val url: String,
-  val avatar: String,
-  val years: List<Int>
-)
+  avatar: String,
+  val years: List<Int>,
+) {
+  val avatar = avatar.fixIfNeeded()
+
+  fun sessions(): List<Session> {
+    return allSessions.filter {
+      it.speakers.any { it.username == username }
+    }.map {
+      it.toGraphQLSession()
+    }
+  }
+
+  private fun String.fixIfNeeded(): String {
+    return if (startsWith("//")) {
+      "http:$this"
+    } else {
+      this
+    }
+  }
+}
+
+private fun JsonSession.toGraphQLSession(): Session {
+  return Session(
+    id = id,
+    title = name,
+    description = description,
+    start = dateFormat.parse(event_start),
+    end = dateFormat.parse(event_end),
+    event_type = event_type,
+    event_subtype = event_subtype,
+    venue = venue,
+    speakerUsernames = speakers.map { it.username },
+  )
+}
 
