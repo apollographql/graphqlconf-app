@@ -6,7 +6,7 @@ import ApolloAPI
 public extension Objects {
   static let Session = ApolloAPI.Object(
     typename: "Session",
-    implementedInterfaces: [],
+    implementedInterfaces: [Interfaces.ScheduleItem.self],
     keyFields: ["id"]
   )
 }

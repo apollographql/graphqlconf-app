@@ -62,7 +62,7 @@ class ScheduleViewModel: ObservableObject {
                 venue: "MacBook Pro",
                 speakers: [
                   SessionFragment.Speaker(
-                    username: "calvincestari",
+                    id: "calvincestari",
                     name: "Calvin Cestari",
                     company: "Apollo",
                     position: "Software Engineer",

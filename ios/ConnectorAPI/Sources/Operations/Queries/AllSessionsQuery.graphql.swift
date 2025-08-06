@@ -51,12 +51,13 @@ public struct AllSessionsQuery: GraphQLQuery {
         .fragment(SessionFragment.self),
       ] }
 
-      public var id: String { __data["id"] }
+      public var id: ConnectorAPI.ID { __data["id"] }
       public var title: String { __data["title"] }
       public var description: String { __data["description"] }
       public var start: ConnectorAPI.LocalDateTime { __data["start"] }
       public var end: ConnectorAPI.LocalDateTime { __data["end"] }
       public var event_type: String { __data["event_type"] }
+      @available(*, deprecated, message: "Use room instead")
       public var venue: String? { __data["venue"] }
       public var speakers: [Speaker] { __data["speakers"] }
 
@@ -68,7 +69,7 @@ public struct AllSessionsQuery: GraphQLQuery {
       }
 
       public init(
-        id: String,
+        id: ConnectorAPI.ID,
         title: String,
         description: String,
         start: ConnectorAPI.LocalDateTime,

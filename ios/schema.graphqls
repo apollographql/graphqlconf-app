@@ -2,35 +2,79 @@ directive @defer(label: String, if: Boolean! = true) on FRAGMENT_SPREAD | INLINE
 
 scalar LocalDateTime
 
+type DayHeader implements ScheduleItem {
+  start: LocalDateTime!
+  end: LocalDateTime!
+  title: String!
+}
+
 type Query {
   sessions: [Session!]!
+
+  """null if the session doesn't exist."""
+  session(id: ID!): Session
+
+  """
+  Returns a list of ScheduleItems to be displayed in the UI.
+
+  ScheduleItems introduce day headers as well as time headers.
+  They also make sure the sessions are sorted by start time/room and group them by time slot.
+
+  A time slot is a manually configured time range. It usually corresponds to a 30-minute slot where 3 sessions can happen in parallel.
+  Because some sessions are shorter, several of them may fit into a single time slot.
+
+  ScheduleItems also filter out some
+  """
+  scheduleItems: [ScheduleItem!]!
   speakers: [Speaker!]!
+
+  """null if the speaker doesn't exist."""
+  speaker(id: ID!): Speaker
   timezone: String!
 }
 
-type Session {
+type Room {
+  name: String!
+  rank: Int!
+  floor: Int!
+}
+
+type Session implements ScheduleItem {
   title: String!
   description: String!
   start: LocalDateTime!
   end: LocalDateTime!
   event_type: String!
   event_subtype: String!
-  venue: String
-  id: String!
+  venue: String @deprecated(reason: "Use room instead")
+  id: ID!
   speakers: [Speaker!]!
+  room: Room
 }
 
 type Speaker {
-  username: String!
+  username: String! @deprecated(reason: "Use id instead")
   company: String!
   position: String!
   name: String!
   about: String!
   location: String!
   url: String!
-  avatar: String!
   years: [Int!]!
+  id: ID!
+  avatar: String!
+  sessions: [Session!]!
+}
+
+type TimeHeader implements ScheduleItem {
+  start: LocalDateTime!
+  end: LocalDateTime!
+}
+
+interface ScheduleItem {
+  start: LocalDateTime!
+  end: LocalDateTime!
 }
 
 extend type Session @typePolicy(keyFields: "id")
-extend type Speaker @typePolicy(keyFields: "username")
+extend type Speaker @typePolicy(keyFields: "id")

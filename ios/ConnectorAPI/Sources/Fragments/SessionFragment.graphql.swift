@@ -5,7 +5,7 @@
 
 public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable {
   public static var fragmentDefinition: StaticString {
-    #"fragment SessionFragment on Session { __typename id title description start end event_type venue speakers { __typename username name company position avatar } }"#
+    #"fragment SessionFragment on Session { __typename id title description start end event_type venue speakers { __typename id name company position avatar } }"#
   }
 
   public let __data: DataDict
@@ -14,7 +14,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
   public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Session }
   public static var __selections: [ApolloAPI.Selection] { [
     .field("__typename", String.self),
-    .field("id", String.self),
+    .field("id", ConnectorAPI.ID.self),
     .field("title", String.self),
     .field("description", String.self),
     .field("start", ConnectorAPI.LocalDateTime.self),
@@ -24,17 +24,18 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     .field("speakers", [Speaker].self),
   ] }
 
-  public var id: String { __data["id"] }
+  public var id: ConnectorAPI.ID { __data["id"] }
   public var title: String { __data["title"] }
   public var description: String { __data["description"] }
   public var start: ConnectorAPI.LocalDateTime { __data["start"] }
   public var end: ConnectorAPI.LocalDateTime { __data["end"] }
   public var event_type: String { __data["event_type"] }
+  @available(*, deprecated, message: "Use room instead")
   public var venue: String? { __data["venue"] }
   public var speakers: [Speaker] { __data["speakers"] }
 
   public init(
-    id: String,
+    id: ConnectorAPI.ID,
     title: String,
     description: String,
     start: ConnectorAPI.LocalDateTime,
@@ -64,28 +65,28 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
   /// Speaker
   ///
   /// Parent Type: `Speaker`
-  public struct Speaker: ConnectorAPI.SelectionSet {
+  public struct Speaker: ConnectorAPI.SelectionSet, Identifiable {
     public let __data: DataDict
     public init(_dataDict: DataDict) { __data = _dataDict }
 
     public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Speaker }
     public static var __selections: [ApolloAPI.Selection] { [
       .field("__typename", String.self),
-      .field("username", String.self),
+      .field("id", ConnectorAPI.ID.self),
       .field("name", String.self),
       .field("company", String.self),
       .field("position", String.self),
       .field("avatar", String.self),
     ] }
 
-    public var username: String { __data["username"] }
+    public var id: ConnectorAPI.ID { __data["id"] }
     public var name: String { __data["name"] }
     public var company: String { __data["company"] }
     public var position: String { __data["position"] }
     public var avatar: String { __data["avatar"] }
 
     public init(
-      username: String,
+      id: ConnectorAPI.ID,
       name: String,
       company: String,
       position: String,
@@ -94,7 +95,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
       self.init(_dataDict: DataDict(
         data: [
           "__typename": ConnectorAPI.Objects.Speaker.typename,
-          "username": username,
+          "id": id,
           "name": name,
           "company": company,
           "position": position,

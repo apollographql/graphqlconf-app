@@ -7,6 +7,6 @@ public extension Objects {
   static let Speaker = ApolloAPI.Object(
     typename: "Speaker",
     implementedInterfaces: [],
-    keyFields: ["username"]
+    keyFields: ["id"]
   )
 }

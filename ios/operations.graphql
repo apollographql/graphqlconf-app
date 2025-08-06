@@ -15,7 +15,7 @@ fragment SessionFragment on Session {
   event_type
   venue
   speakers {
-    username
+    id
     name
     company
     position
@@ -32,7 +32,7 @@ query AllSpeakers {
 }
 
 fragment SpeakerFragment on Speaker {
-  username
+  id
   name
   about
   company

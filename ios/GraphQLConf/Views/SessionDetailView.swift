@@ -56,7 +56,7 @@ struct SessionDetailView: View {
             .font(.HostGrotesk.h3)
             .foregroundStyle(Theme.primaryText)
           LazyVStack(spacing: 0) {
-            ForEach(session.sessionFragment.speakers, id: \.username) { speaker in
+            ForEach(session.sessionFragment.speakers, id: \.id) { speaker in
               SessionDetailSpeakerCellView(speaker: speaker)
             }
           }

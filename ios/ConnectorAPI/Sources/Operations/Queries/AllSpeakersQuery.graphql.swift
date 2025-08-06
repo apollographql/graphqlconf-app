@@ -41,7 +41,7 @@ public struct AllSpeakersQuery: GraphQLQuery {
     /// Speaker
     ///
     /// Parent Type: `Speaker`
-    public struct Speaker: ConnectorAPI.SelectionSet {
+    public struct Speaker: ConnectorAPI.SelectionSet, Identifiable {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
@@ -51,7 +51,7 @@ public struct AllSpeakersQuery: GraphQLQuery {
         .fragment(SpeakerFragment.self),
       ] }
 
-      public var username: String { __data["username"] }
+      public var id: ConnectorAPI.ID { __data["id"] }
       public var name: String { __data["name"] }
       public var about: String { __data["about"] }
       public var company: String { __data["company"] }
@@ -67,7 +67,7 @@ public struct AllSpeakersQuery: GraphQLQuery {
       }
 
       public init(
-        username: String,
+        id: ConnectorAPI.ID,
         name: String,
         about: String,
         company: String,
@@ -78,7 +78,7 @@ public struct AllSpeakersQuery: GraphQLQuery {
         self.init(_dataDict: DataDict(
           data: [
             "__typename": ConnectorAPI.Objects.Speaker.typename,
-            "username": username,
+            "id": id,
             "name": name,
             "about": about,
             "company": company,

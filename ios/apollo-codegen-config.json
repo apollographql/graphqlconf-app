@@ -29,6 +29,7 @@
     "selectionSetInitializers" : {
       "operations": true,
       "namedFragments" : true
-    }
+    },
+    "reduceGeneratedSchemaTypes": true
   }
 }

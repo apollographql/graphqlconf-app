@@ -3,9 +3,9 @@
 
 @_exported import ApolloAPI
 
-public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment {
+public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable {
   public static var fragmentDefinition: StaticString {
-    #"fragment SpeakerFragment on Speaker { __typename username name about company position avatar years }"#
+    #"fragment SpeakerFragment on Speaker { __typename id name about company position avatar years }"#
   }
 
   public let __data: DataDict
@@ -14,7 +14,7 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment {
   public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Speaker }
   public static var __selections: [ApolloAPI.Selection] { [
     .field("__typename", String.self),
-    .field("username", String.self),
+    .field("id", ConnectorAPI.ID.self),
     .field("name", String.self),
     .field("about", String.self),
     .field("company", String.self),
@@ -23,7 +23,7 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment {
     .field("years", [Int].self),
   ] }
 
-  public var username: String { __data["username"] }
+  public var id: ConnectorAPI.ID { __data["id"] }
   public var name: String { __data["name"] }
   public var about: String { __data["about"] }
   public var company: String { __data["company"] }
@@ -32,7 +32,7 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment {
   public var years: [Int] { __data["years"] }
 
   public init(
-    username: String,
+    id: ConnectorAPI.ID,
     name: String,
     about: String,
     company: String,
@@ -43,7 +43,7 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment {
     self.init(_dataDict: DataDict(
       data: [
         "__typename": ConnectorAPI.Objects.Speaker.typename,
-        "username": username,
+        "id": id,
         "name": name,
         "about": about,
         "company": company,
