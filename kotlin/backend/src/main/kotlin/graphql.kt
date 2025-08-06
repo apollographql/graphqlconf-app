@@ -4,6 +4,7 @@ import com.apollographql.apollo.ast.GQLStringValue
 import com.apollographql.apollo.ast.GQLValue
 import com.apollographql.apollo.execution.Coercing
 import com.apollographql.apollo.execution.ExternalValue
+import com.apollographql.apollo.execution.StringCoercing
 import com.apollographql.execution.annotation.GraphQLName
 import com.apollographql.execution.annotation.GraphQLQuery
 import com.apollographql.execution.annotation.GraphQLScalar
@@ -17,6 +18,9 @@ import model.JsonSession
 import model.JsonSpeaker
 import model.allSessions
 import model.allSpeakers
+
+@GraphQLScalar(StringCoercing::class)
+typealias ID = String
 
 @GraphQLScalar(LocalDateTimeCoercing::class)
 @GraphQLName("LocalDateTime")
@@ -99,6 +103,13 @@ class Query {
   }
 
   /**
+   * null if the session doesn't exist.
+   */
+  fun session(id: ID): Session? {
+    return allSessions.find { it.id == id }?.toGraphQLSession()
+  }
+
+  /**
    * Returns a list of ScheduleItems to be displayed in the UI.
    *
    * ScheduleItems introduce day headers as well as time headers.
@@ -120,6 +131,13 @@ class Query {
     }.sortedBy { it.name }
   }
 
+  /**
+   * null if the speaker doesn't exist.
+   */
+  fun speaker(id: ID): Speaker? {
+    return allSpeakers.find { it.username == id }?.toGraphQLSpeaker()
+  }
+
   val timezone = "Europe/Amsterdam"
 }
 
@@ -132,7 +150,7 @@ class Session(
   val event_subtype: String,
   @Deprecated("Use room instead")
   val venue: String?,
-  val id: String,
+  val id: ID,
   private val speakerUsernames: List<String>
 ) : ScheduleItem {
   val speakers: List<Speaker>
@@ -162,7 +180,9 @@ private fun JsonSpeaker.toGraphQLSpeaker(): Speaker {
   )
 }
 
+@Suppress("DEPRECATION")
 class Speaker(
+  @Deprecated("Use id instead")
   val username: String,
   val company: String,
   val position: String,
@@ -173,6 +193,7 @@ class Speaker(
   avatar: String,
   val years: List<Int>,
 ) {
+  val id: ID = username
   val avatar = avatar.fixIfNeeded()
 
   fun sessions(): List<Session> {

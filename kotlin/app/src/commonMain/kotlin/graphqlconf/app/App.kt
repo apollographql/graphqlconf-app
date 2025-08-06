@@ -7,8 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import graphqlconf.app.navigation.MainScreen
-import graphqlconf.design.catalog.Gallery
+import graphqlconf.app.navigation.SessionScreen
+import graphqlconf.app.navigation.SpeakerScreen
+import graphqlconf.app.screen.MainScreen
+import graphqlconf.app.screen.SessionScreen
+import graphqlconf.app.screen.SpeakerScreen
 import graphqlconf.design.theme.GraphqlConfTheme
 
 @Composable
@@ -24,7 +29,13 @@ fun App(isDarkTheme: Boolean = true) {
         startDestination = MainScreen,
       ) {
         composable<MainScreen> {
-          graphqlconf.app.screen.MainScreen()
+          MainScreen(navController)
+        }
+        composable<SessionScreen> {
+          SessionScreen(it.toRoute<SessionScreen>().id, onBack = navController::popBackStack)
+        }
+        composable<SpeakerScreen> {
+          SpeakerScreen(it.toRoute<SpeakerScreen>().id, onBack = navController::popBackStack)
         }
       }
     }

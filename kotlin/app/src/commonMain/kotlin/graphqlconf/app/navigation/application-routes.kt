@@ -4,3 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data object MainScreen
+
+@Serializable
+data class SessionScreen(val id: String)
+
+@Serializable
+data class SpeakerScreen(val id: String)

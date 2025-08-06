@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -17,37 +16,30 @@ import graphqlconf.app.apolloClient
 import graphqlconf.design.component.SpeakerCard
 
 @Composable
-fun SpeakerList() {
+fun SpeakerList(onSpeaker: (String) -> Unit) {
   val listState = rememberLazyListState()
   val state = remember {
     apolloClient.query(GetSpeakersQuery()).toFlow()
   }.collectAsStateWithLifecycle(null)
 
-  val response = state.value
-  when  {
-    response == null -> {
-      Loading()
-    }
-    response.data == null -> {
-      GeneralError(null)
-    }
-    else -> {
-      LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
-        this.itemsIndexed(response.data!!.speakers) { index, it ->
-          Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            SpeakerCard(
-              name = it.name,
-              position = it.position,
-              company = it.company,
-              about = it.about,
-              avatar = it.avatar,
-              eventTypes = it.sessions.map { it.event_subtype },
-              index = index,
-              onClick = {}
-            )
-          }
+  ApolloWrapper(state.value) {
+    LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
+      this.itemsIndexed(it.speakers) { index, it ->
+        val it = it.speakerSummary
+        Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+          SpeakerCard(
+            name = it.name,
+            position = it.position,
+            company = it.company,
+            about = it.about,
+            avatar = it.avatar,
+            eventTypes = it.sessions.map { it.event_subtype },
+            index = index,
+            onClick = { onSpeaker(it.id) }
+          )
         }
       }
     }
   }
+
 }

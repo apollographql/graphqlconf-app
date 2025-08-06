@@ -2,7 +2,10 @@
   <string name="oh_no">Oh no, something went wrong</string>
   <string name="nav_destination_schedule">Schedule</string>
   <string name="nav_destination_speakers">Speakers</string>
+  <string name="nav_destination_session">Session</string>
+  <string name="nav_destination_speaker">Speaker</string>
   <string name="nav_destination_info">Info</string>
   <string name="now">Now</string>
+  <string name="back">Back</string>
   <string name="speaker_photo">Speaker photo</string>
 </resources>

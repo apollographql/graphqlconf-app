@@ -29,6 +29,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import graphqlconf.app.navigation.InfoScreen
 import graphqlconf.app.navigation.ScheduleScreen
+import graphqlconf.app.navigation.SessionScreen
+import graphqlconf.app.navigation.SpeakerScreen
 import graphqlconf.app.navigation.SpeakersScreen
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.app.generated.resources.Res
@@ -47,7 +49,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.reflect.KClass
 
 @Composable
-fun MainScreen() {
+fun MainScreen(rootNavController: NavHostController) {
   val nestedNavController = rememberNavController()
   Column {
     NavHost(
@@ -60,10 +62,14 @@ fun MainScreen() {
       popExitTransition = { ExitTransition.None },
     ) {
       composable<ScheduleScreen> {
-        ScheduleScreen()
+        ScheduleScreen(
+          onSession = { rootNavController.navigate(SessionScreen(it)) }
+        )
       }
       composable<SpeakersScreen> {
-        SpeakersScreen()
+        SpeakersScreen(
+          onSpeaker = { rootNavController.navigate(SpeakerScreen(it)) }
+        )
       }
       composable<InfoScreen> {
         InfoScreen()

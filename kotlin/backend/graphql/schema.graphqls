@@ -16,6 +16,11 @@ type Query {
   sessions: [Session!]!
 
   """
+   null if the session doesn't exist.
+  """
+  session(id: ID!): Session
+
+  """
    Returns a list of ScheduleItems to be displayed in the UI.
 
    ScheduleItems introduce day headers as well as time headers.
@@ -29,6 +34,11 @@ type Query {
   scheduleItems: [ScheduleItem!]!
 
   speakers: [Speaker!]!
+
+  """
+   null if the speaker doesn't exist.
+  """
+  speaker(id: ID!): Speaker
 
   timezone: String!
 }
@@ -56,7 +66,7 @@ type Session implements ScheduleItem {
 
   venue: String @deprecated(reason: "Use room instead")
 
-  id: String!
+  id: ID!
 
   speakers: [Speaker!]!
 
@@ -64,7 +74,7 @@ type Session implements ScheduleItem {
 }
 
 type Speaker {
-  username: String!
+  username: String! @deprecated(reason: "Use id instead")
 
   company: String!
 
@@ -79,6 +89,8 @@ type Speaker {
   url: String!
 
   years: [Int!]!
+
+  id: ID!
 
   avatar: String!
 

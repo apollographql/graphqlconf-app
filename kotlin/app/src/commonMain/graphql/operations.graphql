@@ -26,17 +26,37 @@ query GetScheduleItems {
 
 query GetSpeakers {
   speakers {
-    username
-    avatar
-    about
-    company
-    name
-    position
-    url
-    years
-    sessions {
-      event_type
-      event_subtype
+    ...speakerSummary
+  }
+}
+
+fragment speakerSummary on Speaker {
+  id
+  avatar
+  about
+  company
+  name
+  position
+  url
+  years
+  sessions {
+    event_type
+    event_subtype
+  }
+}
+query GetSession($id: ID!) {
+  session(id: $id) {
+    id
+    title
+    start
+    end
+    event_type
+    room {
+      name
+    }
+    description
+    speakers {
+      ...speakerSummary
     }
   }
 }

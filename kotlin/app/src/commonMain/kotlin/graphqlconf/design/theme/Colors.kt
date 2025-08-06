@@ -12,6 +12,7 @@ class Colors(
   val background: Color,
   val surface: Color,
   val primaryText: Color,
+  val primaryTextInverted: Color,
   val strokeHalf: Color,
 )
 
@@ -19,6 +20,7 @@ val GraphqlConfLightColors = Colors(
   background = neutral100,
   surface = white100,
   primaryText = black100,
+  primaryTextInverted = white100,
   strokeHalf = black50,
 )
 
@@ -26,5 +28,6 @@ val GraphqlConfDarkColors = Colors(
   background = neutral900,
   surface = black100,
   primaryText = white100,
+  primaryTextInverted = black100,
   strokeHalf = white50,
 )
