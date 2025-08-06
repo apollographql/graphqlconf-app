@@ -2,8 +2,8 @@ import Foundation
 
 extension DateFormatter {
 
-  fileprivate static var sharedTimezone: TimeZone { TimeZone(identifier: "Europe/Amsterdam")! }
-  fileprivate static var sharedLocale: Locale { Locale(identifier: "en_US") }
+  static var sharedTimezone: TimeZone { TimeZone(identifier: "Europe/Amsterdam")! }
+  static var sharedLocale: Locale { Locale(identifier: "en_US") }
 
   static let sharedDateReader: DateFormatter = {
     let formatter = DateFormatter()

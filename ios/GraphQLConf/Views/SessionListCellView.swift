@@ -7,15 +7,26 @@ struct SessionListCellView: View {
 
   var body: some View {
     VStack {
-      if let eventType = session.formattedEventType {
-        EventTypeView(eventType: eventType)
+      HStack {
+        if let eventType = session.formattedEventType {
+          EventTypeView(eventType: eventType)
+          Spacer()
+          BookmarkNotificationView(session: session)
+        }
       }
 
-      Text(session.sessionFragment.title)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .multilineTextAlignment(.leading)
-        .font(.HostGrotesk.large)
-        .foregroundStyle(Theme.primaryText)
+      HStack {
+        Text(session.sessionFragment.title)
+          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+          .multilineTextAlignment(.leading)
+          .font(.HostGrotesk.large)
+          .foregroundStyle(Theme.primaryText)
+
+        if session.formattedEventType == nil {
+          Spacer()
+          BookmarkNotificationView(session: session)
+        }
+      }
 
       if !session.sessionFragment.speakers.isEmpty {
         Text(session.joinedSpeakers)

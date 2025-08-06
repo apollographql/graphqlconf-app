@@ -43,6 +43,41 @@ class ScheduleViewModel: ObservableObject {
         for section in sortedSections {
           sortedSchedule.append(section.value.sorted { $0.startDate < $1.startDate })
         }
+
+#if DEBUG
+        let date: Date = .now
+        let startDate: Date = Calendar.current.date(byAdding: .minute, value: 12, to: date)!
+        let endDate: Date = Calendar.current.date(byAdding: .minute, value: 22, to: date)!
+
+        sortedSchedule.insert(
+          contentsOf: [[
+            AugmentedSessionFragment(
+              sessionFragment: SessionFragment(
+                id: UUID().uuidString,
+                title: "Debug Event",
+                description: "A fake event added to test bookmark notification.",
+                start: DateFormatter.sharedDateReader.string(from: startDate),
+                end: DateFormatter.sharedDateReader.string(from: endDate),
+                event_type: "Debug",
+                venue: "MacBook Pro",
+                speakers: [
+                  SessionFragment.Speaker(
+                    username: "calvincestari",
+                    name: "Calvin Cestari",
+                    company: "Apollo",
+                    position: "Software Engineer",
+                    avatar: ""
+                  )
+                ]
+              ),
+              startDate: startDate,
+              endDate: endDate,
+            )
+          ]],
+          at: 0
+        )
+#endif
+
         let sendableSchedule = sortedSchedule
 
         await MainActor.run {

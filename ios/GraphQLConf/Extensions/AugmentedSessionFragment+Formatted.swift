@@ -28,7 +28,7 @@ extension AugmentedSessionFragment {
     return DateFormatter.sharedDateWriter.string(from: self.startDate)
   }
 
-  /// Event start formatted as `<start time> - <end time>`
+  /// Event time formatted as `<start time> - <end time>`
   var formattedStartEndTime: String {
     DateFormatter.sharedDateWriter.dateFormat = "h:mm a"
 
@@ -38,7 +38,7 @@ extension AugmentedSessionFragment {
     return "\(startTimeString) - \(endTimeString)"
   }
 
-  /// Event start formatted as `<month> <day>, <start time> - <end time>`
+  /// Event time formatted as `<month> <day>, <start time> - <end time>`.
   var formattedDateTime: String {
     DateFormatter.sharedDateWriter.dateFormat = "MMMM d"
     let weekdayMonthString = DateFormatter.sharedDateWriter.string(from: self.startDate)
@@ -48,6 +48,22 @@ extension AugmentedSessionFragment {
     let endTimeString = DateFormatter.sharedDateWriter.string(from: self.endDate)
 
     return "\(weekdayMonthString), \(startTimeString) - \(endTimeString)"
+  }
+
+  /// Event start time.
+  var formattedStartTime: String {
+    DateFormatter.sharedDateWriter.dateFormat = "h:mm a"
+    return DateFormatter.sharedDateWriter.string(from: self.startDate)
+  }
+
+  /// Notification date calculated as 10 minutes before the startDate.
+  var notificationDate: Date? {
+    Calendar.current.date(byAdding: .minute, value: -10, to: self.startDate)
+  }
+
+  /// Identifier used when requesting a local notification.
+  var notificationIdentifier: String {
+    sessionFragment.id
   }
 
 }

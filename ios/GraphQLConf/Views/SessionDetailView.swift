@@ -19,15 +19,21 @@ struct SessionDetailView: View {
           .foregroundStyle(Theme.primaryText)
         Spacer(minLength: 16)
 
-        Text(session.formattedDateTime)
-          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-          .font(.HostGrotesk.medium)
-          .foregroundStyle(Theme.primaryText)
-        if let venueName = session.sessionFragment.venue {
-          Text(venueName)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .font(.HostGrotesk.medium)
-            .foregroundStyle(Theme.primaryText)
+        HStack {
+          VStack {
+            Text(session.formattedDateTime)
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+              .font(.HostGrotesk.medium)
+              .foregroundStyle(Theme.primaryText)
+            if let venueName = session.sessionFragment.venue {
+              Text(venueName)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .font(.HostGrotesk.medium)
+                .foregroundStyle(Theme.primaryText)
+            }
+          }
+          Spacer()
+          BookmarkNotificationView(session: session)
         }
 
         if !session.sessionFragment.description.isEmpty {
