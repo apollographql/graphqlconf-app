@@ -14,11 +14,6 @@ struct MainView: View {
           .tabItem {
             Image(.people)
           }
-
-        AboutView()
-          .tabItem {
-            Image(.info)
-          }
       }
       .tint(Theme.tint)
       .navigationBarTitleDisplayMode(.inline)
