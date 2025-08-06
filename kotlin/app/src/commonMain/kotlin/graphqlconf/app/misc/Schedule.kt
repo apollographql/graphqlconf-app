@@ -22,12 +22,7 @@ import graphqlconf.design.component.SessionCard
 import graphqlconf.design.theme.GraphqlConfTheme
 
 @Composable
-fun Schedule(listState: LazyListState) {
-  val responseState: State<ApolloResponse<GetScheduleItemsQuery.Data>?> = remember {
-    apolloClient.query(GetScheduleItemsQuery()).toFlow()
-  }.collectAsStateWithLifecycle(null)
-
-  val response = responseState.value
+fun Schedule(listState: LazyListState, response: ApolloResponse<GetScheduleItemsQuery.Data>?) {
   when {
     response == null -> {
       Loading()

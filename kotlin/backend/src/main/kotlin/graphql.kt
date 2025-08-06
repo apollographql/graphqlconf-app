@@ -126,8 +126,8 @@ class Query {
 class Session(
   val title: String,
   val description: String,
-  val start: GraphQLLocalDateTime,
-  val end: GraphQLLocalDateTime,
+  override val start: GraphQLLocalDateTime,
+  override val end: GraphQLLocalDateTime,
   val event_type: String,
   val event_subtype: String,
   @Deprecated("Use room instead")
@@ -206,9 +206,12 @@ private fun JsonSession.toGraphQLSession(): Session {
   )
 }
 
-sealed interface ScheduleItem
-class DayHeader(val date: GraphQLLocalDate, val title: String) : ScheduleItem
-class TimeHeader(val start: GraphQLLocalTime, val end: GraphQLLocalTime) : ScheduleItem
+sealed interface ScheduleItem {
+  val start: GraphQLLocalDateTime
+  val end: GraphQLLocalDateTime
+}
+class DayHeader(override val start: GraphQLLocalDateTime, override val end: GraphQLLocalDateTime, val title: String) : ScheduleItem
+class TimeHeader(override val start: GraphQLLocalDateTime, override val end: GraphQLLocalDateTime, ) : ScheduleItem
 
 private fun String.toRoom(): Room? {
   return when (this) {
@@ -300,11 +303,11 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
     val end = dateFormat.parse(it.second)
     val date = start.date
     if (lastDate == null || lastDate != date) {
-      items.add(DayHeader(date, "Day $dayIndex"))
+      items.add(DayHeader(start, end, "Day $dayIndex"))
       lastDate = date
       dayIndex++
     }
-    items.add(TimeHeader(start.time, end.time))
+    items.add(TimeHeader(start, end))
     items.addAll(
       // could be optimized but 🤷‍♂️
       sessions.filter {

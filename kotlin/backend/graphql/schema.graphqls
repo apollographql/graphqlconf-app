@@ -2,14 +2,12 @@ schema {
   query: Query
 }
 
-scalar LocalDate
-
 scalar LocalDateTime
 
-scalar LocalTime
+type DayHeader implements ScheduleItem {
+  start: LocalDateTime!
 
-type DayHeader {
-  date: LocalDate!
+  end: LocalDateTime!
 
   title: String!
 }
@@ -43,7 +41,7 @@ type Room {
   floor: Int!
 }
 
-type Session {
+type Session implements ScheduleItem {
   title: String!
 
   description: String!
@@ -87,13 +85,17 @@ type Speaker {
   sessions: [Session!]!
 }
 
-type TimeHeader {
-  start: LocalTime!
+type TimeHeader implements ScheduleItem {
+  start: LocalDateTime!
 
-  end: LocalTime!
+  end: LocalDateTime!
 }
 
-union ScheduleItem = Session|DayHeader|TimeHeader
+interface ScheduleItem {
+  start: LocalDateTime!
+
+  end: LocalDateTime!
+}
 
 type __Schema {
   description: String

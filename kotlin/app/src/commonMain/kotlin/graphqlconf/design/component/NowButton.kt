@@ -51,12 +51,12 @@ enum class NowButtonState {
 
 @Composable
 fun NowButton(
-  time: NowButtonState,
+  state: NowButtonState,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
-  enabled: Boolean = time != NowButtonState.Current,
+  enabled: Boolean = state != NowButtonState.Current,
 ) {
-    val active = time != NowButtonState.Current
+    val active = state != NowButtonState.Current
     val textColor = ColorValues.white100
     val background by animateColorAsState(
         if (active) ColorValues.primaryBase
@@ -81,7 +81,7 @@ fun NowButton(
         )
 
         AnimatedContent(
-            targetState = time,
+            targetState = state,
             transitionSpec = {
                 (fadeIn() + expandHorizontally(clip = false, expandFrom = Alignment.Start)) togetherWith
                         (fadeOut() + shrinkHorizontally(clip = false, shrinkTowards = Alignment.Start))
