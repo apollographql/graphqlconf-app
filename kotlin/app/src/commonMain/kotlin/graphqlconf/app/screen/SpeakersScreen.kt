@@ -1,7 +1,6 @@
 package graphqlconf.app.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
@@ -12,7 +11,7 @@ import graphqlconf_app.app.generated.resources.nav_destination_speakers
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SpeakersScreen() {
+fun SpeakersScreen(onSpeaker: (String) -> Unit) {
   Column {
 
     Header(
@@ -24,6 +23,6 @@ fun SpeakersScreen() {
       },
     )
 
-    SpeakerList()
+    SpeakerList(onSpeaker)
   }
 }

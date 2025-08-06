@@ -25,7 +25,6 @@ import graphqlconf.design.component.NowButtonState
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.nav_destination_schedule
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
@@ -35,7 +34,7 @@ import kotlin.time.Instant
 
 @Suppress("UnrememberedMutableState")
 @Composable
-fun ScheduleScreen() {
+fun ScheduleScreen(onSession: (String) -> Unit) {
   var headerState by rememberSaveable { mutableStateOf(MainHeaderContainerState.Title) }
 
   Column {
@@ -68,14 +67,16 @@ fun ScheduleScreen() {
               )
             }
           },
-          endContent = {
-
-          }
         )
       },
     )
 
-    Schedule(listState, response)
+    Schedule(
+      listState = listState,
+      response = response,
+      onSession = onSession
+    )
+
   }
 }
 

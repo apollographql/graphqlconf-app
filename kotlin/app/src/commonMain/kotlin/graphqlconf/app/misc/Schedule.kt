@@ -18,41 +18,41 @@ import graphqlconf.design.component.SessionCard
 import graphqlconf.design.theme.GraphqlConfTheme
 
 @Composable
-fun Schedule(listState: LazyListState, response: ApolloResponse<GetScheduleItemsQuery.Data>?) {
-  when {
-    response == null -> {
-      Loading()
-    }
-    response.data == null -> {
-      GeneralError(response.exception?.message)
-    }
-    else -> {
-      LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
-        this.items(response.data!!.scheduleItems) {
-          when {
-            it.onDayHeader != null -> {
-              DayHeader(it.start.date, it.onDayHeader.title)
-            }
-            it.onTimeHeader != null -> {
-              Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = DateTimeFormatting.timeToTime(it.start.time, it.end.time),
-                color = GraphqlConfTheme.colors.primaryText,
-                style = GraphqlConfTheme.typography.h3,
+fun Schedule(
+  listState: LazyListState,
+  response: ApolloResponse<GetScheduleItemsQuery.Data>?,
+  onSession: (String) -> Unit
+) {
+  ApolloWrapper(
+    response
+  ) {
+    LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
+      this.items(it.scheduleItems) {
+        when {
+          it.onDayHeader != null -> {
+            DayHeader(it.start.date, it.onDayHeader.title)
+          }
+
+          it.onTimeHeader != null -> {
+            Text(
+              modifier = Modifier.padding(horizontal = 16.dp),
+              text = DateTimeFormatting.timeToTime(it.start.time, it.end.time),
+              color = GraphqlConfTheme.colors.primaryText,
+              style = GraphqlConfTheme.typography.h3,
+            )
+          }
+
+          it.onSession != null -> {
+            val session = it.onSession
+            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+              SessionCard(
+                title = getSessionTitle(session.title),
+                eventType = session.event_type,
+                speakers = session.speakers.map { it.name },
+                venue = session.room?.name ?: "",
+                time = DateTimeFormatting.timeToTime(it.start.time, it.end.time),
+                onClick = { onSession(session.id) },
               )
-            }
-            it.onSession != null -> {
-              val session = it.onSession
-              Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                SessionCard(
-                  title = getSessionTitle(session.title),
-                  eventType = session.event_type,
-                  speakers = session.speakers.map { it.name },
-                  venue = session.room?.name ?: "",
-                  time = DateTimeFormatting.timeToTime(it.start.time, it.end.time),
-                  onClick = {},
-                )
-              }
             }
           }
         }
