@@ -31,6 +31,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -137,12 +138,11 @@ private fun computeNowButtonState(
   }
 }
 
-@OptIn(ExperimentalTime::class)
 fun now(): Instant {
-  return LocalDateTime(2025,9,8,11,0).toInstant(amsterdamTimeZone)//Clock.System.now()
+  return Clock.System.now()
+//  return LocalDateTime(2025,9,8,11,0).toInstant(amsterdamTimeZone)
 }
 
-@OptIn(ExperimentalTime::class)
 private fun computeNowIndex(
   responseState: State<ApolloResponse<GetScheduleItemsQuery.Data>?>,
 ): Int? {

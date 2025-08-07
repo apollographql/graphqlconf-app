@@ -22,6 +22,7 @@ kotlin {
 
   compilerOptions {
     optIn.add("com.russhwolf.settings.ExperimentalSettingsApi")
+    optIn.add("kotlin.time.ExperimentalTime")
   }
 
   sourceSets {
