@@ -70,6 +70,11 @@ apollo {
     packageName.set("graphqlconf.api")
     schemaFiles.from("../backend/graphql/schema.graphqls")
     mapScalar("LocalDateTime", "kotlinx.datetime.LocalDateTime", "graphqlconf.app.LocalDateTimeAdapter")
+
+    introspection {
+      endpointUrl.set("https://graphqlconf.app/graphql")
+      schemaFile.set(file("../backend/graphql/schema.graphqls"))
+    }
   }
 }
 

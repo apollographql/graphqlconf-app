@@ -178,7 +178,7 @@ private fun JsonSpeaker.toGraphQLSpeaker(): Speaker {
     url = url,
     avatar = avatar,
     years = years,
-    socialUrls = socialUrls.map { it.toGraphQLSocialUrls() },
+    socialUrls = socialurls.map { it.toGraphQLSocialUrls() },
   )
 }
 
