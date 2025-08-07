@@ -12,4 +12,13 @@
   <string name="session_speakers">Session speakers</string>
   <string name="meet_the_speaker">Meet the speaker</string>
   <string name="sessions">Sessions</string>
+  <string name="graphqlconf">GraphQLConf</string>
+  <string name="this_year">2025</string>
+  <string name="hosted_by">hosted by</string>
+  <string name="sponsors">Sponsors</string>
+  <string name="privacy_policy">Privacy policy</string>
+  <string name="code_of_conduct">Code of conduct</string>
+  <string name="inclusion_and_diversity">Inclusion &amp; diversity</string>
+  <string name="health_and_safety">Health &amp; safety</string>
+  <string name="graphql_dot_org">graphql.org</string>
 </resources>

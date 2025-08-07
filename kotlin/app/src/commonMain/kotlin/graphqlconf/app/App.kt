@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import graphqlconf.app.navigation.InfoScreen
 import graphqlconf.app.navigation.MainScreen
 import graphqlconf.app.navigation.SessionScreen
 import graphqlconf.app.navigation.SpeakerScreen
