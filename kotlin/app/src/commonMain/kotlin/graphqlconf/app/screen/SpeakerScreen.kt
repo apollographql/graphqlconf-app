@@ -15,13 +15,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -36,6 +40,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import graphqlconf.api.GetSpeakerQuery
 import graphqlconf.api.type.SocialService
+import graphqlconf.app.DateTimeFormatting
 import graphqlconf.app.apolloClient
 import graphqlconf.app.misc.ApolloWrapper
 import graphqlconf.app.misc.Header
@@ -50,19 +55,23 @@ import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.arrow_left
 import graphqlconf_app.app.generated.resources.back
+import graphqlconf_app.app.generated.resources.calendar_today
+import graphqlconf_app.app.generated.resources.clock
 import graphqlconf_app.app.generated.resources.facebook
 import graphqlconf_app.app.generated.resources.globe
 import graphqlconf_app.app.generated.resources.instagram
 import graphqlconf_app.app.generated.resources.linkedin
+import graphqlconf_app.app.generated.resources.location
 import graphqlconf_app.app.generated.resources.meet_the_speaker
 import graphqlconf_app.app.generated.resources.nav_destination_speaker
+import graphqlconf_app.app.generated.resources.sessions
 import graphqlconf_app.app.generated.resources.twitter
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SpeakerScreen(id: String, onBack: () -> Unit) {
+fun SpeakerScreen(id: String, onSession: (String) -> Unit, onBack: () -> Unit) {
   Column {
     Header(
       state = MainHeaderContainerState.Title,
@@ -130,18 +139,99 @@ fun SpeakerScreen(id: String, onBack: () -> Unit) {
               )
 
               Spacer(modifier = Modifier.height(8.dp))
-              SpeakerAvatar(speaker.speakerSummary.avatar, modifier = Modifier.fillMaxWidth().aspectRatio(4f/3f))
+              SpeakerAvatar(speaker.speakerSummary.avatar, modifier = Modifier.fillMaxWidth().aspectRatio(4f / 3f))
             }
           }
           HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
-          PaddingRow {
-            Row(
-              modifier = Modifier.weight(1f),
-              horizontalArrangement = Arrangement.End,
-            ) {
-              speaker.socialUrls.forEach {
-                SocialUrl(it)
+          PaddingRow(modifier = Modifier.height(IntrinsicSize.Min)) {
+            Spacer(modifier = Modifier.weight(1f))
+            speaker.socialUrls.forEach {
+              SocialUrl(it)
+            }
+          }
+          PaddingRow(modifier = Modifier.height(IntrinsicSize.Min)) {
+            Text(
+              modifier = Modifier.weight(1f).padding(horizontal = 8.dp, vertical = 16.dp),
+              text = speaker.speakerSummary.about,
+              color = GraphqlConfTheme.colors.text,
+              style = GraphqlConfTheme.typography.bodyMedium,
+            )
+          }
+          HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+          PaddingRow(Modifier.height(IntrinsicSize.Min)) {
+            Column(modifier = Modifier.weight(1f)) {
+              Text(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+                text = stringResource(Res.string.sessions),
+                color = GraphqlConfTheme.colors.text,
+                style = GraphqlConfTheme.typography.h2,
+              )
+              HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+              speaker.sessions.forEach {
+                Column(modifier = Modifier.clickable {
+                  onSession(it.id)
+                }) {
+                  Spacer(modifier = Modifier.height(16.dp))
+                  Badges(listOf(it.event_type), modifier = Modifier.padding(horizontal = 8.dp))
+                  Spacer(modifier = Modifier.height(16.dp))
+                  Text(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    text = it.title,
+                    color = GraphqlConfTheme.colors.text,
+                    style = GraphqlConfTheme.typography.h3,
+                  )
+                  Spacer(modifier = Modifier.height(16.dp))
+                  HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+                  Row(modifier = Modifier.padding(8.dp), verticalAlignment = CenterVertically) {
+                    val roomName = it.room?.name
+                    if (roomName != null) {
+                      Image(
+                        painter = painterResource(Res.drawable.location),
+                        contentDescription = "Room",
+                        colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.secondary),
+                        modifier = Modifier.align(CenterVertically),
+                      )
+                      Spacer(modifier = Modifier.width(8.dp))
+                      Text(
+                        text = roomName,
+                        color = GraphqlConfTheme.colors.text,
+                        style = GraphqlConfTheme.typography.bodySmall,
+                        modifier = Modifier.align(CenterVertically),
+                      )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Image(
+                      painter = painterResource(Res.drawable.calendar_today),
+                      contentDescription = "Day",
+                      colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.secondary),
+                      modifier = Modifier.align(CenterVertically),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                      text = DateTimeFormatting.date(it.start.date),
+                      color = GraphqlConfTheme.colors.text,
+                      style = GraphqlConfTheme.typography.bodySmall,
+                      modifier = Modifier.align(CenterVertically),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Image(
+                      painter = painterResource(Res.drawable.clock),
+                      contentDescription = "Time",
+                      colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.secondary),
+                      modifier = Modifier.align(CenterVertically),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                      text = DateTimeFormatting.time(it.start.time),
+                      color = GraphqlConfTheme.colors.text,
+                      style = GraphqlConfTheme.typography.bodySmall,
+                      modifier = Modifier.align(CenterVertically),
+                    )
+                  }
+                  HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+                }
               }
+              Spacer(modifier = Modifier.height(32.dp))
             }
           }
         }
@@ -155,13 +245,13 @@ fun SpeakerScreen(id: String, onBack: () -> Unit) {
 
 
 private fun SocialService.toResource(): DrawableResource {
-  return when(this) {
+  return when (this) {
     SocialService.Instagram -> Res.drawable.instagram
     SocialService.Twitter -> Res.drawable.twitter
     SocialService.LinkedIn -> Res.drawable.linkedin
     SocialService.Facebook -> Res.drawable.facebook
     SocialService.Other,
-    SocialService.UNKNOWN__ ->  Res.drawable.globe
+    SocialService.UNKNOWN__ -> Res.drawable.globe
   }
 }
 
@@ -169,22 +259,18 @@ private fun SocialService.toResource(): DrawableResource {
 fun SocialUrl(url: GetSpeakerQuery.SocialUrl, modifier: Modifier = Modifier) {
   val uriHandler = LocalUriHandler.current
   val lineColor = GraphqlConfTheme.colors.secondaryDimmed
-  Image(
-    painter = painterResource(url.service.toResource()),
-    contentDescription = url.service.name,
-    colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.text),
-    modifier = modifier.padding(8.dp).clickable {
-      uriHandler.openUri(url.url)
-    }.drawBehind {
-      val path = Path()
-      path.moveTo(0f, 0f)
-      path.lineTo(0f, size.height)
-      path.lineTo(size.width, size.height)
-      drawPath(
-        path = path,
-        color = lineColor,
-        style = Stroke(width = 1.dp.value),
+  Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+    VerticalDivider(color = lineColor, thickness = 1.dp)
+    Column(modifier = Modifier.width(IntrinsicSize.Min)) {
+      Image(
+        painter = painterResource(url.service.toResource()),
+        contentDescription = url.service.name,
+        colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.text),
+        modifier = modifier.padding(16.dp).size(24.dp).clickable {
+          uriHandler.openUri(url.url)
+        },
       )
-    },
-  )
+      HorizontalDivider(color = lineColor, thickness = 1.dp)
+    }
+  }
 }

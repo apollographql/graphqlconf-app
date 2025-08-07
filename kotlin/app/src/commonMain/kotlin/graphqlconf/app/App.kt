@@ -39,7 +39,11 @@ fun App(isDarkTheme: Boolean = true) {
           )
         }
         composable<SpeakerScreen> {
-          SpeakerScreen(it.toRoute<SpeakerScreen>().id, onBack = navController::popBackStack)
+          SpeakerScreen(
+            id = it.toRoute<SpeakerScreen>().id,
+            onSession = { navController.navigate(SessionScreen(it)) },
+            onBack = navController::popBackStack
+          )
         }
       }
     }

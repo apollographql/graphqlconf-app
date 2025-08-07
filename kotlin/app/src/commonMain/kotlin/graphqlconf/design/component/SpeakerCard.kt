@@ -179,13 +179,14 @@ fun GreenStripes(
       .clipToBounds()
   ) {
     var i = 0f
+    val stripeWidth = 8.dp.value
     while (i < size.width) {
       drawRect(
         color = Color(0xffc3f655),
         topLeft = Offset(i, 0f),
-        size = Size(12.dp.value, size.height)
+        size = Size(stripeWidth, size.height)
       )
-      i += 2 * 12.dp.value
+      i += 2 * stripeWidth
     }
     when (index % 2) {
       0 -> {

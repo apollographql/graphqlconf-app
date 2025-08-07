@@ -68,5 +68,14 @@ query GetSpeaker($id: ID!) {
       service
       url
     }
+    sessions {
+      id
+      title
+      event_type
+      start
+      room {
+        name
+      }
+    }
   }
 }
