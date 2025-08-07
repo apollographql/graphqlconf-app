@@ -9,10 +9,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
-expect fun createSettings(): ObservableSettings
+private lateinit var theSettings: ObservableSettings
 
-private val settings: ObservableSettings by lazy {
-  createSettings()
+fun initializeSettings(settings: ObservableSettings) {
+  theSettings = settings
 }
 
 private val json = Json {
@@ -33,11 +33,11 @@ private inline fun <reified T> String?.decodeOrNull(): T? {
 private const val KEY_BOOKMARKS = "bookmarks"
 
 fun bookmarks(): Flow<Set<SessionId>> {
-  return settings.getStringOrNullFlow(KEY_BOOKMARKS).map { it.decodeOrNull<Set<SessionId>>() ?: emptySet() }
+  return theSettings.getStringOrNullFlow(KEY_BOOKMARKS).map { it.decodeOrNull<Set<SessionId>>() ?: emptySet() }
 }
 
 fun setBookmarks(ids: Set<SessionId>) {
-  settings.set(KEY_BOOKMARKS, json.encodeToString(ids))
+  theSettings.set(KEY_BOOKMARKS, json.encodeToString(ids))
 }
 
 @Serializable

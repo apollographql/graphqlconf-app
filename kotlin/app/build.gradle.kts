@@ -23,6 +23,7 @@ kotlin {
   compilerOptions {
     optIn.add("com.russhwolf.settings.ExperimentalSettingsApi")
   }
+
   sourceSets {
     getByName("commonMain").dependencies {
       implementation("com.apollographql.apollo:apollo-runtime")
@@ -39,6 +40,7 @@ kotlin {
       implementation(libs.androidx.navigation.compose)
       implementation(libs.coil.compose)
       implementation(libs.coil.network.ktor3)
+      implementation(libs.androidx.preference)
 
       // Multiplatform Settings
       implementation(libs.settings)

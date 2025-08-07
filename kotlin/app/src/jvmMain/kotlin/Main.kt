@@ -5,6 +5,8 @@ import coil3.SingletonImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import graphqlconf.app.App
+import graphqlconf.app.createSettings
+import graphqlconf.app.initializeSettings
 import graphqlconf.design.catalog.Gallery
 import okhttp3.OkHttpClient
 import okio.FileSystem
@@ -45,6 +47,8 @@ fun main() = application {
     position = loadWindowPosition(),
     size = loadWindowSize()
   )
+
+  initializeSettings(createSettings())
 
   Window(
     onCloseRequest = {

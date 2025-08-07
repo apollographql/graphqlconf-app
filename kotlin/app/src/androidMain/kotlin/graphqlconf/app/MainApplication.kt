@@ -1,12 +1,14 @@
 package graphqlconf.app
 
 import android.app.Application
-import coil3.ImageLoader
-import coil3.SingletonImageLoader
-import coil3.request.crossfade
+import androidx.preference.PreferenceManager
+import com.russhwolf.settings.SharedPreferencesSettings
 
 class MainApplication : Application() {
   override fun onCreate() {
     super.onCreate()
+    initializeSettings(
+      SharedPreferencesSettings(PreferenceManager.getDefaultSharedPreferences(this))
+    )
   }
 }

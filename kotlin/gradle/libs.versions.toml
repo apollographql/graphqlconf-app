@@ -12,10 +12,12 @@ kgp = "2.2.0"
 ksp = "2.2.0-2.0.2"
 minSdk = "26"
 targetSdk = "36"
+androidx-preference = "1.2.1"
 ktor = "3.2.3"
 
 [libraries]
 agp = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "agp" }
+androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.0.1" }
 androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }

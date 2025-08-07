@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Properties
 
 @OptIn(ExperimentalSettingsApi::class)
-actual fun createSettings(): ObservableSettings {
+fun createSettings(): ObservableSettings {
   val propsFile = File("store.properties")
 
   val props = try {
