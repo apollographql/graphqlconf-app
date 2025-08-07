@@ -81,7 +81,6 @@ fun SpeakerScreen(id: String, onSession: (String) -> Unit, onBack: () -> Unit) {
           startContent = {
             TopMenuButton(
               icon = Res.drawable.arrow_left,
-              contentDescription = stringResource(Res.string.back),
               onClick = onBack,
             )
           }

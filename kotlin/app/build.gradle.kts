@@ -20,6 +20,9 @@ kotlin {
   jvm()
   androidTarget()
 
+  compilerOptions {
+    optIn.add("com.russhwolf.settings.ExperimentalSettingsApi")
+  }
   sourceSets {
     getByName("commonMain").dependencies {
       implementation("com.apollographql.apollo:apollo-runtime")
@@ -30,11 +33,18 @@ kotlin {
       implementation(compose.components.resources)
 
       implementation(libs.kotlinx.datetime)
+      implementation(libs.kotlinx.serialization.json)
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.androidx.lifecycle.runtime.compose)
       implementation(libs.androidx.navigation.compose)
       implementation(libs.coil.compose)
       implementation(libs.coil.network.ktor3)
+
+      // Multiplatform Settings
+      implementation(libs.settings)
+      implementation(libs.settings.serialization)
+      implementation(libs.settings.observable)
+      implementation(libs.settings.coroutines)
 
       implementation(libs.components.ui.tooling.preview)
     }

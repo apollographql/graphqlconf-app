@@ -21,6 +21,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,7 @@ import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.arrow_left
 import graphqlconf_app.app.generated.resources.back
+import graphqlconf_app.app.generated.resources.bookmark_filled
 import graphqlconf_app.app.generated.resources.calendar_today
 import graphqlconf_app.app.generated.resources.location
 import graphqlconf_app.app.generated.resources.nav_destination_session
@@ -66,7 +68,6 @@ fun SessionScreen(id: String, onBack: () -> Unit, onSpeaker: (String) -> Unit) {
           startContent = {
             TopMenuButton(
               icon = Res.drawable.arrow_left,
-              contentDescription = stringResource(Res.string.back),
               onClick = onBack,
             )
           }

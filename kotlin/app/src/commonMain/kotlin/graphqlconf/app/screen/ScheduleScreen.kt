@@ -22,14 +22,15 @@ import graphqlconf.app.misc.MainHeaderContainerState
 import graphqlconf.app.misc.MainHeaderTitleBar
 import graphqlconf.design.component.NowButton
 import graphqlconf.design.component.NowButtonState
+import graphqlconf.design.component.TopMenuButton
 import graphqlconf_app.app.generated.resources.Res
+import graphqlconf_app.app.generated.resources.bookmark_filled
 import graphqlconf_app.app.generated.resources.nav_destination_schedule
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -40,9 +41,10 @@ fun ScheduleScreen(onSession: (String) -> Unit) {
 
   Column {
     val listState = rememberLazyListState()
-    val responseState: State<ApolloResponse<GetScheduleItemsQuery.Data>?> = remember {
+    val responseState = remember {
       apolloClient.query(GetScheduleItemsQuery()).toFlow()
     }.collectAsStateWithLifecycle(null)
+    val filterBookmarked = remember { mutableStateOf(false) }
 
     val nowButtonState = derivedStateOf { computeNowButtonState(responseState, listState) }.value
     val response = responseState.value
@@ -68,6 +70,13 @@ fun ScheduleScreen(onSession: (String) -> Unit) {
               )
             }
           },
+          endContent = {
+            TopMenuButton(
+              icon = Res.drawable.bookmark_filled,
+              selected = filterBookmarked.value,
+              onToggle = { filterBookmarked.value = it },
+            )
+          }
         )
       },
     )
@@ -75,9 +84,9 @@ fun ScheduleScreen(onSession: (String) -> Unit) {
     Schedule(
       listState = listState,
       response = response,
-      onSession = onSession
+      onSession = onSession,
+      filterBookmarked = filterBookmarked.value
     )
-
   }
 }
 

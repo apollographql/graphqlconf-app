@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
 import graphqlconf_app.app.generated.resources.Res
@@ -26,25 +27,24 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 private fun TopMenuButtonImpl(
-    icon: DrawableResource,
-    contentDescription: String,
-    interactionModifier: Modifier,
-    backgroundColor: Color,
-    iconColor: Color,
-    modifier: Modifier = Modifier,
+  icon: DrawableResource,
+  interactionModifier: Modifier,
+  backgroundColor: Color,
+  iconColor: Color,
+  modifier: Modifier = Modifier,
 ) {
-    Icon(
-        modifier = modifier
-            .padding(6.dp)
-            .size(36.dp)
-            .clip(CircleShape)
-            .then(interactionModifier)
-            .background(backgroundColor)
-            .padding(6.dp),
-        painter = painterResource(icon),
-        contentDescription = contentDescription,
-        tint = iconColor,
-    )
+  Icon(
+    modifier = modifier
+      .padding(6.dp)
+      .size(36.dp)
+      .clip(CircleShape)
+      .then(interactionModifier)
+      .background(backgroundColor)
+      .padding(6.dp),
+    painter = painterResource(icon),
+    contentDescription = null,
+    tint = iconColor,
+  )
 }
 
 /**
@@ -52,34 +52,32 @@ private fun TopMenuButtonImpl(
  */
 @Composable
 fun TopMenuButton(
-    icon: DrawableResource,
-    selected: Boolean = false,
-    onToggle: (Boolean) -> Unit,
-    contentDescription: String,
-    modifier: Modifier = Modifier,
+  modifier: Modifier = Modifier,
+  icon: DrawableResource,
+  selected: Boolean = false,
+  onToggle: (Boolean) -> Unit,
 ) {
-    val backgroundColor by animateColorAsState(
-        if (selected) GraphqlConfTheme.colors.background
-        else Color.Transparent
-    )
-    val iconColor by animateColorAsState(
-        if (selected) GraphqlConfTheme.colors.textDimmed
-        else GraphqlConfTheme.colors.text
-    )
+  val backgroundColor by animateColorAsState(
+    if (selected) GraphqlConfTheme.colors.background
+    else Color.Transparent
+  )
+  val iconColor by animateColorAsState(
+    if (selected) ColorValues.primaryBase
+    else GraphqlConfTheme.colors.text
+  )
 
-    TopMenuButtonImpl(
-        icon = icon,
-        contentDescription = contentDescription,
-        modifier = modifier,
-        interactionModifier = Modifier.toggleable(
-            value = selected,
-            enabled = true,
-            onValueChange = onToggle,
-            role = Role.Switch,
-        ),
-        backgroundColor = backgroundColor,
-        iconColor = iconColor,
-    )
+  TopMenuButtonImpl(
+    icon = icon,
+    modifier = modifier,
+    interactionModifier = Modifier.toggleable(
+      value = selected,
+      enabled = true,
+      onValueChange = onToggle,
+      role = Role.Switch,
+    ),
+    backgroundColor = backgroundColor,
+    iconColor = iconColor,
+  )
 }
 
 /**
@@ -87,31 +85,15 @@ fun TopMenuButton(
  */
 @Composable
 fun TopMenuButton(
-    icon: DrawableResource,
-    onClick: () -> Unit,
-    contentDescription: String,
-    modifier: Modifier = Modifier,
+  icon: DrawableResource,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    TopMenuButtonImpl(
-        icon = icon,
-        contentDescription = contentDescription,
-        modifier = modifier,
-        interactionModifier = Modifier.clickable(onClick = onClick),
-        backgroundColor = Color.Transparent,
-        iconColor = GraphqlConfTheme.colors.text,
-    )
-}
-
-@Preview
-@Composable
-internal fun TopMenuButtonPreview() {
-    PreviewHelper {
-        Row {
-            var state1 by remember { mutableStateOf(false) }
-            TopMenuButton(Res.drawable.arrow_left, state1, { state1 = it }, "Bookmark")
-
-            var state2 by remember { mutableStateOf(true) }
-            TopMenuButton(Res.drawable.users, state2, { state2 = it }, "Users")
-        }
-    }
+  TopMenuButtonImpl(
+    icon = icon,
+    modifier = modifier,
+    interactionModifier = Modifier.clickable(onClick = onClick),
+    backgroundColor = Color.Transparent,
+    iconColor = GraphqlConfTheme.colors.text,
+  )
 }
