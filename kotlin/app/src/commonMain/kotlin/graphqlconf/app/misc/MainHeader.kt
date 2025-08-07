@@ -48,7 +48,7 @@ fun Header(
   }
   HorizontalDivider(
     thickness = 1.dp,
-    color = GraphqlConfTheme.colors.strokeHalf,
+    color = GraphqlConfTheme.colors.textDimmed,
   )
 }
 
@@ -74,7 +74,7 @@ fun MainHeaderTitleBar(
       text = title,
       modifier = Modifier.align(Alignment.Center).semantics { heading() },
       style = GraphqlConfTheme.typography.h3,
-      color = GraphqlConfTheme.colors.primaryText,
+      color = GraphqlConfTheme.colors.text,
     )
     Row(Modifier.align(Alignment.CenterEnd)) {
       endContent()

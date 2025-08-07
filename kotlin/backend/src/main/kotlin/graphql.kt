@@ -15,6 +15,7 @@ import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.serialization.ExperimentalSerializationApi
 import model.JsonSession
+import model.JsonSocialUrl
 import model.JsonSpeaker
 import model.allSessions
 import model.allSpeakers
@@ -176,9 +177,36 @@ private fun JsonSpeaker.toGraphQLSpeaker(): Speaker {
     location = location,
     url = url,
     avatar = avatar,
-    years = years
+    years = years,
+    socialUrls = socialUrls.map { it.toGraphQLSocialUrls() },
   )
 }
+
+fun JsonSocialUrl.toGraphQLSocialUrls(): SocialUrl {
+  return SocialUrl(
+    service = service.toGraphQLSocialService(),
+    url = url,
+  )
+}
+
+enum class SocialService {
+  Instagram, Twitter, LinkedIn, Facebook, Other
+}
+
+private fun String.toGraphQLSocialService(): SocialService {
+  return when (this) {
+    "Twitter" ->SocialService.Twitter
+      "LinkedIn" -> SocialService.LinkedIn
+      "Instagram" -> SocialService.Instagram
+      "Facebook" -> SocialService.Facebook
+    else -> SocialService.Other
+  }
+}
+
+class SocialUrl(
+  val service: SocialService,
+  val url: String
+)
 
 @Suppress("DEPRECATION")
 class Speaker(
@@ -192,6 +220,7 @@ class Speaker(
   val url: String,
   avatar: String,
   val years: List<Int>,
+  val socialUrls: List<SocialUrl>,
 ) {
   val id: ID = username
   val avatar = avatar.fixIfNeeded()

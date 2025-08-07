@@ -60,3 +60,13 @@ query GetSession($id: ID!) {
     }
   }
 }
+
+query GetSpeaker($id: ID!) {
+  speaker(id: $id) {
+    ...speakerSummary
+    socialUrls {
+      service
+      url
+    }
+  }
+}

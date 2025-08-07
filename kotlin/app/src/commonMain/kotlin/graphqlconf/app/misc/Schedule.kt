@@ -37,7 +37,7 @@ fun Schedule(
             Text(
               modifier = Modifier.padding(horizontal = 16.dp),
               text = DateTimeFormatting.timeToTime(it.start.time, it.end.time),
-              color = GraphqlConfTheme.colors.primaryText,
+              color = GraphqlConfTheme.colors.text,
               style = GraphqlConfTheme.typography.h3,
             )
           }

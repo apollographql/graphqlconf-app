@@ -175,8 +175,8 @@ private fun MainNavigationButton(
   modifier: Modifier = Modifier,
 ) {
   val iconColor by animateColorAsState(
-    if (selected) GraphqlConfTheme.colors.primaryText
-    else GraphqlConfTheme.colors.primaryText
+    if (selected) GraphqlConfTheme.colors.text
+    else GraphqlConfTheme.colors.text
   )
   Icon(
     modifier = modifier

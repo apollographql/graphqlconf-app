@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
-import graphqlconf.design.theme.eventColor
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.location
 import org.jetbrains.compose.resources.painterResource
@@ -33,8 +32,8 @@ fun SessionCard(
   modifier: Modifier = Modifier,
 ) {
   val backgroundColor = Color.Transparent
-  val borderColor = GraphqlConfTheme.colors.strokeHalf
-  val textColor = GraphqlConfTheme.colors.primaryText
+  val borderColor = GraphqlConfTheme.colors.textDimmed
+  val textColor = GraphqlConfTheme.colors.text
 
   Column(
     modifier

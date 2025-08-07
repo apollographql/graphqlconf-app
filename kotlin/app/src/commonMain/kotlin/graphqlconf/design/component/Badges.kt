@@ -20,7 +20,7 @@ fun Badges(eventTypes: List<String>, modifier: Modifier = Modifier) {
       if (color != null) {
         Text(
           text =  eventType.uppercase(),
-          color = GraphqlConfTheme.colors.primaryText,
+          color = GraphqlConfTheme.colors.text,
           style = GraphqlConfTheme.typography.badge,
           maxLines = 1,
           modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)

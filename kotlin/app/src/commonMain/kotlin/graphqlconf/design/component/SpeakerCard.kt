@@ -9,12 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -26,26 +23,16 @@ import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import coil3.compose.AsyncImagePainter
-import coil3.compose.LocalPlatformContext
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.speaker_photo
 import graphqlconf_app.app.generated.resources.user
-import graphqlconf_app.app.generated.resources.users
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -64,7 +51,7 @@ fun SpeakerCard(
 ) {
   Box(
     modifier = modifier
-      .border(width = 1.dp, color = GraphqlConfTheme.colors.strokeHalf)
+      .border(width = 1.dp, color = GraphqlConfTheme.colors.textDimmed)
       .clickable(onClick = onClick)
       .fillMaxWidth()
       .height(IntrinsicSize.Min)
@@ -93,7 +80,7 @@ fun SpeakerCardContent(
   index: Int,
   modifier: Modifier = Modifier,
 ) {
-  val textColor = GraphqlConfTheme.colors.primaryText
+  val textColor = GraphqlConfTheme.colors.text
 
   Row(
     modifier = modifier
@@ -101,7 +88,7 @@ fun SpeakerCardContent(
       .height(IntrinsicSize.Min)
       .padding(16.dp)
   ) {
-    SpeakerAvatar(
+    StripedSpeakerAvatar(
       avatar = avatar,
       modifier = Modifier.size(92.dp),
       index = index,
@@ -114,7 +101,7 @@ fun SpeakerCardContent(
         color = textColor
       )
       Text(
-        text = listOf(position, company).joinToString(", "),
+        text = listOf(position, company).filter { it.isNotEmpty() }.joinToString(", "),
         style = GraphqlConfTheme.typography.bodySmall,
         color = textColor
       )
@@ -133,20 +120,35 @@ fun SpeakerCardContent(
 }
 
 @Composable
-fun SpeakerAvatar(
+fun StripedSpeakerAvatar(
   avatar: String,
   modifier: Modifier = Modifier,
   index: Int
 ) {
   Box(modifier = modifier.aspectRatio(1f)) {
-    val loaded = remember {  mutableStateOf(false) }
+    SpeakerAvatar(avatar)
+    GreenStripes(index)
+  }
+}
+
+@Composable
+fun SpeakerAvatar(
+  avatar: String,
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier
+  ) {
+
+    val loaded = remember { mutableStateOf(false) }
     val colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.1f) })
     AsyncImage(
       model = avatar,
       contentDescription = stringResource(Res.string.speaker_photo),
       contentScale = ContentScale.Crop,
       onSuccess = { loaded.value = true },
-      colorFilter = colorFilter
+      colorFilter = colorFilter,
+      modifier = Modifier.fillMaxSize()
     )
     if (!loaded.value) {
       Image(
@@ -159,55 +161,65 @@ fun SpeakerAvatar(
       )
     }
     Canvas(modifier = Modifier.fillMaxSize()) {
-      drawRect(color = ColorValues.secondaryLighter.copy(alpha = 1f), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.Multiply)
-    }
-    Canvas(
-      modifier = Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-        .clipToBounds()
-    ) {
-      var i = 0f
-      while (i < size.width) {
-        drawRect(
-          color = Color(0xffc3f655),
-          topLeft = Offset(i, 0f),
-          size = Size(12.dp.value, size.height)
-        )
-        i += 2 * 12.dp.value
-      }
-      when (index % 2) {
-        0 -> {
-          val i = (index / 2)
-          val x = (i % 2)
-          val y = (i + 1) % 2
-          drawRect(
-            brush = Brush.radialGradient(
-              colors = listOf(Color.White, Color.Transparent),
-              center = Offset(x * size.width, y * size.height),
-              radius = size.width / 2,
-              tileMode = TileMode.Clamp
-            ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
-          )
-        }
-
-        1 -> {
-          val i = (index / 2)
-          val x = (i % 2)
-          val y = (i + 1) % 2
-
-          drawRect(
-            brush = Brush.linearGradient(
-              colors = listOf(Color.White, Color.Transparent),
-              start = Offset(x * size.width, y * size.height),
-              end = Offset(size.width/2, size.height/2),
-              tileMode = TileMode.Clamp
-            ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
-          )
-        }
-      }
+      drawRect(
+        color = ColorValues.secondaryLighter.copy(alpha = 1f),
+        topLeft = Offset(0f, 0f),
+        size = size,
+        blendMode = BlendMode.Multiply
+      )
     }
   }
 }
+@Composable
+fun GreenStripes(
+  index: Int,
+) {
+  Canvas(
+    modifier = Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+      .clipToBounds()
+  ) {
+    var i = 0f
+    while (i < size.width) {
+      drawRect(
+        color = Color(0xffc3f655),
+        topLeft = Offset(i, 0f),
+        size = Size(12.dp.value, size.height)
+      )
+      i += 2 * 12.dp.value
+    }
+    when (index % 2) {
+      0 -> {
+        val i = (index / 2)
+        val x = (i % 2)
+        val y = (i + 1) % 2
+        drawRect(
+          brush = Brush.radialGradient(
+            colors = listOf(Color.White, Color.Transparent),
+            center = Offset(x * size.width, y * size.height),
+            radius = size.width / 2,
+            tileMode = TileMode.Clamp
+          ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
+        )
+      }
 
+      1 -> {
+        val i = (index / 2)
+        val x = (i % 2)
+        val y = (i + 1) % 2
+
+        drawRect(
+          brush = Brush.linearGradient(
+            colors = listOf(Color.White, Color.Transparent),
+            start = Offset(x * size.width, y * size.height),
+            end = Offset(size.width/2, size.height/2),
+            tileMode = TileMode.Clamp
+          ), topLeft = Offset(0f, 0f), size = size, blendMode = BlendMode.DstIn
+        )
+      }
+    }
+  }
+
+}
 
 @Preview
 @Composable

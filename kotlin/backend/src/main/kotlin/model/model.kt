@@ -44,6 +44,12 @@ class JsonSpeaker(
   val url: String,
   val avatar: String,
   val years: List<Int> = emptyList(),
+  val socialUrls: List<JsonSocialUrl>
+)
+@Serializable
+class JsonSocialUrl(
+  val service: String,
+  val url: String,
 )
 
 val json = Json {

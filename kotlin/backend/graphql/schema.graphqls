@@ -4,6 +4,18 @@ schema {
 
 scalar LocalDateTime
 
+enum SocialService {
+  Instagram
+
+  Twitter
+
+  LinkedIn
+
+  Facebook
+
+  Other
+}
+
 type DayHeader implements ScheduleItem {
   start: LocalDateTime!
 
@@ -73,6 +85,12 @@ type Session implements ScheduleItem {
   room: Room
 }
 
+type SocialUrl {
+  service: SocialService!
+
+  url: String!
+}
+
 type Speaker {
   username: String! @deprecated(reason: "Use id instead")
 
@@ -89,6 +107,8 @@ type Speaker {
   url: String!
 
   years: [Int!]!
+
+  socialUrls: [SocialUrl!]!
 
   id: ID!
 

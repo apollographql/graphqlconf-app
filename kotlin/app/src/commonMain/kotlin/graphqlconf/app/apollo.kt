@@ -5,10 +5,10 @@ import com.apollographql.apollo.api.Adapter
 import com.apollographql.apollo.api.CustomScalarAdapters
 import com.apollographql.apollo.api.json.JsonReader
 import com.apollographql.apollo.api.json.JsonWriter
+import graphqlconf.api.fragment.SpeakerSummary
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.toJavaLocalDateTime
 
 object LocalDateTimeAdapter: Adapter<LocalDateTime> {
   override fun fromJson(
@@ -64,3 +64,9 @@ object LocalDateAdapter: Adapter<LocalDate> {
 internal val apolloClient = ApolloClient.Builder()
   .serverUrl("https://graphqlconf.app/graphql")
   .build()
+
+
+val SpeakerSummary.positionAndCompany: String
+  get() {
+    return listOf(position, company).filter { it.isNotEmpty() }.joinToString(", ")
+  }

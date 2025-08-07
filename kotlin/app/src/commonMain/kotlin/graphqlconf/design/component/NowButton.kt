@@ -65,7 +65,7 @@ fun NowButton(
   val active = state != NowButtonState.Current
   val textColor by animateColorAsState(
     if (active) ColorValues.white100
-    else GraphqlConfTheme.colors.strokeHalf,
+    else GraphqlConfTheme.colors.textDimmed,
     ColorSpringSpec,
   )
   val background by animateColorAsState(

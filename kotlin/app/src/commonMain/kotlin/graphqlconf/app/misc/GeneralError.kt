@@ -22,7 +22,7 @@ fun GeneralError(message: String?) {
       text = stringResource(Res.string.oh_no),
       textAlign = TextAlign.Center,
       style = GraphqlConfTheme.typography.h1,
-      color = GraphqlConfTheme.colors.primaryText,
+      color = GraphqlConfTheme.colors.text,
       modifier = Modifier.align(Alignment.Center)
     )
   }

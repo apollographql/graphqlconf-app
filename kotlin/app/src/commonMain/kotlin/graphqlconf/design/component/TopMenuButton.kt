@@ -63,8 +63,8 @@ fun TopMenuButton(
         else Color.Transparent
     )
     val iconColor by animateColorAsState(
-        if (selected) GraphqlConfTheme.colors.primaryTextInverted
-        else GraphqlConfTheme.colors.primaryText
+        if (selected) GraphqlConfTheme.colors.textDimmed
+        else GraphqlConfTheme.colors.text
     )
 
     TopMenuButtonImpl(
@@ -98,7 +98,7 @@ fun TopMenuButton(
         modifier = modifier,
         interactionModifier = Modifier.clickable(onClick = onClick),
         backgroundColor = Color.Transparent,
-        iconColor = GraphqlConfTheme.colors.primaryText,
+        iconColor = GraphqlConfTheme.colors.text,
     )
 }
 
