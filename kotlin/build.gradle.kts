@@ -7,4 +7,13 @@ buildscript {
     classpath("graphqlconf.app:build-logic")
     classpath("com.apollographql.compose:gradle-plugin")
   }
+  configurations.all {
+    resolutionStrategy.eachDependency {
+      if (requested.group == "com.google.protobuf" && requested.name == "protobuf-java") {
+        useVersion("3.25.8")
+        because("https://issuetracker.google.com/issues/371158364#comment2")
+      }
+    }
+  }
 }
+

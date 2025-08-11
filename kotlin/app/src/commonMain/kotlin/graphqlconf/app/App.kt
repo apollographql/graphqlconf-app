@@ -1,9 +1,16 @@
 package graphqlconf.app
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,11 +25,14 @@ import graphqlconf.app.screen.SpeakerScreen
 import graphqlconf.design.theme.GraphqlConfTheme
 
 @Composable
-fun App(isDarkTheme: Boolean = true) {
+fun App() {
   GraphqlConfTheme {
-    Surface(
-      modifier = Modifier.fillMaxSize(),
-      color = GraphqlConfTheme.colors.background
+    Box(
+      modifier = Modifier
+        .background(GraphqlConfTheme.colors.surface)
+        .windowInsetsPadding(WindowInsets.statusBars)
+        .windowInsetsPadding(WindowInsets.navigationBars)
+        .fillMaxSize(),
     ) {
       val navController = rememberNavController()
       NavHost(

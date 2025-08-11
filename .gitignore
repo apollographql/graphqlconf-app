@@ -50,3 +50,6 @@ docs.json
 
 # Apollo iOS
 apollo-ios-cli
+
+release.jks
+keystore.properties

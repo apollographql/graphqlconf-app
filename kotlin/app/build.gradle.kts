@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
+import java.util.Properties
 
 plugins {
   id("com.apollographql.apollo")
@@ -41,7 +42,6 @@ kotlin {
       implementation(libs.androidx.navigation.compose)
       implementation(libs.coil.compose)
       implementation(libs.coil.network.ktor3)
-      implementation(libs.androidx.preference)
 
       // Multiplatform Settings
       implementation(libs.settings)
@@ -56,6 +56,8 @@ kotlin {
       implementation(libs.androidx.core.splashscreen)
       implementation(libs.androidx.activity.compose)
       implementation(libs.ktor.client.okhttp)
+      implementation(libs.androidx.preference)
+      implementation(libs.androidx.core)
     }
 
     getByName("commonTest").dependencies {
@@ -130,6 +132,37 @@ android {
 
   defaultConfig {
     minSdk = libs.versions.minSdk.get().toInt()
+    targetSdk = libs.versions.targetSdk.get().toInt()
+
+    versionCode = 1
+    versionName = "1"
+  }
+
+  signingConfigs {
+    create("release") {
+      storeFile = file("release.jks")
+      if (file("keystore.properties").exists()) {
+        val props = file("keystore.properties").inputStream().use {
+          Properties().apply {
+            load(it)
+          }
+        }
+        
+        storePassword = props.get("STORE_PASSWORD").toString()
+        keyAlias = props.get("KEY_ALIAS").toString()
+        keyPassword = props.get("KEY_PASSWORD").toString()
+      }
+    }
+  }
+  buildTypes {
+    release {
+      signingConfig = signingConfigs.getByName("release")
+      isDebuggable = false
+      isMinifyEnabled = false
+      proguardFiles(
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+      )
+    }
   }
 }
 
