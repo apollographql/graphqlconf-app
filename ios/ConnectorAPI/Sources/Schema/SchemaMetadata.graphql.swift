@@ -2,6 +2,7 @@
 // This file was automatically generated and should not be edited.
 
 import ApolloAPI
+import Foundation
 
 public protocol SelectionSet: ApolloAPI.SelectionSet & ApolloAPI.RootSelectionSet
 where Schema == ConnectorAPI.SchemaMetadata {}
@@ -31,3 +32,6 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
 public enum Objects {}
 public enum Interfaces {}
 public enum Unions {}
+
+extension NSArray: @retroactive @unchecked Sendable {}
+
