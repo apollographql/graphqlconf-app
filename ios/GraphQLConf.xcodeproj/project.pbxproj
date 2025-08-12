@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		613F03C62E4B8A4200F90E90 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 613F03C52E4B8A4200F90E90 /* AppIcon.icon */; };
 		E62738DF2E3846110050A3A8 /* ConnectorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E62738DE2E3846110050A3A8 /* ConnectorAPI */; };
 		E699EBAB2E2ED5D60005A499 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = E699EBAA2E2ED5D60005A499 /* Apollo */; };
 		E699EBAD2E2ED5D60005A499 /* ApolloSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = E699EBAC2E2ED5D60005A499 /* ApolloSQLite */; };
@@ -31,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		613F03C52E4B8A4200F90E90 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		E699EB7F2E2ED0550005A499 /* GraphQLConf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphQLConf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E699EB8C2E2ED0570005A499 /* GraphQLConfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphQLConfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E699EB962E2ED0570005A499 /* GraphQLConfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphQLConfUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +119,7 @@
 		E699EB762E2ED0550005A499 = {
 			isa = PBXGroup;
 			children = (
+				613F03C52E4B8A4200F90E90 /* AppIcon.icon */,
 				E69D9E012E416B57005A5E3B /* apollo-codegen-config.json */,
 				E69D9E022E416B57005A5E3B /* operations.graphql */,
 				E69D9E032E416B57005A5E3B /* schema.graphqls */,
@@ -267,6 +270,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				613F03C62E4B8A4200F90E90 /* AppIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +454,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = YQK948L752;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -489,7 +493,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = YQK948L752;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
