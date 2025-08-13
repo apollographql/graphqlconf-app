@@ -1,13 +1,21 @@
 package model
 
 import dateFormat
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.atTime
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import kotlin.collections.filter
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.InputStream
+import kotlin.math.pow
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @Serializable
 data class JsonSession(
@@ -46,6 +54,7 @@ class JsonSpeaker(
   val years: List<Int> = emptyList(),
   val socialurls: List<JsonSocialUrl> = emptyList(),
 )
+
 @Serializable
 class JsonSocialUrl(
   val service: String,
@@ -56,19 +65,75 @@ val json = Json {
   ignoreUnknownKeys = true
 }
 
-@ExperimentalSerializationApi
-val allSessions: List<JsonSession> by lazy {
-  JsonSession::class.java.classLoader.getResourceAsStream("schedule-2025.json")!!.use {
+private class Refesher<D>(
+  val initialValue: () -> D,
+  val refreshValue: () -> D,
+) {
+  private var data = initialValue()
+  private var lastTime = 0L
+  private var job: Job? = null
+  private var tryCount = 0
+  private val lock = Object()
+
+  fun data(): D {
+    synchronized(lock) {
+      if (job == null && System.nanoTime() - lastTime > 2.0.pow(tryCount) * 1.minutes.inWholeNanoseconds) {
+        job = GlobalScope.launch {
+          try {
+            tryCount = 0
+            synchronized(lock) {
+              data = refreshValue()
+              job = null
+            }
+          } catch (e: Exception) {
+            tryCount++
+            e.printStackTrace()
+          } finally {
+            lastTime = System.nanoTime()
+          }
+        }
+      }
+    }
+    return data
+  }
+}
+
+private val sessionRefresher = Refesher(
+  initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("schedule-2025.json")!!.toSessionList() },
+  refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/schedule-2025.json").toSessionList() },
+)
+
+private val client = OkHttpClient()
+private fun getUrl(url: String): InputStream {
+  return client.newCall(Request.Builder().url(url).build()).execute().body.byteStream()
+}
+
+private val speakersRefresher = Refesher(
+  initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("speakers.json")!!.toSpeakerList() },
+  refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/speakers.json").toSpeakerList() },
+)
+val allSessions: List<JsonSession>
+  get() {
+    return sessionRefresher.data()
+  }
+
+private fun InputStream.toSessionList(): List<JsonSession> {
+  return use {
     json.decodeFromStream<List<JsonSession>>(it)
-  }.filter { it.venue != "Workspace - 2nd Floor" } // Filter out sessions in the workspace as they seem to be very long
+  }.sanitize()
+}
+
+private fun List<JsonSession>.sanitize(): List<JsonSession> {
+  return filter { it.venue != "Workspace - 2nd Floor" } // Filter out sessions in the workspace as they seem to be very long
     .map {
       var session = it
       if (it.name == "Registration + Badge Pick-up") {
         // Set the end time to 9:00am to match the schedule even if technically people can still pick up their badges after that
-        session = it.copy(event_end = dateFormat.parse(it.event_end).date.atTime(LocalTime(9, 0)).let { dateFormat.format(it) })
+        session = it.copy(
+          event_end = dateFormat.parse(it.event_end).date.atTime(LocalTime(9, 0)).let { dateFormat.format(it) })
       }
 
-      session = session.copy(getSessionTitle(it.name))
+      session = session.copy(name = getSessionTitle(it.name))
       session
     }
 }
@@ -76,7 +141,7 @@ val allSessions: List<JsonSession> by lazy {
 /**
  * See https://github.com/graphql/graphql.github.io/blob/a3d6819fbedd23b985fc05a37b8fb7722d3a517b/src/app/conf/2025/utils.ts#L49
  */
-fun getSessionTitle(title: String): String {
+private fun getSessionTitle(title: String): String {
   var t = title
   for (prefix in setOf("Keynote: ", "Unconference: ")) {
     t = t.removePrefix(prefix)
@@ -84,9 +149,13 @@ fun getSessionTitle(title: String): String {
   return t.substringBefore(" -")
 }
 
-@ExperimentalSerializationApi
-val allSpeakers: List<JsonSpeaker> by lazy {
-  JsonSession::class.java.classLoader.getResourceAsStream("speakers.json")!!.use {
+private fun InputStream.toSpeakerList(): List<JsonSpeaker> {
+  return use {
     json.decodeFromStream<JsonSpeakers>(it).speakers
   }
 }
+
+val allSpeakers: List<JsonSpeaker>
+  get() {
+    return speakersRefresher.data()
+  }

@@ -1,3 +1,4 @@
+import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 plugins {
@@ -13,6 +14,13 @@ compatPatrouille {
   java(17)
   kotlin(getKotlinPluginVersion())
 }
+
+kotlin {
+  compilerOptions {
+    optIn.add("kotlinx.serialization.ExperimentalSerializationApi")
+    optIn.add("kotlinx.coroutines.DelicateCoroutinesApi")
+  }
+}
 dependencies {
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.apollo.kotlin.execution.runtime)
@@ -22,6 +30,7 @@ dependencies {
   implementation(libs.kotlin.test)
   implementation(libs.kotlinx.datetime)
   implementation(libs.slf4j.simple)
+  implementation(libs.okhttp)
 }
 
 // Configure codegen
