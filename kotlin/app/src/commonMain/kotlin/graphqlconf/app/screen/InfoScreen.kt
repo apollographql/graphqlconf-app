@@ -63,6 +63,7 @@ import graphqlconf_app.app.generated.resources.nav_destination_speakers
 import graphqlconf_app.app.generated.resources.privacy_policy
 import graphqlconf_app.app.generated.resources.this_year
 import graphqlconf_app.app.generated.resources.twitter
+import graphqlconf_app.app.generated.resources.youtube
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -166,6 +167,11 @@ fun InfoScreen() {
       IconCard(
         painter = painterResource(Res.drawable.bluesky),
         url = "https://bsky.app/profile/graphql.org",
+      )
+      VerticalDivider(color = GraphqlConfTheme.colors.textDimmed, thickness = 1.dp)
+      IconCard(
+        painter = painterResource(Res.drawable.youtube),
+        url = "https://www.youtube.com/@GraphQLFoundation",
       )
       VerticalDivider(color = GraphqlConfTheme.colors.textDimmed, thickness = 1.dp)
       Spacer(modifier = Modifier.width(16.dp))
