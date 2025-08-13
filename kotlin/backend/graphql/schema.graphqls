@@ -1,5 +1,6 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 scalar LocalDateTime
@@ -22,6 +23,12 @@ type DayHeader implements ScheduleItem {
   end: LocalDateTime!
 
   title: String!
+}
+
+type Mutation {
+  setVote(input: VoteInput!): Boolean!
+
+  setComment(input: CommentInput!): Boolean!
 }
 
 type Query {
@@ -127,6 +134,22 @@ interface ScheduleItem {
   start: LocalDateTime!
 
   end: LocalDateTime!
+}
+
+input CommentInput {
+  userId: String!
+
+  sessionId: String!
+
+  comment: String!
+}
+
+input VoteInput {
+  userId: String!
+
+  sessionId: String!
+
+  vote: Int!
 }
 
 type __Schema {

@@ -5,9 +5,11 @@ import com.apollographql.apollo.ast.GQLValue
 import com.apollographql.apollo.execution.Coercing
 import com.apollographql.apollo.execution.ExternalValue
 import com.apollographql.apollo.execution.StringCoercing
+import com.apollographql.execution.annotation.GraphQLMutation
 import com.apollographql.execution.annotation.GraphQLName
 import com.apollographql.execution.annotation.GraphQLQuery
 import com.apollographql.execution.annotation.GraphQLScalar
+import io.github.jan.supabase.postgrest.from
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -19,6 +21,8 @@ import model.JsonSocialUrl
 import model.JsonSpeaker
 import model.allSessions
 import model.allSpeakers
+import supabase.SupabaseComment
+import supabase.SupabaseVote
 
 @GraphQLScalar(StringCoercing::class)
 typealias ID = String
@@ -370,3 +374,39 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
 
   return items
 }
+
+class VoteInput(
+  val userId: String,
+  val sessionId: String,
+  val vote: Int
+)
+
+class CommentInput(
+  val userId: String,
+  val sessionId: String,
+  val comment: String
+)
+
+@GraphQLMutation
+class Mutation {
+  suspend fun setVote(input: VoteInput): Boolean {
+    return try {
+      supabase.from("votes").upsert(SupabaseVote(input.userId, input.sessionId, input.vote))
+      true
+    } catch (e: Exception) {
+      println(e.message)
+      false
+    }
+  }
+
+  suspend fun setComment(input: CommentInput): Boolean {
+    return try {
+      supabase.from("comments").upsert(SupabaseComment(input.userId, input.sessionId, input.comment))
+      true
+    } catch (e: Exception) {
+      println(e.message)
+      false
+    }
+  }
+}
+

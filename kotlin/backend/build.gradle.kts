@@ -1,4 +1,3 @@
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 plugins {
@@ -26,11 +25,14 @@ dependencies {
   implementation(libs.apollo.kotlin.execution.runtime)
   implementation(libs.apollo.kotlin.execution.ktor)
   implementation(libs.ktor.server.netty)
+  implementation(libs.ktor.client.okhttp)
   implementation(libs.ktor.forwarded.header)
   implementation(libs.kotlin.test)
   implementation(libs.kotlinx.datetime)
   implementation(libs.slf4j.simple)
   implementation(libs.okhttp)
+  implementation(platform(libs.supabase.bom))
+  implementation(libs.supabase.postgre)
 }
 
 // Configure codegen
