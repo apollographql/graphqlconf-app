@@ -16,9 +16,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import graphqlconf.app.navigation.InfoScreen
+import graphqlconf.app.navigation.LicensesScreen
 import graphqlconf.app.navigation.MainScreen
 import graphqlconf.app.navigation.SessionScreen
 import graphqlconf.app.navigation.SpeakerScreen
+import graphqlconf.app.screen.LicensesScreen
 import graphqlconf.app.screen.MainScreen
 import graphqlconf.app.screen.SessionScreen
 import graphqlconf.app.screen.SpeakerScreen
@@ -55,6 +57,9 @@ fun App() {
             onSession = { navController.navigate(SessionScreen(it)) },
             onBack = navController::popBackStack
           )
+        }
+        composable<LicensesScreen> {
+          LicensesScreen(onBack = navController::popBackStack)
         }
       }
     }

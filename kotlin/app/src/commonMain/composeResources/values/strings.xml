@@ -5,6 +5,8 @@
   <string name="nav_destination_session">Session</string>
   <string name="nav_destination_speaker">Speaker</string>
   <string name="nav_destination_info">Info</string>
+  <string name="nav_licenses">Licenses</string>
+  <string name="licenses">Licenses</string>
   <string name="now">Now</string>
   <string name="back">Back</string>
   <string name="speaker_photo">Speaker photo</string>

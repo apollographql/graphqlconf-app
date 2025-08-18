@@ -10,3 +10,6 @@ data class SessionScreen(val id: String)
 
 @Serializable
 data class SpeakerScreen(val id: String)
+
+@Serializable
+data object LicensesScreen

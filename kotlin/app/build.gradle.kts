@@ -11,6 +11,7 @@ plugins {
   id("org.jetbrains.compose.hot-reload")
   id("com.gradleup.compat.patrouille")
   id("com.android.application")
+  id("app.cash.licensee")
 }
 
 compatPatrouille {
@@ -179,3 +180,24 @@ tasks.register("allJar", Jar::class.java) {
   }
 }
 
+licensee {
+  allow("Apache-2.0")
+  allow("MIT")
+  allowUrl("https://opensource.org/license/mit")
+}
+
+afterEvaluate {
+  afterEvaluate {
+    tasks.named("licenseeAndroidRelease") {
+      outputs.files.forEach {
+        println(it)
+      }
+    }
+  }
+}
+
+tasks.register("updateResources", Copy::class.java) {
+  from(file("build/reports/licensee/androidRelease/artifacts.json"))
+  into(file("src/commonMain/composeResources/files"))
+  dependsOn("licenseeAndroidRelease")
+}

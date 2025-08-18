@@ -35,6 +35,7 @@ dependencies {
   implementation(libs.compose.compiler.gradle.plugin)
   implementation(libs.hot.reload)
   implementation(libs.compat.patrouille)
+  implementation(libs.licensee)
 }
 
 extensions.getByType(GratatouilleExtension::class.java).apply {

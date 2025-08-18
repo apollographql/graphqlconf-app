@@ -27,7 +27,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import graphqlconf.app.navigation.InfoScreen
+import graphqlconf.app.navigation.LicensesScreen
 import graphqlconf.app.navigation.ScheduleScreen
 import graphqlconf.app.navigation.SessionScreen
 import graphqlconf.app.navigation.SpeakerScreen
@@ -72,7 +74,11 @@ fun MainScreen(rootNavController: NavHostController) {
         )
       }
       composable<InfoScreen> {
-        InfoScreen()
+        InfoScreen(
+          navigateToLicenses = {
+            rootNavController.navigate(LicensesScreen)
+          }
+        )
       }
     }
     BottomNavigation(nestedNavController)

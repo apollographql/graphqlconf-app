@@ -1,33 +1,12 @@
 package graphqlconf.app.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -35,7 +14,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
@@ -44,32 +22,14 @@ import androidx.compose.ui.unit.sp
 import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
 import graphqlconf.app.misc.MainHeaderTitleBar
-import graphqlconf.app.misc.Schedule
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
-import graphqlconf_app.app.generated.resources.Res
-import graphqlconf_app.app.generated.resources.app_description
-import graphqlconf_app.app.generated.resources.arrow_left
-import graphqlconf_app.app.generated.resources.bluesky
-import graphqlconf_app.app.generated.resources.code_of_conduct
-import graphqlconf_app.app.generated.resources.discord
-import graphqlconf_app.app.generated.resources.graphql_dot_org
-import graphqlconf_app.app.generated.resources.graphql_foundation
-import graphqlconf_app.app.generated.resources.graphqlconf
-import graphqlconf_app.app.generated.resources.health_and_safety
-import graphqlconf_app.app.generated.resources.hosted_by
-import graphqlconf_app.app.generated.resources.inclusion_and_diversity
-import graphqlconf_app.app.generated.resources.nav_destination_info
-import graphqlconf_app.app.generated.resources.nav_destination_speakers
-import graphqlconf_app.app.generated.resources.privacy_policy
-import graphqlconf_app.app.generated.resources.this_year
-import graphqlconf_app.app.generated.resources.twitter
-import graphqlconf_app.app.generated.resources.youtube
+import graphqlconf_app.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun InfoScreen() {
+fun InfoScreen(navigateToLicenses: () -> Unit) {
   Column(modifier = Modifier.background(GraphqlConfTheme.colors.background).fillMaxSize()) {
     Header(
       state = MainHeaderContainerState.Title,
@@ -152,6 +112,13 @@ fun InfoScreen() {
           url = "https://graphql.org/conf/2025/resources/#inclusion--accessibility",
         )
         Spacer(modifier = Modifier.height(16.dp))
+        InAppLinkCard(
+          title = stringResource(Res.string.licenses),
+          onClick = {
+            navigateToLicenses()
+          }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         LinkCard(
           title = stringResource(Res.string.graphql_dot_org),
           url = "https://graphql.org",
@@ -231,6 +198,23 @@ fun LinkCard(title: String, url: String) {
     )
     Spacer(modifier = Modifier.width(8.dp))
   }
+}
+
+@Composable
+fun InAppLinkCard(title: String, onClick: () -> Unit) {
+  Text(
+    text = title,
+    color = GraphqlConfTheme.colors.text,
+    style = GraphqlConfTheme.typography.bodyLarge,
+    modifier = Modifier
+      .fillMaxSize()
+      .border(width = 1.dp, color = GraphqlConfTheme.colors.textDimmed)
+      .padding(8.dp)
+      .background(GraphqlConfTheme.colors.surface)
+      .clickable {
+        onClick()
+      },
+  )
 }
 
 private val Int.spAsDp: Dp
