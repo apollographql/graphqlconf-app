@@ -135,8 +135,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
 
-    versionCode = 1
-    versionName = "1"
+    versionCode = 2
+    versionName = "2"
   }
 
   signingConfigs {
