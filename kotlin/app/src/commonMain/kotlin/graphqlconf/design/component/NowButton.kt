@@ -11,12 +11,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +32,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf.design.theme.PreviewHelper
@@ -69,24 +73,25 @@ fun NowButton(
     ColorSpringSpec,
   )
   val background by animateColorAsState(
-    if (active) ColorValues.primaryBase
+    if (active) ColorValues.secondaryBase
     else GraphqlConfTheme.colors.surface,
     ColorSpringSpec,
   )
 
+
   Row(
     modifier = modifier
-      .clip(NowButtonShape)
-      .clickable(onClick = onClick, enabled = enabled)
-      .background(background)
-      .width(72.dp)
-      .heightIn(min = 36.dp),
+      .padding(8.dp)
+      .border(1.dp, color = background)
+      .background(background.copy(alpha = 0.3f))
+      .padding(4.dp)
+      .clickable(onClick = onClick, enabled = enabled),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.Center,
   ) {
     Text(
       text = stringResource(Res.string.now).uppercase(),
-      style = GraphqlConfTheme.typography.badge,
+      style = GraphqlConfTheme.typography.badge.copy(fontSize = 14.sp),
       color = textColor,
     )
 
