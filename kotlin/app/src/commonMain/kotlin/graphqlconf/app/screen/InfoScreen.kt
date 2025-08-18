@@ -48,6 +48,7 @@ import graphqlconf.app.misc.Schedule
 import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.app.generated.resources.Res
+import graphqlconf_app.app.generated.resources.app_description
 import graphqlconf_app.app.generated.resources.arrow_left
 import graphqlconf_app.app.generated.resources.bluesky
 import graphqlconf_app.app.generated.resources.code_of_conduct
@@ -122,6 +123,14 @@ fun InfoScreen() {
         Spacer(modifier = Modifier.height(16.dp))
       }
       Spacer(modifier = Modifier.height(32.dp))
+      Text(
+        text = stringResource(Res.string.app_description),
+        style = GraphqlConfTheme.typography.bodyMedium,
+        color = GraphqlConfTheme.colors.text,
+        modifier = Modifier.padding(horizontal = 16.dp),
+      )
+      Spacer(modifier = Modifier.height(32.dp))
+
       Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         LinkCard(
           title = stringResource(Res.string.code_of_conduct),

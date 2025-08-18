@@ -22,4 +22,5 @@
   <string name="health_and_safety">Health &amp; safety</string>
   <string name="graphql_dot_org">graphql.org</string>
   <string name="no_bookmarks">You don't have any bookmark yet.</string>
+  <string name="app_description">This app was written in Kotlin using Jetpack Compose and Apollo Kotlin.\n\nThe "NOW" button and app structure is strongly inspired by the KotlinConf app. Special thanks to them for all the love and care they put in raising the bar for conference apps 💙</string>
 </resources>
