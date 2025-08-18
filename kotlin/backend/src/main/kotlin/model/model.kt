@@ -125,12 +125,15 @@ private fun InputStream.toSessionList(): List<JsonSession> {
 
 private fun List<JsonSession>.sanitize(): List<JsonSession> {
   return filter { it.venue != "Workspace - 2nd Floor" } // Filter out sessions in the workspace as they seem to be very long
-    .map {
+    .mapNotNull {
       var session = it
       if (it.name == "Registration + Badge Pick-up") {
         // Set the end time to 9:00am to match the schedule even if technically people can still pick up their badges after that
         session = it.copy(
           event_end = dateFormat.parse(it.event_end).date.atTime(LocalTime(9, 0)).let { dateFormat.format(it) })
+      }
+      if (it.name == "Cloakroom") {
+        return@mapNotNull null
       }
 
       session = session.copy(name = getSessionTitle(it.name))
