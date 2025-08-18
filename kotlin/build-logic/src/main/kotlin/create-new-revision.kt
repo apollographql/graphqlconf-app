@@ -40,7 +40,6 @@ fun createNewRevision(
         .setRevision("$serviceName-${revision()}")
         .build()
     )
-    .setInvokerIamDisabled(true)
     .build()
 
   servicesClient.updateServiceAsync(newService).get()
