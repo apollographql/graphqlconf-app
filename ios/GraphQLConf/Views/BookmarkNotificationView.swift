@@ -13,7 +13,7 @@ struct BookmarkNotificationView: View {
     Image(.bookmark)
       .foregroundStyle(Theme.tint)
       .frame(width: 48, height: 24, alignment: .center)
-      .saturation($saturation.wrappedValue)
+      .saturation(self.saturation)
       .onTapGesture {
         Task {
           await handleSessionNotification()
