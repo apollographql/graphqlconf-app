@@ -8,9 +8,10 @@ struct BookmarkNotificationView: View {
   @State private var showBookmarkNotificationAlert: Bool = false
   @State private var showDeniedNotificationsAlert: Bool = false
   @State private var saturation: Double = 0.0
+  @State private var image: ImageResource = .bookmark
 
   var body: some View {
-    Image(.bookmark)
+    Image(self.image)
       .foregroundStyle(Theme.tint)
       .frame(width: 48, height: 24, alignment: .center)
       .saturation(self.saturation)
@@ -36,9 +37,24 @@ struct BookmarkNotificationView: View {
       }
       .onAppear() {
         Task {
-          self.saturation = Double(await pendingNotificationRequests(for: session))
+          if await hasPendingNotificationRequests(for: session) {
+            applyBookmarkIndicator()
+
+          } else {
+            removeBookmarkIndicator()
+          }
         }
       }
+  }
+
+  func applyBookmarkIndicator() {
+    self.image = .bookmarkFilled
+    self.saturation = 1.0
+  }
+
+  func removeBookmarkIndicator() {
+    self.image = .bookmark
+    self.saturation = 0.0
   }
 
   func handleSessionNotification() async {
@@ -54,7 +70,7 @@ struct BookmarkNotificationView: View {
     case .denied:
       self.showDeniedNotificationsAlert = true
 
-    default: // .provisional, .ephemeral + @unknown
+    default: // .provisional, .ephemeral, and @unknown
       break
     }
   }
@@ -71,18 +87,18 @@ struct BookmarkNotificationView: View {
     } catch {}
   }
 
-  func checkSessionNotification(for session: AugmentedSessionFragment) async {
-    if await pendingNotificationRequests(for: session) == 0 {
-      await scheduleSessionNotification(for: session)
-
-    } else {
-      await removeAllSessionNotifications(for: session)
+  func hasPendingNotificationRequests(for session: AugmentedSessionFragment) async -> Bool {
+    return await UNUserNotificationCenter.current().pendingNotificationRequests().contains { notificationRequest in
+      notificationRequest.identifier == session.notificationIdentifier
     }
   }
 
-  func pendingNotificationRequests(for session: AugmentedSessionFragment) async -> Int {
-    return await UNUserNotificationCenter.current().pendingNotificationRequests().count { notificationRequest in
-      notificationRequest.identifier == session.notificationIdentifier
+  func checkSessionNotification(for session: AugmentedSessionFragment) async {
+    if await hasPendingNotificationRequests(for: session) {
+      await removeAllSessionNotifications(for: session)
+
+    } else {
+      await scheduleSessionNotification(for: session)
     }
   }
 
@@ -102,15 +118,14 @@ struct BookmarkNotificationView: View {
     }
     let dateComponents = Calendar.current.dateComponents(in: DateFormatter.sharedTimezone, from: notificationDate)
     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-
     let request = UNNotificationRequest(identifier: session.notificationIdentifier, content: content, trigger: trigger)
 
     do {
       try await UNUserNotificationCenter.current().add(request)
-      self.saturation = 1.0
+      applyBookmarkIndicator()
 
 #if DEBUG
-      print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)\n\(await UNUserNotificationCenter.current().pendingNotificationRequests())")
+      print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)")
 #endif
 
     }catch {
@@ -120,10 +135,10 @@ struct BookmarkNotificationView: View {
 
   func removeAllSessionNotifications(for session: AugmentedSessionFragment) async {
     UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [session.notificationIdentifier])
-    self.saturation = 0.0
+    removeBookmarkIndicator()
 
 #if DEBUG
-    print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)\n\(await UNUserNotificationCenter.current().pendingNotificationRequests())")
+    print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)")
 #endif
   }
 
