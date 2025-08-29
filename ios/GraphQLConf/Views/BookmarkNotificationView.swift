@@ -15,11 +15,23 @@ struct BookmarkNotificationView: View {
       .foregroundStyle(Theme.tint)
       .frame(width: 48, height: 24, alignment: .center)
       .saturation(self.saturation)
-      .onTapGesture {
+
+      .onAppear() {
         Task {
-          await handleSessionNotification()
+          if await hasPendingNotificationRequests(for: session) {
+            applyBookmarkIndicator()
+
+          } else {
+            removeBookmarkIndicator()
+          }
         }
       }
+      .onTapGesture {
+        Task {
+          await handleBookmarkRequest()
+        }
+      }
+
       .alert("Session Bookmark", isPresented: $showBookmarkNotificationAlert) {
         Button("OK") {
           Task {
@@ -35,16 +47,6 @@ struct BookmarkNotificationView: View {
       } message: {
         Text("Session bookmarks require notification permissions to work correctly. Please go to your device's settings and enable notifications for this app.")
       }
-      .onAppear() {
-        Task {
-          if await hasPendingNotificationRequests(for: session) {
-            applyBookmarkIndicator()
-
-          } else {
-            removeBookmarkIndicator()
-          }
-        }
-      }
   }
 
   func applyBookmarkIndicator() {
@@ -55,24 +57,6 @@ struct BookmarkNotificationView: View {
   func removeBookmarkIndicator() {
     self.image = .bookmark
     self.saturation = 0.0
-  }
-
-  func handleSessionNotification() async {
-    let center = UNUserNotificationCenter.current()
-
-    switch await center.notificationSettings().authorizationStatus {
-    case .authorized:
-      await checkSessionNotification(for: session)
-
-    case .notDetermined:
-      self.showBookmarkNotificationAlert = true
-
-    case .denied:
-      self.showDeniedNotificationsAlert = true
-
-    default: // .provisional, .ephemeral, and @unknown
-      break
-    }
   }
 
   func requestAppPermissions() async {
@@ -87,18 +71,36 @@ struct BookmarkNotificationView: View {
     } catch {}
   }
 
-  func hasPendingNotificationRequests(for session: AugmentedSessionFragment) async -> Bool {
-    return await UNUserNotificationCenter.current().pendingNotificationRequests().contains { notificationRequest in
-      notificationRequest.identifier == session.notificationIdentifier
+  func handleBookmarkRequest() async {
+    let center = UNUserNotificationCenter.current()
+
+    switch await center.notificationSettings().authorizationStatus {
+    case .authorized:
+      await toggleSessionNotification(for: session)
+
+    case .notDetermined:
+      self.showBookmarkNotificationAlert = true
+
+    case .denied:
+      self.showDeniedNotificationsAlert = true
+
+    default: // .provisional, .ephemeral, and @unknown
+      break
     }
   }
 
-  func checkSessionNotification(for session: AugmentedSessionFragment) async {
+  func toggleSessionNotification(for session: AugmentedSessionFragment) async {
     if await hasPendingNotificationRequests(for: session) {
       await removeAllSessionNotifications(for: session)
 
     } else {
       await scheduleSessionNotification(for: session)
+    }
+  }
+
+  func hasPendingNotificationRequests(for session: AugmentedSessionFragment) async -> Bool {
+    return await UNUserNotificationCenter.current().pendingNotificationRequests().contains { notificationRequest in
+      notificationRequest.identifier == session.notificationIdentifier
     }
   }
 

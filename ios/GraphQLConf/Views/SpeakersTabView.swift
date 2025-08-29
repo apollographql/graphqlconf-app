@@ -1,20 +1,20 @@
 import SwiftUI
 
-struct ScheduleView: View {
+struct SpeakersTabView: View {
 
-  @StateObject private var viewModel = ScheduleViewModel()
+  @StateObject private var viewModel = SpeakerViewModel()
 
   var body: some View {
     VStack {
-      if viewModel.schedule.isEmpty {
-        Text("Fetching schedule...")
+      if viewModel.speakers.isEmpty {
+        Text("Fetching speakers...")
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
           .font(.HostGrotesk.h3)
           .foregroundStyle(Theme.tint)
           .background(.clear)
 
       } else {
-        SessionListView(schedule: $viewModel.schedule)
+        SpeakerListView(speakers: $viewModel.speakers)
       }
     }
     .toolbarBackground(Theme.tabBar, for: .tabBar)
@@ -22,13 +22,14 @@ struct ScheduleView: View {
 
     .onAppear {
       Task {
-        try await viewModel.fetchAllEventsSchedule()
+        try await viewModel.fetchAllSpeakers()
       }
     }
+
   }
 
 }
 
 #Preview {
-  ScheduleView()
+  SpeakersTabView()
 }
