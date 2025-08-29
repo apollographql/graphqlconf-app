@@ -29,7 +29,9 @@ kotlin {
 
   sourceSets {
     getByName("commonMain").dependencies {
-      implementation("com.apollographql.apollo:apollo-runtime")
+      implementation(apollo.deps.runtime)
+      implementation(apollo.deps.normalizedCache)
+      implementation(apollo.deps.normalizedCacheSqlite)
 
       implementation(compose.runtime)
       implementation(compose.foundation)

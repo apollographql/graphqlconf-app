@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.cache.normalized.isFromCache
 import graphqlconf.api.GetScheduleItemsQuery
 import graphqlconf.app.apolloClient
 import graphqlconf.app.misc.Schedule
@@ -26,8 +27,9 @@ import graphqlconf.design.component.TopMenuButton
 import graphqlconf_app.app.generated.resources.Res
 import graphqlconf_app.app.generated.resources.bookmark_filled
 import graphqlconf_app.app.generated.resources.nav_destination_schedule
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.jetbrains.compose.resources.stringResource
@@ -43,7 +45,7 @@ fun ScheduleScreen(onSession: (String) -> Unit) {
   Column {
     val listState = rememberLazyListState()
     val responseState = remember {
-      apolloClient.query(GetScheduleItemsQuery()).toFlow()
+      apolloClient.query(GetScheduleItemsQuery()).toFlow().removeNetworkErrors()
     }.collectAsStateWithLifecycle(null)
     val filterBookmarked = remember { mutableStateOf(false) }
 
@@ -88,6 +90,16 @@ fun ScheduleScreen(onSession: (String) -> Unit) {
       onSession = onSession,
       filterBookmarked = filterBookmarked.value
     )
+  }
+}
+
+private fun Flow<ApolloResponse<GetScheduleItemsQuery.Data>>.removeNetworkErrors(): Flow<ApolloResponse<GetScheduleItemsQuery.Data>> {
+  return this.filter {
+    if (!it.isFromCache && it.data == null) {
+      false
+    } else {
+      true
+    }
   }
 }
 
