@@ -64,7 +64,7 @@ private const val EXTRA_SESSION_ID = "sessionId"
 
 actual fun PlatformContext.scheduleNotification(sessionId: String, scheduleAt: Instant, title: String, room: String) {
   askNotificationPermissionIfNeeded {
-    val delay = (scheduleAt - Clock.System.now()).coerceAtMost(5.seconds)
+    val delay = (scheduleAt - Clock.System.now())
     if (delay.isNegative()) {
       // do not schedule in the past
       return@askNotificationPermissionIfNeeded
