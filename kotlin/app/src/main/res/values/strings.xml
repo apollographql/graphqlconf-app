@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="channel_name">Reminders about your bookmarked sessions</string>
+  <string name="channel_description">Send a notification 10 minutes before a bookmarked session starts.</string>
+</resources>

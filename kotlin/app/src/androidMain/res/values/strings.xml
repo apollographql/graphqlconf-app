@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GraphQLConf 2025</string>
+  <string name="app_name">GraphQLConf 2025</string>
+  <string name="notification_title">Session \'%1$s\' is starting in 10 minutes.</string>
+  <string name="notification_description">The session is happening in room \'%1$s\'.</string>
 </resources>

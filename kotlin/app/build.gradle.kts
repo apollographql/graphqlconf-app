@@ -61,6 +61,7 @@ kotlin {
       implementation(libs.ktor.client.okhttp)
       implementation(libs.androidx.preference)
       implementation(libs.androidx.core)
+      implementation(libs.androidx.work)
     }
 
     getByName("commonTest").dependencies {

@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.LocalPlatformContext
 import graphqlconf.app.misc.Artifact
 import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
