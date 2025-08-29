@@ -9,8 +9,6 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -21,8 +19,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlin.time.toJavaDuration
 
@@ -46,10 +42,12 @@ actual fun PlatformContext.askNotificationPermissionIfNeeded(onAllowed: () -> Un
     val permission = Manifest.permission.POST_NOTIFICATIONS
     val granted = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
     if (!granted) {
-      launcher.launch(permission)
-      GlobalScope.launch {
-        permissionsAllowed.receive()
-        onAllowed()
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+        launcher.launch(permission)
+        GlobalScope.launch {
+          permissionsAllowed.receive()
+          onAllowed()
+        }
       }
     } else {
       onAllowed()
