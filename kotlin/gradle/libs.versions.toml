@@ -9,7 +9,7 @@ coil = "3.3.0"
 sqldelight = "2.0.2"
 coroutines = "1.10.2"
 gratatouille = "0.1.1-SNAPSHOT-cc0251b8b2f1a34608de3c3542056ebd2689ec89"
-kgp = "2.2.0"
+kgp = "2.2.10"
 ksp = "2.2.0-2.0.2"
 minSdk = "26"
 targetSdk = "36"
@@ -56,7 +56,7 @@ kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", versi
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.1"
-kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.2.0"
+kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.2.10"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 ktor-server-netty = "io.ktor:ktor-server-netty:3.2.3"
