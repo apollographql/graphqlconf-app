@@ -1,5 +1,6 @@
 import SwiftUI
 import ConnectorAPI
+import SDWebImageSwiftUI
 
 struct SpeakerDetailView: View {
 
@@ -25,16 +26,19 @@ struct SpeakerDetailView: View {
           .foregroundStyle(Theme.primaryText)
 
         if let avatarURL = speaker.avatarURL {
-          AsyncImage(url: avatarURL) { image in
-            image.image?
+          WebImage(url: avatarURL) { image in
+            image
               .resizable()
               .scaledToFill()
               .saturation(0.0)
-              .overlay(Theme.avatarOverlay)
+          } placeholder: {
+            ProgressView()
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
           }
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
           .aspectRatio(contentMode: .fill)
           .clipped()
+          .overlay(Theme.avatarOverlay)
         }
 
         if !speaker.about.isEmpty {
