@@ -4,5 +4,6 @@ pluginManagement {
     it.maven("https://storage.googleapis.com/apollo-snapshots/m2/")
     it.maven("https://storage.googleapis.com/gradleup/m2/")
     it.google()
+    it.mavenLocal()
   }
 }

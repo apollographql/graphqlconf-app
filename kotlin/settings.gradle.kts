@@ -6,6 +6,7 @@ pluginManagement {
     it.maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     it.gradlePluginPortal()
     it.google()
+    it.mavenLocal()
   }
 }
 
@@ -16,6 +17,5 @@ plugins {
 rootProject.name = "graphqlconf-app"
 
 include(":backend", ":app")
-includeBuild("apollo-compose")
 
 includeBuild("build-logic")

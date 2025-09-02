@@ -4,6 +4,7 @@ import java.util.Properties
 
 plugins {
   id("com.apollographql.apollo")
+  id("com.apollographql.kotlin.compiler.plugin")
   id("org.jetbrains.kotlin.multiplatform")
   id("org.jetbrains.kotlin.plugin.compose")
   id("org.jetbrains.kotlin.plugin.serialization")
@@ -189,18 +190,13 @@ licensee {
   allowUrl("https://opensource.org/license/mit")
 }
 
-afterEvaluate {
-  afterEvaluate {
-    tasks.named("licenseeAndroidRelease") {
-      outputs.files.forEach {
-        println(it)
-      }
-    }
-  }
-}
-
 tasks.register("updateResources", Copy::class.java) {
   from(file("build/reports/licensee/androidRelease/artifacts.json"))
   into(file("src/commonMain/composeResources/files"))
   dependsOn("licenseeAndroidRelease")
+}
+
+apolloKotlinCompilerPlugin {
+  schemaFile.set(file("../backend/graphql/schema.graphqls"))
+  compat.set(true)
 }
