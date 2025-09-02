@@ -46,6 +46,7 @@ kotlin {
       implementation(libs.androidx.navigation.compose)
       implementation(libs.coil.compose)
       implementation(libs.coil.network.ktor3)
+      implementation(libs.apollo.kotlin.compiler.plugin.runtime.compat)
 
       // Multiplatform Settings
       implementation(libs.settings)
@@ -199,4 +200,8 @@ tasks.register("updateResources", Copy::class.java) {
 apolloKotlinCompilerPlugin {
   schemaFile.set(file("../backend/graphql/schema.graphqls"))
   compat.set(true)
+
+  mapScalar("LocalDateTime", "kotlinx.datetime.LocalDateTime", "graphqlconf.app.LocalDateTimeAdapter")
+  mapScalar("LocalDate", "kotlinx.datetime.LocalDate", "graphqlconf.app.LocalDateAdapter")
+  mapScalar("ID", "kotlin.String", "apollo.kotlin.StringAdapter")
 }
