@@ -25,6 +25,10 @@ class ScheduleViewModel: ObservableObject {
 
         var sections: [String: [AugmentedSessionFragment]] = [:]
         for session in sessions.compactMap({ $0.fragments.sessionFragment }) {
+          if session.title.lowercased().contains("canal cruise") {
+            continue // Manually remove the 'Canal Cruise' event.
+          }
+
           guard
             let startDate = DateFormatter.sharedDateReader.date(from: session.start),
             let endDate = DateFormatter.sharedDateReader.date(from: session.end)
