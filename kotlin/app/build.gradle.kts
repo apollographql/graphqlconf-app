@@ -62,6 +62,7 @@ kotlin {
       implementation(libs.androidx.preference)
       implementation(libs.androidx.core)
       implementation(libs.androidx.work)
+      implementation(libs.zoomable.image)
     }
 
     getByName("commonTest").dependencies {
@@ -73,7 +74,6 @@ kotlin {
       implementation(compose.desktop.common)
       implementation(libs.ktor.client.okhttp)
       implementation(libs.coil.network.okhttp)
-
       implementation(libs.kotlinx.coroutines.swing)
     }
 
@@ -138,8 +138,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
 
-    versionCode = 3
-    versionName = "3"
+    versionCode = 4
+    versionName = "4"
   }
 
   signingConfigs {
@@ -187,16 +187,6 @@ licensee {
   allow("Apache-2.0")
   allow("MIT")
   allowUrl("https://opensource.org/license/mit")
-}
-
-afterEvaluate {
-  afterEvaluate {
-    tasks.named("licenseeAndroidRelease") {
-      outputs.files.forEach {
-        println(it)
-      }
-    }
-  }
 }
 
 tasks.register("updateResources", Copy::class.java) {

@@ -7,6 +7,7 @@
   <string name="nav_destination_info">Info</string>
   <string name="nav_licenses">Licenses</string>
   <string name="licenses">Licenses</string>
+  <string name="floor_plan">Floor plan</string>
   <string name="now">Now</string>
   <string name="back">Back</string>
   <string name="speaker_photo">Speaker photo</string>
@@ -21,6 +22,7 @@
   <string name="privacy_policy">Privacy policy</string>
   <string name="code_of_conduct">Code of conduct</string>
   <string name="inclusion_and_diversity">Inclusion &amp; diversity</string>
+  <string name="onsite_resources">Onsite resources</string>
   <string name="health_and_safety">Health &amp; safety</string>
   <string name="graphql_dot_org">graphql.org</string>
   <string name="no_bookmarks">You don't have any bookmark yet.</string>

@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import graphqlconf.app.navigation.FloorPlanScreen
 import graphqlconf.app.navigation.InfoScreen
 import graphqlconf.app.navigation.LicensesScreen
 import graphqlconf.app.navigation.ScheduleScreen
@@ -77,6 +78,9 @@ fun MainScreen(rootNavController: NavHostController) {
         InfoScreen(
           navigateToLicenses = {
             rootNavController.navigate(LicensesScreen)
+          },
+          navigateToFloorPlan = {
+            rootNavController.navigate(FloorPlanScreen)
           }
         )
       }

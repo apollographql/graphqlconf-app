@@ -172,42 +172,4 @@ private fun computeNowIndex(
   }
 }
 
-
 val amsterdamTimeZone = TimeZone.of("Europe/Amsterdam")
-
-private val LazyListState.lastVisibleItemIndex
-  get() = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-
-
-
-//
-//private fun computeNowButtonState(
-//  state: ScheduleUiState.Content,
-//  listState: LazyListState,
-//  nowScrolling: Boolean,
-//): NowButtonState? {
-//  if (nowScrolling) return NowButtonState.Current
-//
-//  val firstActiveIndex = state.firstActiveIndex
-//  val lastActiveIndex = state.lastActiveIndex
-//
-//  if (firstActiveIndex == -1 || lastActiveIndex == -1) return null
-//
-//  val firstVisible = listState.firstVisibleItemIndex
-//  val lastVisible = listState.lastVisibleItemIndex
-//
-//  if (firstVisible == -1 || lastVisible == -1) return null
-//
-//  val lastFullyVisible = lastVisible - 1
-//  if (lastFullyVisible < firstActiveIndex) {
-//    return NowButtonState.Before
-//  }
-//
-//  val firstMostlyVisible = firstVisible + (if (listState.firstVisibleItemScrollOffset > 50) 1 else 0)
-//  if (firstMostlyVisible > lastActiveIndex) {
-//    return NowButtonState.After
-//  }
-//
-//  return NowButtonState.Current
-//}
-//

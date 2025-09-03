@@ -29,7 +29,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun InfoScreen(navigateToLicenses: () -> Unit) {
+fun InfoScreen(navigateToLicenses: () -> Unit, navigateToFloorPlan: () -> Unit) {
   Column(modifier = Modifier.background(GraphqlConfTheme.colors.background).fillMaxSize()) {
     Header(
       state = MainHeaderContainerState.Title,
@@ -110,6 +110,18 @@ fun InfoScreen(navigateToLicenses: () -> Unit) {
         LinkCard(
           title = stringResource(Res.string.inclusion_and_diversity),
           url = "https://graphql.org/conf/2025/resources/#inclusion--accessibility",
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        LinkCard(
+          title = stringResource(Res.string.onsite_resources),
+          url = "https://graphql.org/conf/2025/resources/#onsite-resources",
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        InAppLinkCard(
+          title = stringResource(Res.string.floor_plan),
+          onClick = {
+            navigateToFloorPlan()
+          }
         )
         Spacer(modifier = Modifier.height(16.dp))
         InAppLinkCard(
@@ -209,8 +221,8 @@ fun InAppLinkCard(title: String, onClick: () -> Unit) {
     modifier = Modifier
       .fillMaxSize()
       .border(width = 1.dp, color = GraphqlConfTheme.colors.textDimmed)
-      .padding(8.dp)
       .background(GraphqlConfTheme.colors.surface)
+      .padding(8.dp)
       .clickable {
         onClick()
       },

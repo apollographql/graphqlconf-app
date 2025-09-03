@@ -6,11 +6,11 @@ compileSdk = "36"
 compose = "1.8.2"
 multiplatform-settings = "1.3.0"
 coil = "3.3.0"
-sqldelight = "2.0.2"
 coroutines = "1.10.2"
 gratatouille = "0.1.1-SNAPSHOT-cc0251b8b2f1a34608de3c3542056ebd2689ec89"
-kgp = "2.2.0"
-ksp = "2.2.0-2.0.2"
+kgp = "2.2.20-RC"
+ksp = "2.2.20-RC-2.0.2"
+apollo-kotlin-compiler-plugin = "2.2.20-RC-0.0.0-SNAPSHOT"
 minSdk = "26"
 targetSdk = "36"
 androidx-preference = "1.2.1"
@@ -28,6 +28,8 @@ apollo-gradle-plugin = "com.apollographql.apollo:com.apollographql.apollo.gradle
 apollo-kotlin-execution-gradle-plugin = "com.apollographql.execution:com.apollographql.execution.gradle.plugin:0.1.1-SNAPSHOT-be4a397e0a1d958598b90eb4189105909d0ea59b"
 apollo-kotlin-execution-ktor = { module = "com.apollographql.execution:apollo-execution-ktor" }
 apollo-kotlin-execution-runtime = { module = "com.apollographql.execution:apollo-execution-runtime" }
+apollo-kotlin-compiler-plugin-gradle-plugin = { module = "com.apollographql.kotlin.compiler.plugin:com.apollographql.kotlin.compiler.plugin.gradle.plugin", version.ref = "apollo-kotlin-compiler-plugin" }
+apollo-kotlin-compiler-plugin-runtime-compat = { module = "com.apollographql.kotlin:runtime-compat", version.ref = "apollo-kotlin-compiler-plugin" }
 androidx-work = "androidx.work:work-runtime-ktx:2.10.3"
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
@@ -56,6 +58,7 @@ kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", versi
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.1"
+zoomable-image = "me.saket.telephoto:zoomable-image-coil3:0.16.0"
 kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.2.0"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }

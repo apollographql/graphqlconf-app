@@ -16,7 +16,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GeneralError(message: String?) {
-  println("Oh no" + message)
+  println("Oh no$message")
   Box(modifier = Modifier.fillMaxSize().padding(32.dp)) {
     Text(
       text = stringResource(Res.string.oh_no),
