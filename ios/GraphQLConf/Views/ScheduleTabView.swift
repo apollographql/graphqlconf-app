@@ -17,6 +17,7 @@ struct ScheduleTabView: View {
         SessionListView(schedule: $viewModel.schedule)
       }
     }
+    .background(Theme.mainBackground)
     .toolbarBackground(Theme.tabBar, for: .tabBar)
     .toolbarBackground(.visible, for: .tabBar)
 

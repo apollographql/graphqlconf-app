@@ -5,6 +5,7 @@ struct MainView: View {
   enum TabIdentifier {
     case schedule
     case speakers
+    case info
   }
 
   @State private var selectedTab: TabIdentifier = .schedule
@@ -24,6 +25,12 @@ struct MainView: View {
             Image(.people)
           }
           .tag(TabIdentifier.speakers)
+
+        InfoTabView()
+          .tabItem {
+            Image(.info)
+          }
+          .tag(TabIdentifier.info)
       }
       .tint(Theme.tint)
       .navigationBarTitleDisplayMode(.inline)

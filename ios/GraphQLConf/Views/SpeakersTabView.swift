@@ -17,6 +17,7 @@ struct SpeakersTabView: View {
         SpeakerListView(speakers: $viewModel.speakers)
       }
     }
+    .background(Theme.mainBackground)
     .toolbarBackground(Theme.tabBar, for: .tabBar)
     .toolbarBackground(.visible, for: .tabBar)
 
