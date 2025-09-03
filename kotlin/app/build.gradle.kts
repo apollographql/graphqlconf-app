@@ -4,7 +4,6 @@ import java.util.Properties
 
 plugins {
   id("com.apollographql.apollo")
-  id("com.apollographql.kotlin.compiler.plugin")
   id("org.jetbrains.kotlin.multiplatform")
   id("org.jetbrains.kotlin.plugin.compose")
   id("org.jetbrains.kotlin.plugin.serialization")
@@ -46,7 +45,6 @@ kotlin {
       implementation(libs.androidx.navigation.compose)
       implementation(libs.coil.compose)
       implementation(libs.coil.network.ktor3)
-      implementation(libs.apollo.kotlin.compiler.plugin.runtime.compat)
 
       // Multiplatform Settings
       implementation(libs.settings)
@@ -195,13 +193,4 @@ tasks.register("updateResources", Copy::class.java) {
   from(file("build/reports/licensee/androidRelease/artifacts.json"))
   into(file("src/commonMain/composeResources/files"))
   dependsOn("licenseeAndroidRelease")
-}
-
-apolloKotlinCompilerPlugin {
-  schemaFile.set(file("../backend/graphql/schema.graphqls"))
-  compat.set(true)
-
-  mapScalar("LocalDateTime", "kotlinx.datetime.LocalDateTime", "graphqlconf.app.LocalDateTimeAdapter2")
-  mapScalar("LocalDate", "kotlinx.datetime.LocalDate", "graphqlconf.app.LocalDateAdapter2")
-  mapScalar("ID", "kotlin.String", "apollo.kotlin.StringAdapter")
 }

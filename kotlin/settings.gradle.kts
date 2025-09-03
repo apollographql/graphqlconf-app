@@ -6,7 +6,7 @@ pluginManagement {
     it.maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     it.gradlePluginPortal()
     it.google()
-    it.mavenLocal()
+//    it.mavenLocal()
   }
 }
 

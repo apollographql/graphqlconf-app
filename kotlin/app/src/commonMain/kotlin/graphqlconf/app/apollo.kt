@@ -1,6 +1,5 @@
 package graphqlconf.app
 
-import apollo.kotlin.JsonElement
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Adapter
 import com.apollographql.apollo.api.CustomScalarAdapters
@@ -79,24 +78,3 @@ val SpeakerSummary.positionAndCompany: String
   get() {
     return listOf(position, company).filter { it.isNotEmpty() }.joinToString(", ")
   }
-
-object LocalTimeAdapter2: apollo.kotlin.Adapter<LocalTime> {
-  override fun fromJson(element: JsonElement): LocalTime {
-    return LocalTime.parse(element as String)
-  }
-
-  override fun toJson(value: LocalTime): JsonElement {
-    return value.toString()
-  }
-}
-
-object LocalDateTimeAdapter2: apollo.kotlin.Adapter<LocalDateTime> {
-
-  override fun fromJson(element: JsonElement): LocalDateTime {
-    return LocalDateTime.parse(element as String)
-  }
-
-  override fun toJson(value: LocalDateTime): JsonElement {
-    return value.toString()
-  }
-}
