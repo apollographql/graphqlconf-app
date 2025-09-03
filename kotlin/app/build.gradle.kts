@@ -64,6 +64,7 @@ kotlin {
       implementation(libs.androidx.preference)
       implementation(libs.androidx.core)
       implementation(libs.androidx.work)
+      implementation(libs.zoomable.image)
     }
 
     getByName("commonTest").dependencies {
@@ -75,7 +76,6 @@ kotlin {
       implementation(compose.desktop.common)
       implementation(libs.ktor.client.okhttp)
       implementation(libs.coil.network.okhttp)
-
       implementation(libs.kotlinx.coroutines.swing)
     }
 

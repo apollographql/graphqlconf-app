@@ -13,3 +13,6 @@ data class SpeakerScreen(val id: String)
 
 @Serializable
 data object LicensesScreen
+
+@Serializable
+data object FloorPlanScreen
