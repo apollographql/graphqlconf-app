@@ -3,7 +3,7 @@ import SwiftUI
 struct InfoCellView: View {
 
   let title: String
-  var hasIndicator: Bool = true
+  var hasIndicator: Bool = false
 
   var body: some View {
     HStack {
