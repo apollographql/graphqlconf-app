@@ -81,7 +81,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     public var company: String { __data["company"] }
     public var position: String { __data["position"] }
     public var avatar: String { __data["avatar"] }
-    public var years: [Int] { __data["years"] }
+    public var socialUrls: [SocialUrl] { __data["socialUrls"] }
 
     public struct Fragments: FragmentContainer {
       public let __data: DataDict
@@ -97,7 +97,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
       company: String,
       position: String,
       avatar: String,
-      years: [Int]
+      socialUrls: [SocialUrl]
     ) {
       self.init(_dataDict: DataDict(
         data: [
@@ -108,7 +108,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
           "company": company,
           "position": position,
           "avatar": avatar,
-          "years": years,
+          "socialUrls": socialUrls._fieldData,
         ],
         fulfilledFragments: [
           ObjectIdentifier(SessionFragment.Speaker.self),
@@ -116,5 +116,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
         ]
       ))
     }
+
+    public typealias SocialUrl = SpeakerFragment.SocialUrl
   }
 }

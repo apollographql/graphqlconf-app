@@ -34,5 +34,8 @@ fragment SpeakerFragment on Speaker {
   company
   position
   avatar
-  years
+  socialUrls {
+    service
+    url
+  }
 }

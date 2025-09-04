@@ -72,7 +72,12 @@ class ScheduleViewModel: ObservableObject {
                     company: "Apollo",
                     position: "Software Engineer",
                     avatar: "",
-                    years: []
+                    socialUrls: [
+                      SessionFragment.Speaker.SocialUrl(
+                        service: .case(.linkedIn),
+                        url: "https://linkedin.com"
+                      )
+                    ]
                   )
                 ]
               ),

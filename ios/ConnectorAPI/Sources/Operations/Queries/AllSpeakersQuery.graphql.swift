@@ -57,7 +57,7 @@ public struct AllSpeakersQuery: GraphQLQuery {
       public var company: String { __data["company"] }
       public var position: String { __data["position"] }
       public var avatar: String { __data["avatar"] }
-      public var years: [Int] { __data["years"] }
+      public var socialUrls: [SocialUrl] { __data["socialUrls"] }
 
       public struct Fragments: FragmentContainer {
         public let __data: DataDict
@@ -73,7 +73,7 @@ public struct AllSpeakersQuery: GraphQLQuery {
         company: String,
         position: String,
         avatar: String,
-        years: [Int]
+        socialUrls: [SocialUrl]
       ) {
         self.init(_dataDict: DataDict(
           data: [
@@ -84,7 +84,7 @@ public struct AllSpeakersQuery: GraphQLQuery {
             "company": company,
             "position": position,
             "avatar": avatar,
-            "years": years,
+            "socialUrls": socialUrls._fieldData,
           ],
           fulfilledFragments: [
             ObjectIdentifier(AllSpeakersQuery.Data.Speaker.self),
@@ -92,6 +92,8 @@ public struct AllSpeakersQuery: GraphQLQuery {
           ]
         ))
       }
+
+      public typealias SocialUrl = SpeakerFragment.SocialUrl
     }
   }
 }

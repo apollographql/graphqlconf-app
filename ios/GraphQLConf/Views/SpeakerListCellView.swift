@@ -7,7 +7,6 @@ struct SpeakerListCellView: View {
   let speaker: SpeakerFragment
 
   // TODO: tappable scroll index by alphabet
-  // TODO: "Returning speaker" label (requires 'years' to be populated)
 
   var body: some View {
     LazyVStack {

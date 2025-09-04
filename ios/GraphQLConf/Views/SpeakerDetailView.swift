@@ -6,8 +6,6 @@ struct SpeakerDetailView: View {
 
   let speaker: SpeakerFragment
 
-  // TODO: striped overlay as on web
-  // TODO: "Returning speaker" label (requires 'years' to be populated)
   // TODO: Sessions list
 
   var body: some View {
@@ -47,6 +45,22 @@ struct SpeakerDetailView: View {
             .multilineTextAlignment(.leading)
             .font(.HostGrotesk.large)
             .foregroundStyle(Theme.primaryText)
+        }
+
+        if !speaker.socialUrls.isEmpty {
+          Spacer(minLength: 16)
+          HStack(spacing: 0) {
+            Spacer().frame(maxWidth: .infinity)
+            ForEach(speaker.socialUrls, id: \.self) { socialResource in
+              if let url = URL(string: socialResource.url), let image = socialResource.service.value?.image {
+                Link(destination: url) {
+                  Image(image)
+                    .tint(Theme.primaryText)
+                    .frame(width: 60, height: 60)
+                }
+              }
+            }
+          }
         }
       }
       .toolbarRole(.editor)

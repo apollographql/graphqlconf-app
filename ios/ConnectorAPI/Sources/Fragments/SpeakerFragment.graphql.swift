@@ -5,7 +5,7 @@
 
 public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable {
   public static var fragmentDefinition: StaticString {
-    #"fragment SpeakerFragment on Speaker { __typename id name about company position avatar years }"#
+    #"fragment SpeakerFragment on Speaker { __typename id name about company position avatar socialUrls { __typename service url } }"#
   }
 
   public let __data: DataDict
@@ -20,7 +20,7 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     .field("company", String.self),
     .field("position", String.self),
     .field("avatar", String.self),
-    .field("years", [Int].self),
+    .field("socialUrls", [SocialUrl].self),
   ] }
 
   public var id: ConnectorAPI.ID { __data["id"] }
@@ -29,7 +29,7 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
   public var company: String { __data["company"] }
   public var position: String { __data["position"] }
   public var avatar: String { __data["avatar"] }
-  public var years: [Int] { __data["years"] }
+  public var socialUrls: [SocialUrl] { __data["socialUrls"] }
 
   public init(
     id: ConnectorAPI.ID,
@@ -38,7 +38,7 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     company: String,
     position: String,
     avatar: String,
-    years: [Int]
+    socialUrls: [SocialUrl]
   ) {
     self.init(_dataDict: DataDict(
       data: [
@@ -49,11 +49,45 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
         "company": company,
         "position": position,
         "avatar": avatar,
-        "years": years,
+        "socialUrls": socialUrls._fieldData,
       ],
       fulfilledFragments: [
         ObjectIdentifier(SpeakerFragment.self)
       ]
     ))
+  }
+
+  /// SocialUrl
+  ///
+  /// Parent Type: `SocialUrl`
+  public struct SocialUrl: ConnectorAPI.SelectionSet {
+    public let __data: DataDict
+    public init(_dataDict: DataDict) { __data = _dataDict }
+
+    public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.SocialUrl }
+    public static var __selections: [ApolloAPI.Selection] { [
+      .field("__typename", String.self),
+      .field("service", GraphQLEnum<ConnectorAPI.SocialService>.self),
+      .field("url", String.self),
+    ] }
+
+    public var service: GraphQLEnum<ConnectorAPI.SocialService> { __data["service"] }
+    public var url: String { __data["url"] }
+
+    public init(
+      service: GraphQLEnum<ConnectorAPI.SocialService>,
+      url: String
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ConnectorAPI.Objects.SocialUrl.typename,
+          "service": service,
+          "url": url,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(SpeakerFragment.SocialUrl.self)
+        ]
+      ))
+    }
   }
 }

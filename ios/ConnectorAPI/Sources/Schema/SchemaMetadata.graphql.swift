@@ -23,6 +23,7 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     switch typename {
     case "Query": return ConnectorAPI.Objects.Query
     case "Session": return ConnectorAPI.Objects.Session
+    case "SocialUrl": return ConnectorAPI.Objects.SocialUrl
     case "Speaker": return ConnectorAPI.Objects.Speaker
     default: return nil
     }

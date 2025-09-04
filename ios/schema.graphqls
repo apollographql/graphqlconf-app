@@ -2,10 +2,23 @@ directive @defer(label: String, if: Boolean! = true) on FRAGMENT_SPREAD | INLINE
 
 scalar LocalDateTime
 
+enum SocialService {
+  Instagram
+  Twitter
+  LinkedIn
+  Facebook
+  Other
+}
+
 type DayHeader implements ScheduleItem {
   start: LocalDateTime!
   end: LocalDateTime!
   title: String!
+}
+
+type Mutation {
+  setVote(input: VoteInput!): Boolean!
+  setComment(input: CommentInput!): Boolean!
 }
 
 type Query {
@@ -52,6 +65,11 @@ type Session implements ScheduleItem {
   room: Room
 }
 
+type SocialUrl {
+  service: SocialService!
+  url: String!
+}
+
 type Speaker {
   username: String! @deprecated(reason: "Use id instead")
   company: String!
@@ -61,6 +79,7 @@ type Speaker {
   location: String!
   url: String!
   years: [Int!]!
+  socialUrls: [SocialUrl!]!
   id: ID!
   avatar: String!
   sessions: [Session!]!
@@ -74,6 +93,18 @@ type TimeHeader implements ScheduleItem {
 interface ScheduleItem {
   start: LocalDateTime!
   end: LocalDateTime!
+}
+
+input CommentInput {
+  userId: String!
+  sessionId: String!
+  comment: String!
+}
+
+input VoteInput {
+  userId: String!
+  sessionId: String!
+  vote: Int!
 }
 
 extend type Session @typePolicy(keyFields: "id")
