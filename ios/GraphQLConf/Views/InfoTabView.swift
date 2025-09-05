@@ -85,9 +85,9 @@ struct InfoTabView: View {
       ScrollView {
         VStack(spacing: 12) {
           Section {
-            // TODO: This should be using ForEach but I haven't figured out a way to use a single WebViewRepresentable with
-            // dynamic URL loading. There were bugs I couldn't resolve in time and this had to ship. If there is time
-            // I'll come back to this.
+            // TODO: This should be using ForEach but I haven't figured out a way to use a single WebViewRepresentable
+            // with dynamic URL loading. There were bugs I couldn't resolve in time and this had to ship. If there is
+            // time I'll come back to this.
             InfoCellView(title: InfoLink.codeOfConduct.title)
               .onTapGesture {
                 isCodeOfConductPresented.toggle()
@@ -150,8 +150,8 @@ struct InfoTabView: View {
     .toolbarBackground(Theme.tabBar, for: .tabBar)
     .toolbarBackground(.visible, for: .tabBar)
 
-    // TODO: Ideally we only have a single sheet with a single WebViewRepresentable instance but there were bugs I could not
-    // resolve in time and this app had to be released. If there is time I'll come back to this.
+    // TODO: Ideally we only have a single sheet with a single WebViewRepresentable instance but there were bugs I
+    // could not resolve in time and this app had to be released. If there is time I'll come back to this.
     .sheet(isPresented: $isCodeOfConductPresented) {
       NavigationStack {
         WebViewRepresentable(url: InfoLink.codeOfConduct.url)

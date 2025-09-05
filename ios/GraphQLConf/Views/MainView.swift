@@ -9,7 +9,8 @@ struct MainView: View {
   }
 
   @State private var selectedTab: TabIdentifier = .schedule
-  @State private var filteredSchedule: Bool = false
+  @State private var bookmarkFilter: Bool = false
+  @State private var scrollToNow: Bool = false
 
   var body: some View {
     NavigationStack {
@@ -41,11 +42,18 @@ struct MainView: View {
             .font(.HostGrotesk.navigationTitle)
         }
         if self.selectedTab == .schedule {
+          ToolbarItem(placement: .topBarLeading) {
+            Button {
+              scrollToNow.toggle()
+            } label: {
+              Image(.clock)
+            }
+          }
           ToolbarItem(placement: .topBarTrailing) {
             Button {
-              filteredSchedule = !filteredSchedule
+              bookmarkFilter.toggle()
             } label: {
-              Image(filteredSchedule ? .bookmarkFilled : .bookmark)
+              Image(bookmarkFilter ? .bookmarkFilled : .bookmark)
             }
           }
         }
@@ -53,7 +61,8 @@ struct MainView: View {
       .toolbarBackground(.visible, for: .navigationBar)
       .toolbarBackground(Theme.navigationBarReverse, for: .navigationBar)
 
-      .environment(\.bookmarkFilter, self.filteredSchedule)
+      .environment(\.bookmarkFilter, self.bookmarkFilter)
+      .environment(\.scrollToNow, self.scrollToNow)
     }
     .tint(Theme.tintReverse)
   }
