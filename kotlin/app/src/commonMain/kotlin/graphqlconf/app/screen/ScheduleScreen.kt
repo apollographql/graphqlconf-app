@@ -14,6 +14,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.cache.normalized.FetchPolicy
+import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.apollographql.apollo.cache.normalized.isFromCache
 import graphqlconf.api.GetScheduleItemsQuery
 import graphqlconf.app.apolloClient
@@ -37,6 +39,7 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
+var firstLaunch: Boolean = true
 @Suppress("UnrememberedMutableState")
 @Composable
 fun ScheduleScreen(onSession: (String) -> Unit) {
@@ -45,7 +48,16 @@ fun ScheduleScreen(onSession: (String) -> Unit) {
   Column {
     val listState = rememberLazyListState()
     val responseState = remember {
-      apolloClient.query(GetScheduleItemsQuery()).toFlow().removeNetworkErrors()
+      val fetchPolicy = if (firstLaunch) {
+        firstLaunch = false
+        FetchPolicy.NetworkFirst
+      } else {
+        FetchPolicy.CacheFirst
+      }
+      apolloClient.query(GetScheduleItemsQuery())
+        .fetchPolicy(fetchPolicy)
+        .toFlow()
+        .removeNetworkErrors()
     }.collectAsStateWithLifecycle(null)
     val filterBookmarked = remember { mutableStateOf(false) }
 
