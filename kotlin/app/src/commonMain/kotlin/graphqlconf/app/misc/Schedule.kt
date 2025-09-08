@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.LocalPlatformContext
@@ -22,6 +23,7 @@ import graphqlconf.app.bookmarks
 import graphqlconf.app.cancelNotification
 import graphqlconf.app.scheduleNotification
 import graphqlconf.app.screen.amsterdamTimeZone
+import graphqlconf.app.screen.now
 import graphqlconf.app.setBookmarks
 import graphqlconf.design.component.DayHeader
 import graphqlconf.design.component.SessionCard
@@ -39,6 +41,7 @@ fun Schedule(
   onSession: (String) -> Unit,
   filterBookmarked: Boolean
 ) {
+  val now = now()
   val bookmarkState = remember {
     bookmarks()
   }.collectAsStateWithLifecycle(emptySet())
@@ -66,6 +69,11 @@ fun Schedule(
 
     LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
       this.items(scheduleItems) { scheduleItem ->
+        val alpha = if (now > scheduleItem.end.toInstant(amsterdamTimeZone)) {
+          0.5f
+        } else {
+          1f
+        }
         when {
           scheduleItem.onDayHeader != null -> {
             DayHeader(scheduleItem.start.date, scheduleItem.onDayHeader.title)
@@ -73,7 +81,7 @@ fun Schedule(
 
           scheduleItem.onTimeHeader != null -> {
             Text(
-              modifier = Modifier.padding(horizontal = 16.dp),
+              modifier = Modifier.padding(horizontal = 16.dp).alpha(alpha),
               text = DateTimeFormatting.timeToTime(scheduleItem.start.time, scheduleItem.end.time),
               color = GraphqlConfTheme.colors.text,
               style = GraphqlConfTheme.typography.h3,
@@ -83,7 +91,7 @@ fun Schedule(
           scheduleItem.onSession != null -> {
             val context = LocalPlatformContext.current
             val session = scheduleItem.onSession
-            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(alpha)) {
               SessionCard(
                 title = session.title,
                 eventType = session.event_type,
