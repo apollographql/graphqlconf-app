@@ -40,9 +40,10 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 var firstLaunch: Boolean = true
+
 @Suppress("UnrememberedMutableState")
 @Composable
-fun ScheduleScreen(onSession: (String) -> Unit) {
+fun ScheduleScreen(isBookmarks: Boolean, onSession: (String) -> Unit) {
   var headerState by rememberSaveable { mutableStateOf(MainHeaderContainerState.Title) }
 
   Column {
@@ -59,7 +60,7 @@ fun ScheduleScreen(onSession: (String) -> Unit) {
         .toFlow()
         .removeNetworkErrors()
     }.collectAsStateWithLifecycle(null)
-    val filterBookmarked = remember { mutableStateOf(false) }
+    val filterBookmarked = remember { mutableStateOf(isBookmarks) }
 
     val nowButtonState = derivedStateOf { computeNowButtonState(responseState, listState) }.value
     val response = responseState.value

@@ -27,7 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import graphqlconf.app.navigation.FloorPlanScreen
 import graphqlconf.app.navigation.InfoScreen
 import graphqlconf.app.navigation.LicensesScreen
@@ -57,7 +57,7 @@ fun MainScreen(rootNavController: NavHostController) {
   Column {
     NavHost(
       nestedNavController,
-      startDestination = ScheduleScreen,
+      startDestination = ScheduleScreen(false),
       modifier = Modifier.fillMaxWidth().weight(1.0f),
       enterTransition = { EnterTransition.None },
       exitTransition = { ExitTransition.None },
@@ -66,6 +66,7 @@ fun MainScreen(rootNavController: NavHostController) {
     ) {
       composable<ScheduleScreen> {
         ScheduleScreen(
+          isBookmarks = it.toRoute<ScheduleScreen>().isBookmarks,
           onSession = { rootNavController.navigate(SessionScreen(it)) }
         )
       }

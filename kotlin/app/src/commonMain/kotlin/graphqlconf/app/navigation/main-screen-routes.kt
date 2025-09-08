@@ -3,7 +3,7 @@ package graphqlconf.app.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ScheduleScreen
+class ScheduleScreen(val isBookmarks: Boolean)
 
 @Serializable
 data object SpeakersScreen
