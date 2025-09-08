@@ -145,7 +145,6 @@ private fun computeNowButtonState(
 
   val firstVisible = items.get(firstVisibleItemIndex)
 
-
   val visibleStart = firstVisible.start.toInstant(amsterdamTimeZone)
   val visibleEnd = firstVisible.end.toInstant(amsterdamTimeZone)
   return when {
@@ -173,7 +172,7 @@ private fun computeNowIndex(
   if (response.data == null) return null
 
   val ret = response.data!!.scheduleItems.indexOfFirst {
-    it.onTimeHeader != null && now() in it.start.toInstant(amsterdamTimeZone)..<it.end.toInstant(amsterdamTimeZone)
+    it.onTimeHeader != null && now() >= it.start.toInstant(amsterdamTimeZone)
   }
 
   if (ret == -1) {
