@@ -25,7 +25,7 @@ struct SessionDetailView: View {
               .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
               .font(.HostGrotesk.large)
               .foregroundStyle(Theme.primaryText)
-            if let venueName = session.sessionFragment.venue {
+            if let venueName = session.formattedVenue {
               Text(venueName)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .font(.HostGrotesk.large)

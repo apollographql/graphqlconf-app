@@ -5,7 +5,7 @@
 
 public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable {
   public static var fragmentDefinition: StaticString {
-    #"fragment SessionFragment on Session { __typename id title description start end event_type venue speakers { __typename ...SpeakerFragment } }"#
+    #"fragment SessionFragment on Session { __typename id title description start end event_type room { __typename name floor } speakers { __typename ...SpeakerFragment } }"#
   }
 
   public let __data: DataDict
@@ -20,7 +20,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     .field("start", ConnectorAPI.LocalDateTime.self),
     .field("end", ConnectorAPI.LocalDateTime.self),
     .field("event_type", String.self),
-    .field("venue", String?.self),
+    .field("room", Room?.self),
     .field("speakers", [Speaker].self),
   ] }
 
@@ -30,8 +30,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
   public var start: ConnectorAPI.LocalDateTime { __data["start"] }
   public var end: ConnectorAPI.LocalDateTime { __data["end"] }
   public var event_type: String { __data["event_type"] }
-  @available(*, deprecated, message: "Use room instead")
-  public var venue: String? { __data["venue"] }
+  public var room: Room? { __data["room"] }
   public var speakers: [Speaker] { __data["speakers"] }
 
   public init(
@@ -41,7 +40,7 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     start: ConnectorAPI.LocalDateTime,
     end: ConnectorAPI.LocalDateTime,
     event_type: String,
-    venue: String? = nil,
+    room: Room? = nil,
     speakers: [Speaker]
   ) {
     self.init(_dataDict: DataDict(
@@ -53,13 +52,47 @@ public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
         "start": start,
         "end": end,
         "event_type": event_type,
-        "venue": venue,
+        "room": room._fieldData,
         "speakers": speakers._fieldData,
       ],
       fulfilledFragments: [
         ObjectIdentifier(SessionFragment.self)
       ]
     ))
+  }
+
+  /// Room
+  ///
+  /// Parent Type: `Room`
+  public struct Room: ConnectorAPI.SelectionSet {
+    public let __data: DataDict
+    public init(_dataDict: DataDict) { __data = _dataDict }
+
+    public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Room }
+    public static var __selections: [ApolloAPI.Selection] { [
+      .field("__typename", String.self),
+      .field("name", String.self),
+      .field("floor", Int32.self),
+    ] }
+
+    public var name: String { __data["name"] }
+    public var floor: Int32 { __data["floor"] }
+
+    public init(
+      name: String,
+      floor: Int32
+    ) {
+      self.init(_dataDict: DataDict(
+        data: [
+          "__typename": ConnectorAPI.Objects.Room.typename,
+          "name": name,
+          "floor": floor,
+        ],
+        fulfilledFragments: [
+          ObjectIdentifier(SessionFragment.Room.self)
+        ]
+      ))
+    }
   }
 
   /// Speaker

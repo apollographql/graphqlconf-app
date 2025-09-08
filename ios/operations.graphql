@@ -13,7 +13,10 @@ fragment SessionFragment on Session {
   start
   end
   event_type
-  venue
+  room {
+    name
+    floor
+  }
   speakers {
     ...SpeakerFragment
   }

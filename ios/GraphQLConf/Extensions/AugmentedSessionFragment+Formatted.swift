@@ -22,6 +22,12 @@ extension AugmentedSessionFragment {
     }
   }
 
+  var formattedVenue: String? {
+    guard let room = self.sessionFragment.room else { return nil }
+
+    return "\(room.name) (\(room.floor.ordinal) floor)"
+  }
+
   /// To be used as the label for the session section. Formatted as `<weekday>, <month> <day>`.
   var formattedSectionDate: String {
     DateFormatter.sharedDateWriter.dateFormat = "EEEE, MMMM dd"

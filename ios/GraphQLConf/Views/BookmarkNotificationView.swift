@@ -109,7 +109,7 @@ struct BookmarkNotificationView: View {
     content.title = "Session starting soon!"
     content.sound = UNNotificationSound.default
     content.body = "\"\(session.sessionFragment.title)\" is starting at \(session.formattedStartTime)"
-    if let venueName = session.sessionFragment.venue {
+    if let venueName = session.formattedVenue {
       content.body += " in \(venueName)"
     }
     content.body += "."

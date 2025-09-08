@@ -57,8 +57,7 @@ public struct AllSessionsQuery: GraphQLQuery {
       public var start: ConnectorAPI.LocalDateTime { __data["start"] }
       public var end: ConnectorAPI.LocalDateTime { __data["end"] }
       public var event_type: String { __data["event_type"] }
-      @available(*, deprecated, message: "Use room instead")
-      public var venue: String? { __data["venue"] }
+      public var room: Room? { __data["room"] }
       public var speakers: [Speaker] { __data["speakers"] }
 
       public struct Fragments: FragmentContainer {
@@ -75,7 +74,7 @@ public struct AllSessionsQuery: GraphQLQuery {
         start: ConnectorAPI.LocalDateTime,
         end: ConnectorAPI.LocalDateTime,
         event_type: String,
-        venue: String? = nil,
+        room: Room? = nil,
         speakers: [Speaker]
       ) {
         self.init(_dataDict: DataDict(
@@ -87,7 +86,7 @@ public struct AllSessionsQuery: GraphQLQuery {
             "start": start,
             "end": end,
             "event_type": event_type,
-            "venue": venue,
+            "room": room._fieldData,
             "speakers": speakers._fieldData,
           ],
           fulfilledFragments: [
@@ -96,6 +95,8 @@ public struct AllSessionsQuery: GraphQLQuery {
           ]
         ))
       }
+
+      public typealias Room = SessionFragment.Room
 
       public typealias Speaker = SessionFragment.Speaker
     }
