@@ -66,8 +66,12 @@ fun MainScreen(rootNavController: NavHostController) {
     ) {
       composable<ScheduleScreen> {
         ScheduleScreen(
-          isBookmarks = it.toRoute<ScheduleScreen>().isBookmarks,
-          onSession = { rootNavController.navigate(SessionScreen(it)) }
+          filterBookmarked = it.toRoute<ScheduleScreen>().isBookmarks,
+          onSession = { rootNavController.navigate(SessionScreen(it)) },
+          onFilterBookmarks = {
+            nestedNavController.popBackStack()
+            nestedNavController.navigate(ScheduleScreen(it))
+          }
         )
       }
       composable<SpeakersScreen> {

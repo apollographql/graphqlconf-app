@@ -43,7 +43,7 @@ var firstLaunch: Boolean = true
 
 @Suppress("UnrememberedMutableState")
 @Composable
-fun ScheduleScreen(isBookmarks: Boolean, onSession: (String) -> Unit) {
+fun ScheduleScreen(filterBookmarked: Boolean, onSession: (String) -> Unit, onFilterBookmarks: (Boolean) -> Unit) {
   var headerState by rememberSaveable { mutableStateOf(MainHeaderContainerState.Title) }
 
   Column {
@@ -60,8 +60,6 @@ fun ScheduleScreen(isBookmarks: Boolean, onSession: (String) -> Unit) {
         .toFlow()
         .removeNetworkErrors()
     }.collectAsStateWithLifecycle(null)
-    val filterBookmarked = remember { mutableStateOf(isBookmarks) }
-
     val nowButtonState = derivedStateOf { computeNowButtonState(responseState, listState) }.value
     val response = responseState.value
     Header(
@@ -89,8 +87,8 @@ fun ScheduleScreen(isBookmarks: Boolean, onSession: (String) -> Unit) {
           endContent = {
             TopMenuButton(
               icon = Res.drawable.bookmark_filled,
-              selected = filterBookmarked.value,
-              onToggle = { filterBookmarked.value = it },
+              selected = filterBookmarked,
+              onToggle = onFilterBookmarks,
             )
           }
         )
@@ -101,7 +99,7 @@ fun ScheduleScreen(isBookmarks: Boolean, onSession: (String) -> Unit) {
       listState = listState,
       response = response,
       onSession = onSession,
-      filterBookmarked = filterBookmarked.value
+      filterBookmarked = filterBookmarked
     )
   }
 }
