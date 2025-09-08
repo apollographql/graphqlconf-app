@@ -5,6 +5,10 @@ struct SessionListCellView: View {
 
   let session: AugmentedSessionFragment
 
+  var isPastSession: Bool {
+    session.endDate < Date.now
+  }
+
   var body: some View {
     VStack {
       HStack {
@@ -59,6 +63,8 @@ struct SessionListCellView: View {
         .stroke(Theme.cellStroke)
         .fill(Theme.cellBackground)
     }
+
+    .opacity(self.isPastSession ? 0.5 : 1.0)
   }
 
 }
