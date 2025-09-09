@@ -80,9 +80,14 @@ struct SessionListView: View {
 
       sessionList = schedule.compactMap { section in
         let filteredSection = section.compactMap { session in
-          pendingNotificationRequests.contains { notificationRequest in
-            notificationRequest.identifier == session.notificationIdentifier
-          } ? session : nil
+          if pendingNotificationRequests.contains(where: { $0.identifier == session.notificationIdentifier }) {
+            return session
+          }
+          if UserDefaults.standard.object(forKey: session.notificationIdentifier) != nil {
+            return session
+          }
+
+          return nil
         }
 
         return filteredSection.isEmpty ? nil : filteredSection
