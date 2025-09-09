@@ -352,6 +352,8 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
     "2025-09-10 14:20" to "2025-09-10 14:50",
     "2025-09-10 15:00" to "2025-09-10 15:30",
     "2025-09-10 15:50" to "2025-09-10 16:20",
+    "2025-09-10 16:30" to "2025-09-10 16:45",
+    "2025-09-10 16:45" to "2025-09-10 17:00",
   ).forEach {
     val start = dateFormat.parse(it.first)
     val end = dateFormat.parse(it.second)
