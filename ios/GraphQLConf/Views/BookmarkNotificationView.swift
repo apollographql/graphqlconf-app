@@ -3,6 +3,10 @@ import UserNotifications
 
 struct BookmarkNotificationView: View {
 
+  // TODO: Refactor bookmark + notification functions. There should be one 'bookmark' add/remove function that handles
+  // notification and local (past events). There are lots of places right now where you need particular knowledge about
+  // how things are handled. The goal is to remove that complexity and make it easy to work with.
+
   enum BookmarkSource {
     case pendingNotification
     case bookmark
@@ -106,6 +110,7 @@ struct BookmarkNotificationView: View {
   func toggleSessionNotification(for session: AugmentedSessionFragment) async {
     if await hasPendingNotificationRequests(for: session) {
       await removeAllSessionNotifications(for: session)
+      removeBookmark(for: session)
       removeBookmarkIndicator()
 
     } else if hasBookmark(for: session) {
@@ -144,9 +149,10 @@ struct BookmarkNotificationView: View {
     do {
       if notificationDate > Date.now {
         try await UNUserNotificationCenter.current().add(request)
+        addBookmark(notificationDate, for: session) // this enables bookmarked sessions to remain bookmarked once finished
         applyBookmarkIndicator(.pendingNotification)
 #if DEBUG
-      print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)")
+        print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)")
 #endif
 
       } else {
