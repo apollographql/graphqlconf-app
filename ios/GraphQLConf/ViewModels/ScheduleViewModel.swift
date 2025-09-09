@@ -63,7 +63,10 @@ class ScheduleViewModel: ObservableObject {
                 start: DateFormatter.sharedDateReader.string(from: startDate),
                 end: DateFormatter.sharedDateReader.string(from: endDate),
                 event_type: "Debug",
-                venue: "MacBook Pro",
+                room: SessionFragment.Room(
+                  name: "Home",
+                  floor: 0
+                ),
                 speakers: [
                   SessionFragment.Speaker(
                     id: "calvincestari",
