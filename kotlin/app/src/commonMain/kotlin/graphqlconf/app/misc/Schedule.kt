@@ -76,7 +76,7 @@ fun Schedule(
         }
         when {
           scheduleItem.onDayHeader != null -> {
-            DayHeader(scheduleItem.start.date, scheduleItem.onDayHeader.title)
+            DayHeader(modifier = Modifier.alpha(alpha), scheduleItem.start.date, scheduleItem.onDayHeader.title)
           }
 
           scheduleItem.onTimeHeader != null -> {

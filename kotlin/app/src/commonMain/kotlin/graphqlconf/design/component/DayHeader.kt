@@ -27,8 +27,8 @@ import graphqlconf_app.app.generated.resources.Res
 import kotlinx.datetime.LocalDate
 
 @Composable
-fun DayHeader(date: LocalDate, title: String) {
-  Column(modifier = Modifier.padding(vertical = 32.dp).fillMaxWidth()) {
+fun DayHeader(modifier: Modifier, date: LocalDate, title: String) {
+  Column(modifier = modifier.padding(vertical = 32.dp).fillMaxWidth()) {
     Box(modifier = Modifier.background(ColorValues.primaryBase).fillMaxWidth()) {
       Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
         Column {

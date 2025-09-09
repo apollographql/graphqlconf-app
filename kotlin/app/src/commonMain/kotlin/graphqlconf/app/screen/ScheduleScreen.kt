@@ -173,7 +173,7 @@ private fun computeNowIndex(
 
   val now = now()
   val ret = response.data!!.scheduleItems.indexOfFirst {
-    it.onTimeHeader != null && it.start.toInstant(amsterdamTimeZone) >= now
+    it.onTimeHeader != null && (it.end.toInstant(amsterdamTimeZone) >= now || it.start.toInstant(amsterdamTimeZone) >= now)
   }
 
   if (ret == -1) {
