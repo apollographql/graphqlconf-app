@@ -3,6 +3,11 @@ import UserNotifications
 
 struct BookmarkNotificationView: View {
 
+  enum BookmarkSource {
+    case pendingNotification
+    case bookmark
+  }
+
   let session: AugmentedSessionFragment
 
   @State private var showBookmarkNotificationAlert: Bool = false
@@ -19,7 +24,10 @@ struct BookmarkNotificationView: View {
       .onAppear() {
         Task {
           if await hasPendingNotificationRequests(for: session) {
-            applyBookmarkIndicator()
+            applyBookmarkIndicator(.pendingNotification)
+
+          } else if hasBookmark(for: session) {
+            applyBookmarkIndicator(.bookmark)
 
           } else {
             removeBookmarkIndicator()
@@ -49,8 +57,12 @@ struct BookmarkNotificationView: View {
       }
   }
 
-  func applyBookmarkIndicator() {
-    self.image = .bookmarkFilled
+  func applyBookmarkIndicator(_ source: BookmarkSource) {
+    switch source {
+    case .pendingNotification: self.image = .bookmarkFilled
+    case .bookmark: self.image = .bookmark
+    }
+
     self.saturation = 1.0
   }
 
@@ -89,9 +101,16 @@ struct BookmarkNotificationView: View {
     }
   }
 
+  // MARK: Notifications
+
   func toggleSessionNotification(for session: AugmentedSessionFragment) async {
     if await hasPendingNotificationRequests(for: session) {
       await removeAllSessionNotifications(for: session)
+      removeBookmarkIndicator()
+
+    } else if hasBookmark(for: session) {
+      removeBookmark(for: session)
+      removeBookmarkIndicator()
 
     } else {
       await scheduleSessionNotification(for: session)
@@ -123,12 +142,17 @@ struct BookmarkNotificationView: View {
     let request = UNNotificationRequest(identifier: session.notificationIdentifier, content: content, trigger: trigger)
 
     do {
-      try await UNUserNotificationCenter.current().add(request)
-      applyBookmarkIndicator()
-
+      if notificationDate > Date.now {
+        try await UNUserNotificationCenter.current().add(request)
+        applyBookmarkIndicator(.pendingNotification)
 #if DEBUG
       print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)")
 #endif
+
+      } else {
+        addBookmark(notificationDate, for: session)
+        applyBookmarkIndicator(.bookmark)
+      }
 
     }catch {
       #warning("Present alert - failed to schedule notification!")
@@ -137,11 +161,24 @@ struct BookmarkNotificationView: View {
 
   func removeAllSessionNotifications(for session: AugmentedSessionFragment) async {
     UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [session.notificationIdentifier])
-    removeBookmarkIndicator()
 
 #if DEBUG
     print("Pending notification requests: \(await UNUserNotificationCenter.current().pendingNotificationRequests().count)")
 #endif
+  }
+
+  // MARK: Local Bookmarks
+
+  func hasBookmark(for session: AugmentedSessionFragment) -> Bool {
+    UserDefaults.standard.object(forKey: session.notificationIdentifier) != nil ? true : false
+  }
+
+  func addBookmark(_ object: Any?, for session: AugmentedSessionFragment) {
+    UserDefaults.standard.setValue(object, forKey: session.notificationIdentifier)
+  }
+
+  func removeBookmark(for session: AugmentedSessionFragment) {
+    UserDefaults.standard.removeObject(forKey: session.notificationIdentifier)
   }
 
 }
