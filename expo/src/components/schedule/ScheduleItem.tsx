@@ -1,58 +1,46 @@
 import { From } from "@/apollo_client";
-import { gql, TypedDocumentNode } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
+import {
+  ScheduleListItem_SchedSessionFragmentDoc,
+  ScheduleListItem_SchedSessionFragment,
+} from "./ScheduleItem.generated";
 
-type ScheduleListItemFragment_SchedSession = {
-  __typename: "SchedSession";
-  id: string;
-  name: string | null;
-  venue: { id: string; name: string | null } | null;
-  event: {
-    start_time: string | null;
-    end_time: string | null;
-    type: string | null;
-    subtype: string | null;
-  } | null;
-  speakers:
-    | {
-        username: string;
-        name: string | null;
-      }[]
-    | null;
-};
-
-const SchedSession: TypedDocumentNode<ScheduleListItemFragment_SchedSession> = gql`
-  fragment ScheduleListItem_SchedSession on SchedSession {
-    __typename
-    id
-    name
-    venue {
+if (false) {
+  // eslint-disable-next-line no-unused-expressions
+  gql`
+    fragment ScheduleListItem_SchedSession on SchedSession {
+      __typename
       id
       name
+      venue {
+        id
+        name
+      }
+      event {
+        start_time
+        end_time
+        type
+        subtype
+      }
+      speakers {
+        username
+        name
+      }
     }
-    event {
-      start_time
-      end_time
-      type
-      subtype
-    }
-    speakers {
-      username
-      name
-    }
-  }
-`;
+  `;
+}
 
 ScheduleListItem.fragments = {
-  SchedSession,
-};
+  SchedSession: ScheduleListItem_SchedSessionFragmentDoc,
+} as const;
 
 export function ScheduleListItem({
   schedSession,
 }: {
-  schedSession: From<ScheduleListItemFragment_SchedSession>;
+  schedSession: From<ScheduleListItem_SchedSessionFragment>;
 }) {
   const { data } = useSuspenseFragment({
     fragment: ScheduleListItem.fragments.SchedSession,

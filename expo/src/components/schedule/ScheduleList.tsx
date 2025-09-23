@@ -1,56 +1,46 @@
-import { gql, TypedDocumentNode } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { useMemo } from "react";
 import { SectionList } from "react-native";
 import { ScheduleListItem } from "./ScheduleItem";
 import { From } from "@/apollo_client";
 import { SectionHeader } from "./SectionHeader";
-import { ResultOf } from "@graphql-typed-document-node/core";
 import { ThemedText } from "../themed-text";
+import {
+  ScheduleList_QueryFragmentDoc,
+  ScheduleList_QueryFragment,
+} from "./ScheduleList.generated";
 
-type ScheduleListQueryFragment_Query = {
-  schedule_2025:
-    | null
-    | {
-        id: string;
-        event:
-          | null
-          | ({
-              start_time_epoch: number | null;
-              start_weekday: string | null;
-            } & ResultOf<typeof SectionHeader.fragments.SchedEvent>);
-        venue: null | {
-          id: string;
-        };
-      }[];
-};
-const Query: TypedDocumentNode<ScheduleListQueryFragment_Query> = gql`
-  fragment ScheduleList_Query on Query {
-    schedule_2025 {
-      id
-      event {
-        start_time_epoch
-        start_weekday
-        ...SectionHeader_SchedEvent @unmask #needs to be passed unmasked as it cannot be normalized
-      }
-      venue {
+if (false) {
+  // eslint-disable-next-line no-unused-expressions
+  gql`
+    fragment ScheduleList_Query on Query {
+      schedule_2025 {
         id
+        event {
+          start_time_epoch
+          start_weekday
+          ...SectionHeader_SchedEvent @unmask #needs to be passed unmasked as it cannot be normalized
+        }
+        venue {
+          id
+        }
+        ...ScheduleListItem_SchedSession
       }
-      ...ScheduleListItem_SchedSession
     }
-  }
-  ${ScheduleListItem.fragments.SchedSession}
-  ${SectionHeader.fragments.SchedEvent}
-`;
+    ${ScheduleListItem.fragments.SchedSession}
+    ${SectionHeader.fragments.SchedEvent}
+  `;
+}
 
 ScheduleList.fragments = {
-  Query,
+  Query: ScheduleList_QueryFragmentDoc,
 } as const;
 
 export function ScheduleList({
   parent,
 }: {
-  parent: From<ScheduleListQueryFragment_Query>;
+  parent: From<ScheduleList_QueryFragment>;
 }) {
   const { data } = useSuspenseFragment({
     fragment: ScheduleList.fragments.Query,

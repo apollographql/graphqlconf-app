@@ -1,6 +1,12 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { type useSuspenseFragment } from "@apollo/client/react";
 import { Platform } from "react-native";
+import type { GraphQLCodegenDataMasking } from "@apollo/client/masking";
+
+declare module "@apollo/client" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface TypeOverrides extends GraphQLCodegenDataMasking.TypeOverrides {}
+}
 
 if (!process.env.EXPO_PUBLIC__GRAPHQL_SERVER) {
   throw new Error("EXPO_PUBLIC__GRAPHQL_SERVER is not set");

@@ -5,15 +5,19 @@ import { Suspense } from "react";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ScheduleScreenDocument } from "./schedule.generated";
 
-const ScheduleScreenQuery = gql`
-  query ScheduleScreen {
-    ...ScheduleList_Query
-  }
-  ${ScheduleList.fragments.Query}
-`;
+if (false) {
+  // eslint-disable-next-line no-unused-expressions
+  gql`
+    query ScheduleScreen {
+      ...ScheduleList_Query
+    }
+    ${ScheduleList.fragments.Query}
+  `;
+}
 
-ScheduleScreen.Query = ScheduleScreenQuery;
+ScheduleScreen.Query = ScheduleScreenDocument;
 
 export default function ScheduleScreen() {
   useBackgroundQuery(ScheduleScreen.Query);
