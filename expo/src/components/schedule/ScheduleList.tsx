@@ -1,6 +1,10 @@
 import { gql } from "@apollo/client";
-import { useSuspenseFragment } from "@apollo/client/react";
-import { useMemo } from "react";
+import {
+  QueryRef,
+  useQueryRefHandlers,
+  useSuspenseFragment,
+} from "@apollo/client/react";
+import { useMemo, useTransition } from "react";
 import { SectionList } from "react-native";
 import { ScheduleListItem } from "./ScheduleItem";
 import { fragmentRegistry, From } from "@/apollo_client";
@@ -38,9 +42,18 @@ fragmentRegistry.register(ScheduleList.fragments.Query);
 
 export function ScheduleList({
   parent,
+  queryRef,
 }: {
   parent: From<ScheduleList_QueryFragment>;
+  queryRef: QueryRef;
 }) {
+  const { refetch } = useQueryRefHandlers(queryRef);
+  const [refreshing, transition] = useTransition();
+  const onRefresh = () => {
+    transition(() => {
+      refetch();
+    });
+  };
   const { data } = useSuspenseFragment({
     fragment: ScheduleList.fragments.Query,
     fragmentName: "ScheduleList_Query",
@@ -71,6 +84,8 @@ export function ScheduleList({
   }, [data.schedule_2025]);
   return (
     <SectionList
+      refreshing={refreshing}
+      onRefresh={onRefresh}
       style={{ margin: 5 }}
       sections={sections}
       keyExtractor={(item) => item.id}

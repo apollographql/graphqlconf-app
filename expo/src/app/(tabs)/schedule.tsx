@@ -19,12 +19,12 @@ if (false) {
 ScheduleScreen.Query = ScheduleScreenDocument;
 
 export default function ScheduleScreen() {
-  useBackgroundQuery(ScheduleScreen.Query);
+  const [queryRef] = useBackgroundQuery(ScheduleScreen.Query);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ThemedView style={{ flex: 1 }}>
         <Suspense fallback={<ThemedText>Loading...</ThemedText>}>
-          <ScheduleList parent={"ROOT_QUERY"} />
+          <ScheduleList parent={"ROOT_QUERY"} queryRef={queryRef} />
         </Suspense>
       </ThemedView>
     </SafeAreaView>
