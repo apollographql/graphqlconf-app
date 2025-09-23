@@ -3,6 +3,7 @@ import { ResultOf } from "@graphql-typed-document-node/core";
 import { ThemedText } from "../themed-text";
 
 import { SectionHeader_SchedEventFragmentDoc } from "./SectionHeader.generated";
+import { fragmentRegistry } from "@/apollo_client";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
@@ -15,6 +16,7 @@ if (false) {
 SectionHeader.fragments = {
   SchedEvent: SectionHeader_SchedEventFragmentDoc,
 } as const;
+fragmentRegistry.register(SectionHeader.fragments.SchedEvent);
 
 export function SectionHeader({
   event,

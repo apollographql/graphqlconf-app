@@ -3,7 +3,7 @@ import { useSuspenseFragment } from "@apollo/client/react";
 import { useMemo } from "react";
 import { SectionList } from "react-native";
 import { ScheduleListItem } from "./ScheduleItem";
-import { From } from "@/apollo_client";
+import { fragmentRegistry, From } from "@/apollo_client";
 import { SectionHeader } from "./SectionHeader";
 import { ThemedText } from "../themed-text";
 import {
@@ -28,14 +28,13 @@ if (false) {
         ...ScheduleListItem_SchedSession
       }
     }
-    ${ScheduleListItem.fragments.SchedSession}
-    ${SectionHeader.fragments.SchedEvent}
   `;
 }
 
 ScheduleList.fragments = {
   Query: ScheduleList_QueryFragmentDoc,
 } as const;
+fragmentRegistry.register(ScheduleList.fragments.Query);
 
 export function ScheduleList({
   parent,

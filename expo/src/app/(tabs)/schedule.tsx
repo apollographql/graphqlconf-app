@@ -13,7 +13,6 @@ if (false) {
     query ScheduleScreen {
       ...ScheduleList_Query
     }
-    ${ScheduleList.fragments.Query}
   `;
 }
 

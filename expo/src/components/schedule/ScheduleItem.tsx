@@ -1,4 +1,4 @@
-import { From } from "@/apollo_client";
+import { fragmentRegistry, From } from "@/apollo_client";
 import { gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { ThemedView } from "@/components/themed-view";
@@ -36,6 +36,7 @@ if (false) {
 ScheduleListItem.fragments = {
   SchedSession: ScheduleListItem_SchedSessionFragmentDoc,
 } as const;
+fragmentRegistry.register(ScheduleListItem.fragments.SchedSession);
 
 export function ScheduleListItem({
   schedSession,

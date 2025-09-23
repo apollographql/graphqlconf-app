@@ -2,6 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { type useSuspenseFragment } from "@apollo/client/react";
 import { Platform } from "react-native";
 import type { GraphQLCodegenDataMasking } from "@apollo/client/masking";
+import { createFragmentRegistry } from "@apollo/client/cache";
 
 declare module "@apollo/client" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -17,8 +18,12 @@ if (Platform.OS === "android") {
   uri = uri.replace("localhost", "10.0.2.2");
 }
 
+export const fragmentRegistry = createFragmentRegistry();
+
 export const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    fragments: fragmentRegistry,
+  }),
   link: new HttpLink({
     uri,
   }),
