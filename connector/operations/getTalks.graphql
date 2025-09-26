@@ -1,0 +1,28 @@
+query GetTalks(
+  $ids: [String!]
+  $year: String
+  $nameLike: String
+  $descriptionLike: String
+  $venueId: String
+  $start: Int
+  $end: Int
+  $limit: Int
+) {
+  events(
+    nameLike: $nameLike
+    year: $year
+    ids: $ids
+    descriptionLike: $descriptionLike
+    venueId: $venueId
+    start: $start
+    end: $end
+    limit: $limit
+  ) {
+    name
+    description
+    speakers {
+      name
+      id
+    }
+  }
+}

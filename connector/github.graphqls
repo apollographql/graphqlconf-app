@@ -3,155 +3,207 @@
 # a graph. To learn more, visit Apollo's documentation: 🔗https://www.apollographql.com/docs/graphos/schema-design/connectors
 
 extend schema
-  @link( # Enable this schema to use Apollo Federation features
-    url: "https://specs.apollo.dev/federation/v2.10"
-  )
+  @link(url: "https://specs.apollo.dev/federation/v2.10") # Enable this schema to use Apollo Federation features
   @link( # Enable this schema to use Apollo Connectors
     url: "https://specs.apollo.dev/connect/v0.2"
     import: ["@connect", "@source"]
   )
-
-@source(
-  name: "github"
-  http: {
-    baseURL: "https://graphql.github.io/"
-    headers: [
-      { name: "Accept", value: "application/vnd.github.json+json" }
-    ]
-  }
-)
+  @source(name: "conf", http: { baseURL: "http://localhost:8081/api/conf/" })
 
 type Query {
-  schedule_2025: [SchedSession!]
+  events(
+    year: String
+    ids: [String!]
+    nameLike: String
+    descriptionLike: String
+    venueId: String
+    start: Int
+    end: Int
+    limit: Int
+  ): [SchedSession!]!
     @connect(
-      source: "github"
+      source: "conf"
       http: {
-        GET: "scripts/sync-sched/schedule-2025.json"
+        GET: "events"
+        queryParams: """
+        year: $args.year
+        id: $args.ids
+        name_like: $args.nameLike
+        description_like: $args.descriptionLike
+        venue_id: $args.venueId
+        _start: $args.start
+        _end: $args.end
+        _limit: $args.limit
+        """
       }
       selection: """
       id
+      event_key
       active
       pinned
       name
       description
-      invite_only
       goers
       seats
-      event: {
-        key: event_key
-        start: event_start
-        end: event_end
-        start_year: event_start_year
-        start_month: event_start_month
-        start_month_short: event_start_month_short
-        start_day: event_start_day
-        start_weekday: event_start_weekday
-        start_weekday_short: event_start_weekday_short
-        start_time: event_start_time
-        start_date: start_date
-        end_year: event_end_year
-        end_month: event_end_month
-        end_month_short: event_end_month_short
-        end_day: event_end_day
-        end_weekday: event_end_weekday
-        end_weekday_short: event_end_weekday_short
-        end_time: event_end_time
-        end_date: end_date
-        type: event_type
-        subtype: event_subtype
-        timezone: $("Europe/Amsterdam")
-        start_time_epoch: start_time_ts
-      }
-      venue: {
-        id: venue_id
-        name: venue
-      }
-      speakers {
-        username
+      audience
+      invite_only
+      type
+      subtype
+      start_time_ts
+      start_date
+      start_time
+      end_date
+      end_time
+      year
+      video_stream
+      venue: {id:venue_id}
+      speakers: speaker_id->map({id: @}) {id}
+      files {
+        path
         name
-        about
-        position
-        company
-        avatar
-        years: _years
-        custom_order
       }
       """
     )
 
-  speakers: [SchedSpeaker!]
+  speakers(
+    ids: [String!]
+    company: String
+    username: String
+    nameLike: String
+  ): [SchedSpeaker!]
     @connect(
-      source: "github"
+      source: "conf"
       http: {
-        GET: "scripts/sync-sched/speakers.json"
+        GET: "speakers"
+        queryParams: """
+        id: $args.ids
+        company: $args.company
+        username: $args.username
+        name_like: $args.nameLike
+        """
       }
       selection: """
-      $.speakers {
+      ${
+        id
         username
         name
         about
         position
+        location
+        url
         company
         avatar
+        socialurls {
+          service
+          url
+        }
         years: _years
-        custom_order
       }
       """
     )
+
+  venues(ids: [String!], nameLike: String): [SchedVenue!]!
+    @connect(
+      source: "conf"
+      http: {
+        GET: "venues"
+        queryParams: """
+        id: $args.ids
+        name_like: $args.nameLike
+        """
+      }
+      selection: """
+      id
+      name
+      """
+    )
+}
+
+enum YN {
+  Y
+  N
 }
 
 type SchedSession {
   id: String!
-  active: String
-  pinned: String
-  name: String
-  description: String
-  invite_only: String
-  goers: String
-  seats: String
-  event: SchedEvent
-  venue: SchedVenue
-  speakers: [SchedSpeaker!]
-}
-
-type SchedEvent {
-  key: String!
-  start: String
-  end: String
-  start_year: String
-  start_month: String
-  start_month_short: String
-  start_day: String
-  start_weekday: String
-  start_weekday_short: String
-  start_time: String
-  start_date: String
-  end_year: String
-  end_month: String
-  end_month_short: String
-  end_day: String
-  end_weekday: String
-  end_weekday_short: String
-  end_time: String
-  end_date: String
-  type: String
+  event_key: String!
+  active: YN!
+  pinned: YN!
+  name: String!
+  description: String!
+  goers: Int
+  seats: Int
+  audience: String
+  invite_only: YN!
+  type: String!
   subtype: String
-  timezone: String!
-  start_time_epoch: Int
+  start_time_ts: Int
+  start_date: String!
+  start_time: String!
+  end_date: String!
+  end_time: String!
+  year: String!
+  video_stream: String
+  venue: SchedVenue
+  speakers: [SchedSpeaker!]!
+  files: [File!]!
 }
 
-type SchedVenue {
+type File {
+  path: String!
+  name: String!
+}
+
+type SchedVenue
+  @connect(
+    source: "conf"
+    http: { GET: "venues", queryParams: "id: $batch.id" }
+    selection: """
+    id
+    name
+    """
+  ) {
   id: String!
   name: String
 }
 
-type SchedSpeaker {
+type SchedSpeaker
+  @connect(
+    source: "conf"
+    http: { GET: "speakers", queryParams: "id: $batch.id" }
+    selection: """
+    ${
+      id
+      username
+      name
+      about
+      position
+      location
+      url
+      company
+      avatar
+      socialurls {
+        service
+        url
+      }
+      years: _years
+    }
+    """
+  ) {
+  id: String!
   username: String!
-  name: String
-  about: String
-  position: String
-  company: String
-  avatar: String
+  company: String!
+  position: String!
+  name: String!
+  about: String!
+  location: String!
+  url: String!
+  avatar: String!
+  socialurls: [SocialUrl!]!
   years: [Int!]
-  custom_order: Int
+}
+
+type SocialUrl {
+  service: String!
+  url: String!
 }

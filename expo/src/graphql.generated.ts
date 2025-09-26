@@ -13,68 +13,84 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  join__DirectiveArguments: { input: any; output: any; }
-  join__FieldSet: { input: any; output: any; }
-  join__FieldValue: { input: any; output: any; }
-  link__Import: { input: any; output: any; }
+};
+
+export type File = {
+  __typename?: 'File';
+  name: Scalars['String']['output'];
+  path: Scalars['String']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  schedule_2025?: Maybe<Array<SchedSession>>;
+  events: Array<SchedSession>;
   speakers?: Maybe<Array<SchedSpeaker>>;
+  venues: Array<SchedVenue>;
 };
 
-export type SchedEvent = {
-  __typename?: 'SchedEvent';
-  end?: Maybe<Scalars['String']['output']>;
-  end_date?: Maybe<Scalars['String']['output']>;
-  end_day?: Maybe<Scalars['String']['output']>;
-  end_month?: Maybe<Scalars['String']['output']>;
-  end_month_short?: Maybe<Scalars['String']['output']>;
-  end_time?: Maybe<Scalars['String']['output']>;
-  end_weekday?: Maybe<Scalars['String']['output']>;
-  end_weekday_short?: Maybe<Scalars['String']['output']>;
-  end_year?: Maybe<Scalars['String']['output']>;
-  key: Scalars['String']['output'];
-  start?: Maybe<Scalars['String']['output']>;
-  start_date?: Maybe<Scalars['String']['output']>;
-  start_day?: Maybe<Scalars['String']['output']>;
-  start_month?: Maybe<Scalars['String']['output']>;
-  start_month_short?: Maybe<Scalars['String']['output']>;
-  start_time?: Maybe<Scalars['String']['output']>;
-  start_time_epoch?: Maybe<Scalars['Int']['output']>;
-  start_weekday?: Maybe<Scalars['String']['output']>;
-  start_weekday_short?: Maybe<Scalars['String']['output']>;
-  start_year?: Maybe<Scalars['String']['output']>;
-  subtype?: Maybe<Scalars['String']['output']>;
-  timezone: Scalars['String']['output'];
-  type?: Maybe<Scalars['String']['output']>;
+
+export type QueryEventsArgs = {
+  descriptionLike?: InputMaybe<Scalars['String']['input']>;
+  end?: InputMaybe<Scalars['Int']['input']>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  nameLike?: InputMaybe<Scalars['String']['input']>;
+  start?: InputMaybe<Scalars['Int']['input']>;
+  venueId?: InputMaybe<Scalars['String']['input']>;
+  year?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QuerySpeakersArgs = {
+  company?: InputMaybe<Scalars['String']['input']>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  nameLike?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryVenuesArgs = {
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  nameLike?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SchedSession = {
   __typename?: 'SchedSession';
-  active?: Maybe<Scalars['String']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  event?: Maybe<SchedEvent>;
-  goers?: Maybe<Scalars['String']['output']>;
+  active: Yn;
+  audience?: Maybe<Scalars['String']['output']>;
+  description: Scalars['String']['output'];
+  end_date: Scalars['String']['output'];
+  end_time: Scalars['String']['output'];
+  event_key: Scalars['String']['output'];
+  files: Array<File>;
+  goers?: Maybe<Scalars['Int']['output']>;
   id: Scalars['String']['output'];
-  invite_only?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  pinned?: Maybe<Scalars['String']['output']>;
-  seats?: Maybe<Scalars['String']['output']>;
-  speakers?: Maybe<Array<SchedSpeaker>>;
+  invite_only: Yn;
+  name: Scalars['String']['output'];
+  pinned: Yn;
+  seats?: Maybe<Scalars['Int']['output']>;
+  speakers: Array<SchedSpeaker>;
+  start_date: Scalars['String']['output'];
+  start_time: Scalars['String']['output'];
+  start_time_ts?: Maybe<Scalars['Int']['output']>;
+  subtype?: Maybe<Scalars['String']['output']>;
+  type: Scalars['String']['output'];
   venue?: Maybe<SchedVenue>;
+  video_stream?: Maybe<Scalars['String']['output']>;
+  year: Scalars['String']['output'];
 };
 
 export type SchedSpeaker = {
   __typename?: 'SchedSpeaker';
-  about?: Maybe<Scalars['String']['output']>;
-  avatar?: Maybe<Scalars['String']['output']>;
-  company?: Maybe<Scalars['String']['output']>;
-  custom_order?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  position?: Maybe<Scalars['String']['output']>;
+  about: Scalars['String']['output'];
+  avatar: Scalars['String']['output'];
+  company: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  location: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  position: Scalars['String']['output'];
+  socialurls: Array<SocialUrl>;
+  url: Scalars['String']['output'];
   username: Scalars['String']['output'];
   years?: Maybe<Array<Scalars['Int']['output']>>;
 };
@@ -85,20 +101,13 @@ export type SchedVenue = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-export type Join__ContextArgument = {
-  context: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  selection: Scalars['join__FieldValue']['input'];
-  type: Scalars['String']['input'];
+export type SocialUrl = {
+  __typename?: 'SocialUrl';
+  service: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
-export enum Join__Graph {
-  Github = 'GITHUB'
-}
-
-export enum Link__Purpose {
-  /** `EXECUTION` features provide metadata necessary for operation execution. */
-  Execution = 'EXECUTION',
-  /** `SECURITY` features provide metadata necessary to securely resolve fields. */
-  Security = 'SECURITY'
+export enum Yn {
+  N = 'N',
+  Y = 'Y'
 }

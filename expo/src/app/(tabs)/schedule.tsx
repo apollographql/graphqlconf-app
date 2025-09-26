@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScheduleScreenDocument } from "./schedule.generated";
+import { ScheduleScreenDocument } from "./_schedule.generated";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -24,7 +24,7 @@ export default function ScheduleScreen() {
     <SafeAreaView style={{ flex: 1 }}>
       <ThemedView style={{ flex: 1 }}>
         <Suspense fallback={<ThemedText>Loading...</ThemedText>}>
-          <ScheduleList parent={"ROOT_QUERY"} queryRef={queryRef} />
+          <ScheduleList parent={"ROOT_QUERY" as any} queryRef={queryRef} />
         </Suspense>
       </ThemedView>
     </SafeAreaView>

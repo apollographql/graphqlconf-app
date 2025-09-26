@@ -3,6 +3,7 @@ import { type useSuspenseFragment } from "@apollo/client/react";
 import { Platform } from "react-native";
 import type { GraphQLCodegenDataMasking } from "@apollo/client/masking";
 import { createFragmentRegistry } from "@apollo/client/cache";
+import { DocumentTypeDecoration } from "@graphql-typed-document-node/core";
 
 declare module "@apollo/client" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -30,6 +31,15 @@ export const client = new ApolloClient({
   dataMasking: true,
 });
 
-export type From<TData = unknown> = NonNullable<
-  useSuspenseFragment.Options<TData, any>["from"]
->;
+// export type From<TData = unknown> = NonNullable<
+//   useSuspenseFragment.Options<TData, any>["from"]
+// >;
+
+export type From<TDocumentType extends DocumentTypeDecoration<any, any>> =
+  TDocumentType extends DocumentTypeDecoration<infer TType, any>
+    ? [TType] extends [{ " $fragmentName"?: infer TKey }]
+      ? TKey extends string
+        ? { " $fragmentRefs"?: { [key in TKey]: TType } }
+        : never
+      : never
+    : never;

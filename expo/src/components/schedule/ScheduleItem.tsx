@@ -3,10 +3,7 @@ import { gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
-import {
-  ScheduleListItem_SchedSessionFragmentDoc,
-  ScheduleListItem_SchedSessionFragment,
-} from "./ScheduleItem.generated";
+import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleItem.generated";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -19,12 +16,10 @@ if (false) {
         id
         name
       }
-      event {
-        start_time
-        end_time
-        type
-        subtype
-      }
+      start_time
+      end_time
+      type
+      subtype
       speakers {
         username
         name
@@ -41,7 +36,7 @@ fragmentRegistry.register(ScheduleListItem.fragments.SchedSession);
 export function ScheduleListItem({
   schedSession,
 }: {
-  schedSession: From<ScheduleListItem_SchedSessionFragment>;
+  schedSession: From<typeof ScheduleListItem.fragments.SchedSession>;
 }) {
   const { data } = useSuspenseFragment({
     fragment: ScheduleListItem.fragments.SchedSession,
@@ -55,7 +50,7 @@ export function ScheduleListItem({
       <ThemedText>{data.name}</ThemedText>
       {!data.venue ? null : <ThemedText>{data.venue?.name}</ThemedText>}
       <ThemedText>
-        {data.event?.start_time} - {data.event?.end_time}
+        {data.start_time} - {data.end_time}
       </ThemedText>
       {!data.speakers ? null : (
         <ThemedText>

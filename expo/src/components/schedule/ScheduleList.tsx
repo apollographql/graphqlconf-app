@@ -10,26 +10,20 @@ import { ScheduleListItem } from "./ScheduleItem";
 import { fragmentRegistry, From } from "@/apollo_client";
 import { SectionHeader } from "./SectionHeader";
 import { ThemedText } from "../themed-text";
-import {
-  ScheduleList_QueryFragmentDoc,
-  ScheduleList_QueryFragment,
-} from "./ScheduleList.generated";
+import { ScheduleList_QueryFragmentDoc } from "./ScheduleList.generated";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     fragment ScheduleList_Query on Query {
-      schedule_2025 {
+      events(year: "2025") {
         id
-        event {
-          start_time_epoch
-          start_weekday
-          ...SectionHeader_SchedEvent @unmask #needs to be passed unmasked as it cannot be normalized
-        }
+        start_time_ts
         venue {
           id
         }
         ...ScheduleListItem_SchedSession
+        ...SectionHeader_SchedEvent @unmask #needs to be passed unmasked as it cannot be normalized
       }
     }
   `;
@@ -44,7 +38,7 @@ export function ScheduleList({
   parent,
   queryRef,
 }: {
-  parent: From<ScheduleList_QueryFragment>;
+  parent: From<typeof ScheduleList.fragments.Query>;
   queryRef: QueryRef;
 }) {
   const { refetch } = useQueryRefHandlers(queryRef);
@@ -61,27 +55,31 @@ export function ScheduleList({
   });
   const sections = useMemo(() => {
     const grouped = Object.groupBy(
-      data.schedule_2025 || [],
-      (item) => item.event?.start_time_epoch ?? 0
+      data.events || [],
+      (item) => item.start_time_ts ?? 0
     );
     let previousDay: undefined | string;
     return Object.entries(grouped)
       .map(([timeslot, items]) => {
         return {
-          firstEvent: items?.[0].event,
+          firstEvent: items?.[0],
+          weekday: new Date(items?.[0]?.start_time_ts ?? 0).toLocaleDateString(
+            undefined,
+            { weekday: "long" }
+          ),
           timeslot: Number(timeslot) || 0,
           data: items ?? [],
         };
       })
       .sort((a, b) => a.timeslot - b.timeslot)
       .map((section) => {
-        if (section.firstEvent?.start_weekday !== previousDay) {
-          previousDay = section.firstEvent?.start_weekday ?? undefined;
+        if (section.weekday !== previousDay) {
+          previousDay = section.weekday ?? undefined;
           return { ...section, firstEventOfDay: true };
         }
         return { ...section, firstEventOfDay: false };
       });
-  }, [data.schedule_2025]);
+  }, [data.events]);
   return (
     <SectionList
       refreshing={refreshing}
