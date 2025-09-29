@@ -44,23 +44,27 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
               scrollViewRef.current?.scrollToEnd({ animated: true })
             }
           >
-            {messages.map((m) => (
-              <View key={m.id} style={{ marginVertical: 8 }}>
-                <View>
-                  <ThemedText style={{ fontWeight: 700 }}>{m.role}</ThemedText>
-                  {m.parts.map((part, i) => {
-                    switch (part.type) {
-                      case "text":
-                        return (
-                          <ThemedText key={`${m.id}-${i}`}>
-                            {part.text}
-                          </ThemedText>
-                        );
-                    }
-                  })}
+            <View style={styles.chatContentWrapper}>
+              {messages.map((m) => (
+                <View key={m.id} style={{ marginVertical: 8 }}>
+                  <View>
+                    <ThemedText style={{ fontWeight: 700 }}>
+                      {m.role}
+                    </ThemedText>
+                    {m.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <ThemedText key={`${m.id}-${i}`}>
+                              {part.text}
+                            </ThemedText>
+                          );
+                      }
+                    })}
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
+            </View>
           </Animated.ScrollView>
         )}
         <View style={styles.omnibarRow}>
@@ -122,7 +126,8 @@ const styles = Object.assign(
     expanded: {
       height: "70%",
     },
-    chatContainer: { flex: 1, justifyContent: "flex-end" },
+    chatContainer: { flexGrow: 1 },
+    chatContentWrapper: { flexGrow: 1, justifyContent: "flex-end" },
     omnibarRow: {
       flexDirection: "row",
       marginTop: 10,

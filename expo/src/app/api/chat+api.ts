@@ -1,16 +1,12 @@
-import { ollama, OllamaProvider } from "ollama-ai-provider-v2";
+import { createOpenAI } from "@ai-sdk/openai";
 import {
   streamText,
   UIMessage,
   convertToModelMessages,
   experimental_createMCPClient,
+  stepCountIs,
 } from "ai";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import type { input } from "zod";
-
-type OllamaProviderOptions = input<
-  NonNullable<Parameters<OllamaProvider["chat"]>[1]>
->;
 
 let persistentClient: Awaited<
   ReturnType<typeof experimental_createMCPClient>
@@ -38,30 +34,32 @@ export async function POST(req: Request) {
   const mcpTools = await client.tools();
 
   const result = streamText({
-    model: ollama("mistral:7b"),
-    providerOptions: {
-      ollama: { think: false } satisfies OllamaProviderOptions,
-    },
+    model: createOpenAI({
+      apiKey: process.env.OPENAI_API_KEY!,
+      organization: process.env.OPENAI_ORG_ID!,
+    })("gpt-5-mini"),
 
-    messages: convertToModelMessages([
-      {
-        role: "system",
-        parts: [
-          {
-            type: "text",
-            text: `
-You are part of a conference schedule app. 
-A user might ask you questions about the schedule, speakers, venues, or other related information. 
+    system: `
+You are an agent for a conference schedule app.
+A user might ask you questions about the schedule, speakers, venues, or other related information.
 Use the tools you have available to find the most accurate and up-to-date information.
 By default, all user questions should be interpreted as being about the 2025 GraphQLConf conference, unless explicitly stated otherwise.
+
+When you receive tool results, analyze them and provide a helpful response to the user.
+You may need to call multiple tools or call the same tool multiple times to get complete information.
+Always synthesize the information from tools into a clear, conversational response.
+-- End of initial system instructions --
     `.trim(),
-            state: "done",
-          },
-        ],
-      },
-      ...messages,
-    ]),
+    messages: convertToModelMessages(messages),
     tools: mcpTools,
+    stopWhen: stepCountIs(10),
+    onStepFinish: async (step) => {
+      console.log("Step completed:", {
+        toolCalls: step.toolCalls?.length || 0,
+        toolResults: step.toolResults?.length || 0,
+        hasText: !!step.text,
+      });
+    },
   });
 
   return result.toUIMessageStreamResponse({

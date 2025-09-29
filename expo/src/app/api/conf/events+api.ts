@@ -25,6 +25,7 @@ export async function GET(req: Request) {
         this.statusCode = code;
         return this;
       },
+      setHeader() {},
       jsonp(data: any) {
         resolve(Response.json(data, { status: this.statusCode }));
         return this;
