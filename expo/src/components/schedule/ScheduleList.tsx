@@ -16,7 +16,7 @@ if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     fragment ScheduleList_Query on Query {
-      events(year: "2025") {
+      events(year: $year) {
         id
         start_time_ts
         venue {
@@ -37,9 +37,11 @@ fragmentRegistry.register(ScheduleList.fragments.Query);
 export function ScheduleList({
   parent,
   queryRef,
+  variables,
 }: {
   parent: From<typeof ScheduleList.fragments.Query>;
   queryRef: QueryRef;
+  variables: { year: string };
 }) {
   const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
@@ -53,6 +55,7 @@ export function ScheduleList({
     fragment: ScheduleList.fragments.Query,
     fragmentName: "ScheduleList_Query",
     from: parent,
+    variables,
   });
   const sections = useMemo(() => {
     const grouped = Object.groupBy(
