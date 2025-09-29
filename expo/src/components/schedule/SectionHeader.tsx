@@ -1,16 +1,19 @@
 import { gql } from "@apollo/client";
-import { ResultOf } from "@graphql-typed-document-node/core";
 import { ThemedText } from "../themed-text";
 
 import { SectionHeader_SchedEventFragmentDoc } from "./SectionHeader.generated";
-import { fragmentRegistry } from "@/apollo_client";
+import { fragmentRegistry, From } from "@/apollo_client";
 import { useMemo } from "react";
+import { useSuspenseFragment } from "@apollo/client/react";
+import { StyleSheet } from "react-native";
+import { ThemedView } from "../themed-view";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     fragment SectionHeader_SchedEvent on SchedSession {
       id
       start_time
+      start_time_ts
     }
   `;
 }
@@ -23,20 +26,45 @@ export function SectionHeader({
   event,
   firstEventOfDay,
 }: {
-  event: ResultOf<typeof SectionHeader.fragments.SchedEvent>;
+  event: From<typeof SectionHeader.fragments.SchedEvent>;
   firstEventOfDay: boolean;
 }) {
+  const { data } = useSuspenseFragment({
+    fragment: SectionHeader.fragments.SchedEvent,
+    fragmentName: "SectionHeader_SchedEvent",
+    from: event,
+  });
   const weekday = useMemo(
     () =>
-      new Date(event.start_time ?? "").toLocaleDateString(undefined, {
+      new Date(
+        data.start_time_ts ? data.start_time_ts * 1000 : ""
+      ).toLocaleDateString(undefined, {
         weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       }),
-    [event.start_time]
+    [data.start_time_ts]
   );
   return (
-    <>
-      {!firstEventOfDay ? null : <ThemedText>{weekday}</ThemedText>}
-      <ThemedText>{event.start_time}</ThemedText>
-    </>
+    <ThemedView style={firstEventOfDay && styles.firstEventOfDay}>
+      {!firstEventOfDay ? null : (
+        <ThemedText type="title" style={styles.firstEventOfDayText}>
+          {weekday}
+        </ThemedText>
+      )}
+      <ThemedText type="subtitle">{data.start_time}</ThemedText>
+    </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  firstEventOfDay: {
+    borderTopWidth: 3,
+    marginTop: 10,
+    paddingTop: 10,
+  },
+  firstEventOfDayText: {
+    marginBottom: 10,
+  },
+});

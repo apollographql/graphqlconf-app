@@ -5,6 +5,11 @@ const { getDefaultConfig } = require("expo/metro-config");
 const config = getDefaultConfig(__dirname);
 
 config.resolver.unstable_enablePackageExports = true;
+config.resolver.unstable_conditionNames = [
+  "require",
+  "react-native",
+  "development",
+];
 
 const ALIASES = {
   tslib: "tslib/tslib.es6.js",

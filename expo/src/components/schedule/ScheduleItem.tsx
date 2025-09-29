@@ -36,10 +36,13 @@ fragmentRegistry.register(ScheduleListItem.fragments.SchedSession);
 export function ScheduleListItem({
   schedSession,
 }: {
-  schedSession: From<typeof ScheduleListItem.fragments.SchedSession>;
+  schedSession:
+    | From<typeof ScheduleListItem.fragments.SchedSession>
+    | { typename: "SchedSession"; id: string };
 }) {
   const { data } = useSuspenseFragment({
     fragment: ScheduleListItem.fragments.SchedSession,
+    fragmentName: "ScheduleListItem_SchedSession",
     from: schedSession,
   });
 

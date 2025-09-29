@@ -1,0 +1,32 @@
+diff --git a/node_modules/@graphql-codegen/visitor-plugin-common/cjs/client-side-base-visitor.js b/node_modules/@graphql-codegen/visitor-plugin-common/cjs/client-side-base-visitor.js
+index d8f7c53..1b101ae 100644
+--- a/node_modules/@graphql-codegen/visitor-plugin-common/cjs/client-side-base-visitor.js
++++ b/node_modules/@graphql-codegen/visitor-plugin-common/cjs/client-side-base-visitor.js
+@@ -135,7 +135,10 @@ class ClientSideBaseVisitor extends base_visitor_js_1.BaseVisitor {
+             const jsonStringify = (json) => JSON.stringify(json, (key, value) => (key === 'loc' ? undefined : value));
+             let definitions = [...gqlObj.definitions];
+             for (const fragmentName of fragmentDependencyNames) {
+-                definitions.push(this.fragmentsGraph.getNodeData(fragmentName).node);
++                const fragmentData = this.fragmentsGraph.getNodeData(fragmentName);
++                if (!fragmentData.isExternal || this.config.includeExternalFragments) {
++                definitions.push(fragmentData.node);
++                }
+             }
+             if (this.config.optimizeDocumentNode) {
+                 definitions = [
+diff --git a/node_modules/@graphql-codegen/visitor-plugin-common/esm/client-side-base-visitor.js b/node_modules/@graphql-codegen/visitor-plugin-common/esm/client-side-base-visitor.js
+index cc9c605..0423371 100644
+--- a/node_modules/@graphql-codegen/visitor-plugin-common/esm/client-side-base-visitor.js
++++ b/node_modules/@graphql-codegen/visitor-plugin-common/esm/client-side-base-visitor.js
+@@ -131,7 +131,10 @@ export class ClientSideBaseVisitor extends BaseVisitor {
+             const jsonStringify = (json) => JSON.stringify(json, (key, value) => (key === 'loc' ? undefined : value));
+             let definitions = [...gqlObj.definitions];
+             for (const fragmentName of fragmentDependencyNames) {
+-                definitions.push(this.fragmentsGraph.getNodeData(fragmentName).node);
++                const fragmentData = this.fragmentsGraph.getNodeData(fragmentName);
++                if (!fragmentData.isExternal || this.config.includeExternalFragments) {
++                definitions.push(fragmentData.node);
++                }
+             }
+             if (this.config.optimizeDocumentNode) {
+                 definitions = [

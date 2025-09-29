@@ -50,6 +50,7 @@ const config: CodegenConfig = {
         // don't generate a type for the `__typename` for root operation types.
         skipTypeNameForRoot: true,
         inlineFragmentTypes: "mask",
+        includeExternalFragments: false,
         customDirectives: {
           apolloUnmask: true,
         },

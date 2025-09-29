@@ -23,7 +23,7 @@ if (false) {
           id
         }
         ...ScheduleListItem_SchedSession
-        ...SectionHeader_SchedEvent @unmask #needs to be passed unmasked as it cannot be normalized
+        ...SectionHeader_SchedEvent
       }
     }
   `;
@@ -48,6 +48,7 @@ export function ScheduleList({
       refetch();
     });
   };
+
   const { data } = useSuspenseFragment({
     fragment: ScheduleList.fragments.Query,
     fragmentName: "ScheduleList_Query",
@@ -61,12 +62,14 @@ export function ScheduleList({
     let previousDay: undefined | string;
     return Object.entries(grouped)
       .map(([timeslot, items]) => {
+        const startTime = items?.[0]?.start_time_ts;
         return {
           firstEvent: items?.[0],
-          weekday: new Date(items?.[0]?.start_time_ts ?? 0).toLocaleDateString(
-            undefined,
-            { weekday: "long" }
-          ),
+          weekday: startTime
+            ? new Date(startTime * 1000).toLocaleDateString(undefined, {
+                weekday: "long",
+              })
+            : "",
           timeslot: Number(timeslot) || 0,
           data: items ?? [],
         };
