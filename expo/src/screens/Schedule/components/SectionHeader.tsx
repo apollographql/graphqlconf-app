@@ -1,12 +1,12 @@
-import { gql } from "@apollo/client";
-import { ThemedText } from "../themed-text";
+import { FragmentType, gql } from "@apollo/client";
+import { ThemedText } from "@/components/themed-text";
 
 import { SectionHeader_SchedEventFragmentDoc } from "./SectionHeader.generated";
-import { fragmentRegistry, From } from "@/apollo_client";
+import { fragmentRegistry } from "@/apollo_client";
 import { useMemo } from "react";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { StyleSheet } from "react-native";
-import { ThemedView } from "../themed-view";
+import { ThemedView } from "@/components/themed-view";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
@@ -26,7 +26,7 @@ export function SectionHeader({
   event,
   firstEventOfDay,
 }: {
-  event: From<typeof SectionHeader.fragments.SchedEvent>;
+  event: FragmentType<typeof SectionHeader.fragments.SchedEvent>;
   firstEventOfDay: boolean;
 }) {
   const { data } = useSuspenseFragment({

@@ -1,5 +1,5 @@
-import { fragmentRegistry, From } from "@/apollo_client";
-import { gql } from "@apollo/client";
+import { fragmentRegistry, FromParent } from "@/apollo_client";
+import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
@@ -34,16 +34,16 @@ ScheduleListItem.fragments = {
 fragmentRegistry.register(ScheduleListItem.fragments.SchedSession);
 
 export function ScheduleListItem({
-  schedSession,
+  SchedSession,
 }: {
-  schedSession:
-    | From<typeof ScheduleListItem.fragments.SchedSession>
-    | { typename: "SchedSession"; id: string };
+  SchedSession:
+    | FragmentType<typeof ScheduleListItem.fragments.SchedSession>
+    | FromParent<typeof ScheduleListItem.fragments.SchedSession>;
 }) {
   const { data } = useSuspenseFragment({
     fragment: ScheduleListItem.fragments.SchedSession,
     fragmentName: "ScheduleListItem_SchedSession",
-    from: schedSession,
+    from: SchedSession,
   });
 
   return (

@@ -1,10 +1,9 @@
 /* eslint-disable */
-import * as Types from '../../graphql.generated';
+import * as Types from '../../../graphql.generated';
 
 import { ScheduleListItem_SchedSessionFragment } from './ScheduleItem.generated';
 import { SectionHeader_SchedEventFragment } from './SectionHeader.generated';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export default function NotARoute(){ throw new Error('This is not a route!'); }
 export type ScheduleList_QueryFragment = { events: Array<(
     { __typename: 'SchedSession', id: string, start_time_ts: number | null, venue: { __typename: 'SchedVenue', id: string } | null }
     & { ' $fragmentRefs'?: { 'ScheduleListItem_SchedSessionFragment': ScheduleListItem_SchedSessionFragment;'SectionHeader_SchedEventFragment': SectionHeader_SchedEventFragment } }

@@ -1,9 +1,8 @@
 /* eslint-disable */
 import * as Types from '../../graphql.generated';
 
-import { ScheduleList_QueryFragment } from '../../components/schedule/ScheduleList.generated';
+import { ScheduleList_QueryFragment } from './components/ScheduleList.generated';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export default function NotARoute(){ throw new Error('This is not a route!'); }
 export type ScheduleScreenQueryVariables = Types.Exact<{
   year: Types.Scalars['String']['input'];
 }>;

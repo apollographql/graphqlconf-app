@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { FragmentType, gql } from "@apollo/client";
 import {
   QueryRef,
   useQueryRefHandlers,
@@ -7,9 +7,9 @@ import {
 import { useMemo, useTransition } from "react";
 import { SectionList } from "react-native";
 import { ScheduleListItem } from "./ScheduleItem";
-import { fragmentRegistry, From } from "@/apollo_client";
+import { fragmentRegistry } from "@/apollo_client";
 import { SectionHeader } from "./SectionHeader";
-import { ThemedText } from "../themed-text";
+import { ThemedText } from "@/components/themed-text";
 import { ScheduleList_QueryFragmentDoc } from "./ScheduleList.generated";
 
 if (false) {
@@ -39,7 +39,7 @@ export function ScheduleList({
   queryRef,
   variables,
 }: {
-  parent: From<typeof ScheduleList.fragments.Query>;
+  parent: FragmentType<typeof ScheduleList.fragments.Query>;
   queryRef: QueryRef;
   variables: { year: string };
 }) {
@@ -93,7 +93,7 @@ export function ScheduleList({
       style={{ margin: 5 }}
       sections={sections}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <ScheduleListItem schedSession={item} />}
+      renderItem={({ item }) => <ScheduleListItem SchedSession={item} />}
       renderSectionHeader={({ section: { firstEvent, firstEventOfDay } }) =>
         firstEvent ? (
           <SectionHeader event={firstEvent} firstEventOfDay={firstEventOfDay} />

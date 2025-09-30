@@ -33,12 +33,6 @@ const config: CodegenConfig = {
         },
         "typescript-operations",
         "typed-document-node",
-        {
-          add: {
-            content:
-              "export default function NotARoute(){ throw new Error('This is not a route!'); }",
-          },
-        },
       ],
       // Note: these config options moved from the other generated file config
       config: {

@@ -1,8 +1,7 @@
 /* eslint-disable */
-import * as Types from '../../graphql.generated';
+import * as Types from '../../../graphql.generated';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export default function NotARoute(){ throw new Error('This is not a route!'); }
 export type ScheduleListItem_SchedSessionFragment = { __typename: 'SchedSession', id: string, name: string, start_time: string, end_time: string, type: string, subtype: string | null, venue: { __typename: 'SchedVenue', id: string, name: string | null } | null, speakers: Array<{ __typename: 'SchedSpeaker', username: string, name: string }> } & { ' $fragmentName'?: 'ScheduleListItem_SchedSessionFragment' };
 
 export const ScheduleListItem_SchedSessionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ScheduleListItem_SchedSession"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SchedSession"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"venue"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"subtype"}},{"kind":"Field","name":{"kind":"Name","value":"speakers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<ScheduleListItem_SchedSessionFragment, unknown>;
