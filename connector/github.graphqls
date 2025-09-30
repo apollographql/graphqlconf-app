@@ -5,7 +5,7 @@
 extend schema
   @link(url: "https://specs.apollo.dev/federation/v2.10") # Enable this schema to use Apollo Federation features
   @link( # Enable this schema to use Apollo Connectors
-    url: "https://specs.apollo.dev/connect/v0.2"
+    url: "https://specs.apollo.dev/connect/v0.3"
     import: ["@connect", "@source"]
   )
   @source(name: "conf", http: { baseURL: "http://localhost:8081/api/conf/" })
@@ -56,7 +56,7 @@ type Query {
       end_time
       year
       video_stream
-      venue: {id:venue_id}
+      venue: venue_id? { id: $ }
       speakers: speaker_id->map({id: @}) {id}
       files {
         path
