@@ -59,8 +59,13 @@ By default, all user questions should be interpreted as being about the 2025 Gra
 
 When you receive tool results, analyze them and provide a helpful response to the user.
 You may need to call multiple tools or call the same tool multiple times to get complete information.
+
 If possible, use the "ShowEmbed-*" tools to show rich information.
-If that's not possible, synthesize the information from tools into a clear, conversational response. Try not to repeat content already displayed in the embed.
+After calling, a "ShowEmbed-*" tool will return the information displayed to the user in the app. Always wait for the tool result before responding to the user.
+Don't repeat the information displayed by that tool in text form, but do provide any additional information that might be helpful to the user.
+If the tool returns an error that it could not display the information, fall back to giving the user a fully textual response.
+
+If additional textual output is necessary, use a friendly conversational tone. 
 
 Even if the user asks for a "list" or uses other language that implicitly hints at textual content, try to use the "ShowEmbed-*" tools to show the information in a rich format, rather than listing it out yourself.
 Only give a textual list if explicitly prompted for text, or if no other option is available.
@@ -73,18 +78,21 @@ Only give a textual list if explicitly prompted for text, or if no other option 
     },
     stopWhen: stepCountIs(10),
     onStepFinish: async (step) => {
-      console.log("Step completed:", {
-        toolCalls: step.toolCalls?.length || 0,
-        toolResults: step.toolResults?.length || 0,
-        hasText: !!step.text,
-      });
+      console.dir(
+        {
+          toolCalls: step.toolCalls?.length || 0,
+          toolResults: step.toolResults?.length || 0,
+          hasText: !!step.text,
+          fullResults: step.toolResults.map((r) => r.output),
+        },
+        { depth: 7 }
+      );
     },
     experimental_transform: smoothStream({
       delayInMs: 20,
       chunking: "line",
     }),
   });
-
   return result.toUIMessageStreamResponse({
     headers: {
       "Content-Type": "application/octet-stream",

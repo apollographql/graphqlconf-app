@@ -12,8 +12,8 @@
     "codegen": "graphql-codegen"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^2.0.38",
-    "@ai-sdk/react": "^2.0.51",
+    "@ai-sdk/openai": "^2.1.0-beta.11",
+    "@ai-sdk/react": "^2.1.0-beta.19",
     "@apollo/client": "^4.0.5",
     "@expo/vector-icons": "^15.0.2",
     "@graphql-typed-document-node/core": "^3.2.0",
@@ -21,7 +21,7 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
-    "ai": "^5.0.49",
+    "ai": "^5.1.0-beta.19",
     "core-js": "^3.45.1",
     "expo": "~54.0.9",
     "expo-constants": "~18.0.9",

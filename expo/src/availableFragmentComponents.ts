@@ -96,8 +96,6 @@ export const componentTools = mapEntries(
       name: v.name,
       description: v.description,
       inputSchema: v.schema,
-      outputSchema: z.object({}),
-      execute: () => ({}),
     })
 );
 

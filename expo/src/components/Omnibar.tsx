@@ -12,20 +12,84 @@ import { generateAPIUrl } from "@/generateApiUrl";
 import { ThemedText } from "./themed-text";
 import { IconSymbol } from "./ui/icon-symbol";
 import { availableFragmentComponents } from "@/availableFragmentComponents";
+import { useApolloClient } from "@apollo/client/react";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   const theme = useColorScheme() ?? "light";
   const [showChat, setShowChat] = useState(false);
+  const client = useApolloClient();
 
   const inputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<Animated.ScrollView>(null);
-  const { messages, error, sendMessage, status } = useChat({
+  const { messages, error, sendMessage, status, addToolResult } = useChat({
     transport: new DefaultChatTransport({
       fetch: expoFetch as unknown as typeof globalThis.fetch,
       api: generateAPIUrl("/api/chat"),
     }),
     onError: (error) => console.error(error, "ERROR"),
+    sendAutomaticallyWhen(options) {
+      console.log({ sendAutomaticallyWhen: options });
+      const lastPart = options.messages.at(-1)?.parts.at(-1);
+      if (lastPart && isToolEmbedPart(lastPart)) {
+        if (lastPart.state === "output-error") {
+          // give the agent a chance to respond with text if the embed failed
+          return true;
+        }
+      }
+      return false;
+    },
+    onToolCall({ toolCall }) {
+      if (toolCall.dynamic) {
+        return;
+      }
+      if (toolCall.toolName.startsWith("ShowEmbed-")) {
+        const componentName = toolCall.toolName.substring("ShowEmbed-".length);
+        if (!(componentName in availableFragmentComponents)) {
+          throw new Error(`Unknown component name: ${componentName}`);
+        }
+        const details =
+          availableFragmentComponents[
+            componentName as keyof typeof availableFragmentComponents
+          ];
+        const output: Record<string, unknown> = {};
+        const props = toolCall.input as Record<string, any>;
+        for (const [targetTypeName, docs] of Object.entries(
+          details.fragments
+        )) {
+          const fragmentData = client.readFragment({
+            id: client.cache.identify(props[targetTypeName]),
+            fragment: docs,
+            fragmentName: docs.definitions.find(
+              (d) => d.kind === "FragmentDefinition"
+            )?.name.value,
+          });
+          if (!fragmentData) {
+            addToolResult({
+              tool: toolCall.toolName,
+              toolCallId: toolCall.toolCallId,
+              state: "output-error",
+              errorText:
+                "Could not render component in the app due to missing data. Fall back to giving the user a textual response.",
+            });
+            return;
+          }
+          output[targetTypeName] = fragmentData;
+        }
+
+        addToolResult({
+          tool: toolCall.toolName,
+          toolCallId: toolCall.toolCallId,
+          output: ["This data has been displayed to the user:", output],
+        });
+      }
+    },
   });
+
+  function isToolEmbedPart(part: {
+    type: string;
+  }): part is { type: `tool-${string}` } {
+    return part.type.startsWith("tool-ShowEmbed-");
+  }
 
   console.log(messages);
 
@@ -214,9 +278,3 @@ const styles = Object.assign(
     },
   }
 );
-
-function isToolEmbedPart(part: {
-  type: string;
-}): part is { type: `tool-${string}` } {
-  return part.type.startsWith("tool-ShowEmbed-");
-}
