@@ -71,7 +71,7 @@ ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-forwarded-header = { module = "io.ktor:ktor-server-forwarded-header", version.ref = "ktor" }
-librarian = "com.gradleup.librarian:com.gradleup.librarian.gradle.plugin:0.0.11-SNAPSHOT-e8ab4653f68118d36889519f430f1fcd118745e3"
+librarian = "com.gradleup.librarian:com.gradleup.librarian.gradle.plugin:0.2.0"
 okhttp = "com.squareup.okhttp3:okhttp:5.1.0"
 slf4j-simple = "org.slf4j:slf4j-simple:2.0.17"
 licensee = "app.cash.licensee:licensee-gradle-plugin:1.13.0"
