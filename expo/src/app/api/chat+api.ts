@@ -5,8 +5,10 @@ import {
   convertToModelMessages,
   experimental_createMCPClient,
   stepCountIs,
+  smoothStream,
 } from "ai";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { componentTools } from "@/availableFragmentComponents";
 
 let persistentClient: Awaited<
   ReturnType<typeof experimental_createMCPClient>
@@ -37,8 +39,18 @@ export async function POST(req: Request) {
     model: createOpenAI({
       apiKey: process.env.OPENAI_API_KEY!,
       organization: process.env.OPENAI_ORG_ID!,
-    })("gpt-5-mini"),
-
+    })("gpt-4.1-mini"),
+    // https://github.com/vercel/ai/issues/7099#issuecomment-3069539156
+    // avoid "Item 'rs_03e6d4960e393c150068dbd1b235cc819ca60b4f637ad981e2' of type 'reasoning' was provided without its required following item." error
+    // this seems to only be necessary when using GPT 5 tools
+    // providerOptions: {
+    //   openai: {
+    //     store: false,
+    //     reasoningEffort: "low",
+    //     reasoningSummary: "auto",
+    //     include: ["reasoning.encrypted_content"],
+    //   } satisfies OpenAIResponsesProviderOptions,
+    // },
     system: `
 You are an agent for a conference schedule app.
 A user might ask you questions about the schedule, speakers, venues, or other related information.
@@ -47,11 +59,18 @@ By default, all user questions should be interpreted as being about the 2025 Gra
 
 When you receive tool results, analyze them and provide a helpful response to the user.
 You may need to call multiple tools or call the same tool multiple times to get complete information.
-Always synthesize the information from tools into a clear, conversational response.
+If possible, use the "ShowEmbed-*" tools to show rich information.
+If that's not possible, synthesize the information from tools into a clear, conversational response. Try not to repeat content already displayed in the embed.
+
+Even if the user asks for a "list" or uses other language that implicitly hints at textual content, try to use the "ShowEmbed-*" tools to show the information in a rich format, rather than listing it out yourself.
+Only give a textual list if explicitly prompted for text, or if no other option is available.
 -- End of initial system instructions --
     `.trim(),
     messages: convertToModelMessages(messages),
-    tools: mcpTools,
+    tools: {
+      ...mcpTools,
+      ...componentTools,
+    },
     stopWhen: stepCountIs(10),
     onStepFinish: async (step) => {
       console.log("Step completed:", {
@@ -60,6 +79,10 @@ Always synthesize the information from tools into a clear, conversational respon
         hasText: !!step.text,
       });
     },
+    experimental_transform: smoothStream({
+      delayInMs: 20,
+      chunking: "line",
+    }),
   });
 
   return result.toUIMessageStreamResponse({
@@ -69,19 +92,3 @@ Always synthesize the information from tools into a clear, conversational respon
     },
   });
 }
-// export async function GET(req: Request) {
-//   const result = generateObject({
-//     model: ollama("gemma3:1b"),
-//     providerOptions: {
-//       ollama: { think: false } satisfies OllamaProviderOptions,
-//     },
-//     prompt: "Write a very simple recipe for pancakes.",
-//     schema: z.object({
-//       title: z.string().describe("The title of the recipe"),
-//       ingredients: z.array(z.string()).describe("The ingredients needed"),
-//       instructions: z.array(z.string()).describe("The cooking instructions"),
-//     }),
-//   });
-
-//   return Response.json((await result).object);
-// }

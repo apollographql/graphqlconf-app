@@ -7,10 +7,11 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { fetch as expoFetch } from "expo/fetch";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { generateAPIUrl } from "@/generateApiUrl";
 import { ThemedText } from "./themed-text";
 import { IconSymbol } from "./ui/icon-symbol";
+import { availableFragmentComponents } from "@/availableFragmentComponents";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   const theme = useColorScheme() ?? "light";
@@ -25,6 +26,8 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
     }),
     onError: (error) => console.error(error, "ERROR"),
   });
+
+  console.log(messages);
 
   return (
     <View style={styles.wrapper}>
@@ -46,23 +49,61 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
           >
             <View style={styles.chatContentWrapper}>
               {messages.map((m) => (
-                <View key={m.id} style={{ marginVertical: 8 }}>
+                <ThemedView
+                  key={m.id}
+                  style={
+                    m.role === "user" ? styles.userChat : styles.assistantChat
+                  }
+                >
                   <View>
                     <ThemedText style={{ fontWeight: 700 }}>
                       {m.role}
                     </ThemedText>
                     {m.parts.map((part, i) => {
-                      switch (part.type) {
-                        case "text":
+                      if (part.type === "text") {
+                        return (
+                          <ThemedText key={`${m.id}-${i}`}>
+                            {part.text}
+                          </ThemedText>
+                        );
+                      }
+                      if (isToolEmbedPart(part)) {
+                        const componentName = part.type.substring(
+                          "tool-ShowEmbed-".length
+                        );
+                        if (part.state === "output-available") {
+                          const embed =
+                            availableFragmentComponents[
+                              componentName as keyof typeof availableFragmentComponents
+                            ];
+
                           return (
-                            <ThemedText key={`${m.id}-${i}`}>
-                              {part.text}
-                            </ThemedText>
+                            <Suspense
+                              key={`${m.id}-${i}`}
+                              fallback={
+                                <ThemedView
+                                  style={{
+                                    margin: 10,
+                                    borderWidth: 1,
+                                    borderRadius: 8,
+                                    padding: 10,
+                                  }}
+                                >
+                                  <ThemedText>
+                                    Loading...{" "}
+                                    {JSON.stringify(part.input, null, 2)}
+                                  </ThemedText>
+                                </ThemedView>
+                              }
+                            >
+                              <embed.Component {...(part.input as any)} />
+                            </Suspense>
                           );
+                        }
                       }
                     })}
                   </View>
-                </View>
+                </ThemedView>
               ))}
             </View>
           </Animated.ScrollView>
@@ -141,6 +182,22 @@ const styles = Object.assign(
       borderRadius: 8,
       padding: 8,
     },
+    assistantChat: {
+      maxWidth: "90%",
+      alignSelf: "flex-start",
+      borderWidth: 1,
+      borderRadius: 8,
+      padding: 8,
+      margin: 8,
+    },
+    userChat: {
+      maxWidth: "90%",
+      alignSelf: "flex-end",
+      borderWidth: 1,
+      borderRadius: 8,
+      padding: 8,
+      margin: 8,
+    },
   }),
   {
     light: {
@@ -157,3 +214,9 @@ const styles = Object.assign(
     },
   }
 );
+
+function isToolEmbedPart(part: {
+  type: string;
+}): part is { type: `tool-${string}` } {
+  return part.type.startsWith("tool-ShowEmbed-");
+}

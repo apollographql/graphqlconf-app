@@ -18,9 +18,18 @@ query GetTalks(
     end: $end
     limit: $limit
   ) {
+    __typename
+    id
     name
     description
+    start_time_ts
     speakers {
+      __typename
+      name
+      id
+    }
+    venue {
+      __typename
       name
       id
     }
