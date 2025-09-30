@@ -3,7 +3,7 @@ import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
-import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleItem.generated";
+import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleListItem.generated";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions

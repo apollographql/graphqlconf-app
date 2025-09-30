@@ -6,5 +6,8 @@
         "./localSchema.graphql"
       ]
     },
+    "excludes": [
+      "**/*.generated.ts"
+    ]
   }
 }

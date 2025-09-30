@@ -7,15 +7,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScheduleScreen } from "@/screens/Schedule/ScheduleScreen";
 import { VariablesOf } from "@graphql-typed-document-node/core";
 
-if (false) {
-  // eslint-disable-next-line no-unused-expressions
-  gql`
-    query ScheduleScreen($year: String!) {
-      ...ScheduleList_Query
-    }
-  `;
-}
-
 export default function ScheduleRoute() {
   const variables: VariablesOf<typeof ScheduleScreen.Query> = { year: "2025" };
 
