@@ -5,7 +5,10 @@ import { Colors } from "@/constants/theme";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import {
+  DefaultChatTransport,
+  lastAssistantMessageIsCompleteWithToolCalls,
+} from "ai";
 import { fetch as expoFetch } from "expo/fetch";
 import { Suspense, useRef, useState } from "react";
 import { generateAPIUrl } from "@/generateApiUrl";
@@ -27,17 +30,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
       api: generateAPIUrl("/api/chat"),
     }),
     onError: (error) => console.error(error, "ERROR"),
-    sendAutomaticallyWhen(options) {
-      console.log({ sendAutomaticallyWhen: options });
-      const lastPart = options.messages.at(-1)?.parts.at(-1);
-      if (lastPart && isToolEmbedPart(lastPart)) {
-        if (lastPart.state === "output-error") {
-          // give the agent a chance to respond with text if the embed failed
-          return true;
-        }
-      }
-      return false;
-    },
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     onToolCall({ toolCall }) {
       if (toolCall.dynamic) {
         return;
