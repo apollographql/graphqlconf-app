@@ -5,7 +5,7 @@ import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { Omnibar } from "@/components/Omnibar";
+import { Omnibar } from "@/components/Omnibar/Omnibar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabLayout() {
