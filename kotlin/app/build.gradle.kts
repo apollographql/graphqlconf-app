@@ -144,7 +144,9 @@ android {
 
   signingConfigs {
     create("release") {
-      storeFile = file("release.jks")
+      if (file("release.jks").exists()) {
+        storeFile = file("release.jks")
+      }
       if (file("keystore.properties").exists()) {
         val props = file("keystore.properties").inputStream().use {
           Properties().apply {
