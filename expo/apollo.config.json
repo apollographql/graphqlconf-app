@@ -1,0 +1,13 @@
+{
+  "client": {
+    "service": {
+      "localSchemaFile": [
+        "../connector/supergraph.graphql",
+        "./localSchema.graphql"
+      ]
+    },
+    "excludes": [
+      "**/*.generated.ts"
+    ]
+  }
+}

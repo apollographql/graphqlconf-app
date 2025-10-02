@@ -1,0 +1,20 @@
+endpoint: https://localhost:4000
+
+transport:
+  type: streamable_http
+operations:
+  source: local
+  paths:
+    - ./operations
+schema:
+  source: local
+  path: ./supergraph.graphql
+overrides:
+  mutation_mode: all
+introspection:
+  execute:
+    enabled: false
+  introspect:
+    enabled: false
+  search:
+    enabled: false

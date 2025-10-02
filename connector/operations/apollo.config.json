@@ -1,0 +1,12 @@
+{
+  "client": {
+    "service": {
+      "localSchemaFile": [
+        "../supergraph.graphql"
+      ]
+    },
+    "includes": [
+      "*.graphql"
+    ]
+  }
+}

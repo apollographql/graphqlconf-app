@@ -1,0 +1,1 @@
+directive @unmask(mode: String) on FRAGMENT_SPREAD | INLINE_FRAGMENT

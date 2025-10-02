@@ -1,0 +1,65 @@
+type File {
+  path: String!
+  name: String!
+}
+type Query {
+  events(year: String, ids: [String!], nameLike: String, descriptionLike: String, venueId: String, start: Int, end: Int, limit: Int): [SchedSession!]!
+  speakers(ids: [String!], company: String, username: String, nameLike: String): [SchedSpeaker!]
+  venues(ids: [String!], nameLike: String): [SchedVenue!]!
+}
+type SchedSession {
+  id: String!
+  event_key: String!
+  active: YN!
+  pinned: YN!
+  name: String!
+  description: String!
+  goers: Int
+  seats: Int
+  audience: String
+  invite_only: YN!
+  type: String!
+  subtype: String
+  start_time_ts: Int
+  start_date: String!
+  start_time: String!
+  end_date: String!
+  end_time: String!
+  year: String!
+  video_stream: String
+  venue: SchedVenue
+  speakers: [SchedSpeaker!]!
+  files: [File!]!
+}
+type SchedSpeaker {
+  id: String!
+  username: String!
+  company: String!
+  position: String!
+  name: String!
+  about: String!
+  location: String!
+  url: String!
+  avatar: String!
+  socialurls: [SocialUrl!]!
+  years: [Int!]
+}
+type SchedVenue {
+  id: String!
+  name: String
+}
+type SocialUrl {
+  service: String!
+  url: String!
+}
+enum YN {
+  Y
+  N
+}
+"Exposes a URL that specifies the behavior of this scalar."
+directive @specifiedBy(
+    "The URL that specifies the behavior of this scalar."
+    url: String!
+  ) on SCALAR
+directive @defer(label: String, if: Boolean! = true) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
