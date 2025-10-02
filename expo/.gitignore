@@ -33,6 +33,9 @@ yarn-error.*
 # local env files
 .env*.local
 
+# MCP OAuth client registration
+oauth-mcpBuilders.json
+
 # typescript
 *.tsbuildinfo
 

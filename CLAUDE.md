@@ -99,3 +99,5 @@ rover dev --supergraph-config supergraph.yaml --router-config router.yaml --mcp 
    cd expo
    npm run lint
    ```
+
+- The client-side chat integration can be found in the `expo/src/components/Omnibar/` folder, and the agent is in `expo/src/app/api/chat+api.ts`

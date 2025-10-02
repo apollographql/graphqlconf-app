@@ -9,31 +9,28 @@ import {
 } from "ai";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { componentTools } from "@/availableFragmentComponents";
-
-let persistentClient: Awaited<
-  ReturnType<typeof experimental_createMCPClient>
-> | null = null;
-
-async function getPersistentClient() {
-  if (persistentClient) return persistentClient;
-
-  const transport = new StreamableHTTPClientTransport(
-    new URL("http://127.0.0.1:5000/mcp")
-  );
-
-  persistentClient = await experimental_createMCPClient({
-    transport,
-  });
-
-  return persistentClient;
-}
+import { getTools as getMcpBuilderTools } from "@/agent/mcpBuilders";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
-  const client = await getPersistentClient();
+  // Get SuperGraph MCP tools (local GraphQL router)
+  const supergraphMcpClient = await experimental_createMCPClient({
+    transport: new StreamableHTTPClientTransport(
+      new URL("http://127.0.0.1:5000/mcp")
+    ),
+  });
+  const [supergraphMcpTools, remoteEventsMcpTools] = await Promise.all([
+    supergraphMcpClient.tools(),
+    getMcpBuilderTools(req),
+  ]);
+  const tools = {
+    ...supergraphMcpTools,
+    ...remoteEventsMcpTools,
+    ...componentTools,
+  };
 
-  const mcpTools = await client.tools();
+  console.log("Available tools:", Object.keys(tools));
 
   const result = streamText({
     model: createOpenAI({
@@ -72,10 +69,7 @@ Only give a textual list if explicitly prompted for text, or if no other option 
 -- End of initial system instructions --
     `.trim(),
     messages: convertToModelMessages(messages),
-    tools: {
-      ...mcpTools,
-      ...componentTools,
-    },
+    tools,
     stopWhen: stepCountIs(10),
     onStepFinish: async (step) => {
       console.dir(
