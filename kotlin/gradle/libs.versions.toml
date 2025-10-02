@@ -44,7 +44,7 @@ google-cloud-run = "com.google.cloud:google-cloud-run:0.68.0"
 google-cloud-storage = { module = "com.google.cloud:google-cloud-storage" }
 gradle-api = "dev.gradleplugins:gradle-api:8.11.1"
 gratatouille = { module = "com.gradleup.gratatouille:gratatouille-gradle-plugin", version.ref = "gratatouille" }
-hot-reload = "org.jetbrains.compose.hot-reload:org.jetbrains.compose.hot-reload.gradle.plugin:1.0.0-beta04"
+hot-reload = "org.jetbrains.compose.hot-reload:org.jetbrains.compose.hot-reload.gradle.plugin:1.0.0-beta09"
 jib-core = "com.google.cloud.tools:jib-core:0.27.3"
 kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kgp" }
 kotlin-annotations-jvm = { module = "org.jetbrains.kotlin:kotlin-annotations-jvm", version.ref = "kgp" }
