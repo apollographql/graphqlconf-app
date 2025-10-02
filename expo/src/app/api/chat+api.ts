@@ -3,30 +3,23 @@ import {
   streamText,
   UIMessage,
   convertToModelMessages,
-  experimental_createMCPClient,
   stepCountIs,
   smoothStream,
 } from "ai";
-import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { componentTools } from "@/availableFragmentComponents";
-import { getTools as getMcpBuilderTools } from "@/agent/mcpBuilders";
+import { getTools as getBuildersMcpTools } from "@/agent/buildersMcp";
+import { getTools as getSupergraphMcpTools } from "@/agent/supergraphMcp";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
-  // Get SuperGraph MCP tools (local GraphQL router)
-  const supergraphMcpClient = await experimental_createMCPClient({
-    transport: new StreamableHTTPClientTransport(
-      new URL("http://127.0.0.1:5000/mcp")
-    ),
-  });
-  const [supergraphMcpTools, remoteEventsMcpTools] = await Promise.all([
-    supergraphMcpClient.tools(),
-    getMcpBuilderTools(req),
+  const [supergraphMcp, remoteEventsMcp] = await Promise.all([
+    getSupergraphMcpTools(),
+    getBuildersMcpTools(req),
   ]);
   const tools = {
-    ...supergraphMcpTools,
-    ...remoteEventsMcpTools,
+    ...supergraphMcp.tools,
+    ...remoteEventsMcp.tools,
     ...componentTools,
   };
 
@@ -86,6 +79,10 @@ Only give a textual list if explicitly prompted for text, or if no other option 
       delayInMs: 20,
       chunking: "line",
     }),
+    onFinish() {
+      supergraphMcp.close();
+      remoteEventsMcp.close();
+    },
   });
   return result.toUIMessageStreamResponse({
     headers: {

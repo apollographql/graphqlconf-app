@@ -30,11 +30,12 @@ export const getTools = async (request: Request) => {
   if (accessToken) {
     try {
       const remoteEventsClient = await getRemoteEventsMCPClient(accessToken);
-      return await remoteEventsClient.tools();
+      const tools = await remoteEventsClient.tools();
+      return { tools, close: () => remoteEventsClient.close() };
     } catch (error) {
       console.error("Failed to connect to remote events MCP server:", error);
       // Continue without remote events MCP tools
     }
   }
-  return {};
+  return { tools: {}, close: async () => {} };
 };

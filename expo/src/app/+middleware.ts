@@ -1,4 +1,4 @@
-import { oauth } from "@/agent/mcpBuilders";
+import { oauth } from "@/agent/buildersMcp";
 
 export default async function middleware(request: Request) {
   {
