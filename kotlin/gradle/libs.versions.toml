@@ -24,8 +24,8 @@ androidx-core = "androidx.core:core:1.17.0-rc01"
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.0.1" }
 androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta03" }
-apollo-gradle-plugin = "com.apollographql.apollo:com.apollographql.apollo.gradle.plugin:4.3.2"
-apollo-kotlin-execution-gradle-plugin = "com.apollographql.execution:com.apollographql.execution.gradle.plugin:0.1.1-SNAPSHOT-be4a397e0a1d958598b90eb4189105909d0ea59b"
+apollo-gradle-plugin = "com.apollographql.apollo:com.apollographql.apollo.gradle.plugin:4.3.3"
+apollo-kotlin-execution-gradle-plugin = "com.apollographql.execution:com.apollographql.execution.gradle.plugin:0.1.1"
 apollo-kotlin-execution-ktor = { module = "com.apollographql.execution:apollo-execution-ktor" }
 apollo-kotlin-execution-runtime = { module = "com.apollographql.execution:apollo-execution-runtime" }
 apollo-kotlin-compiler-plugin-gradle-plugin = { module = "com.apollographql.kotlin.compiler.plugin:com.apollographql.kotlin.compiler.plugin.gradle.plugin", version.ref = "apollo-kotlin-compiler-plugin" }
