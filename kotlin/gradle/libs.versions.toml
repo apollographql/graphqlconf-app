@@ -39,7 +39,7 @@ components-ui-tooling-preview = { module = "org.jetbrains.compose.components:com
 compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kgp" }
 compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "compose" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
-google-cloud-bom = "com.google.cloud:libraries-bom:26.64.0"
+google-cloud-bom = "com.google.cloud:libraries-bom:26.69.0"
 google-cloud-run = "com.google.cloud:google-cloud-run:0.68.0"
 google-cloud-storage = { module = "com.google.cloud:google-cloud-storage" }
 gradle-api = "dev.gradleplugins:gradle-api:8.11.1"
