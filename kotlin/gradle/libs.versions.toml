@@ -8,7 +8,7 @@ multiplatform-settings = "1.3.0"
 coil = "3.3.0"
 coroutines = "1.10.2"
 gratatouille = "0.1.1-SNAPSHOT-cc0251b8b2f1a34608de3c3542056ebd2689ec89"
-kgp = "2.2.20-RC"
+kgp = "2.2.20"
 ksp = "2.2.20-RC-2.0.2"
 apollo-kotlin-compiler-plugin = "2.2.20-RC-0.0.0-SNAPSHOT"
 minSdk = "26"
@@ -59,7 +59,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.1"
 zoomable-image = "me.saket.telephoto:zoomable-image-coil3:0.16.0"
-kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.2.0"
+kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.2.20"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 ktor-server-netty = "io.ktor:ktor-server-netty:3.2.3"
