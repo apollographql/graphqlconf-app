@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import { useBackgroundQuery } from "@apollo/client/react";
 import { Suspense } from "react";
 import { ThemedText } from "@/components/themed-text";

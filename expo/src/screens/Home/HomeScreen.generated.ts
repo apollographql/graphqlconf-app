@@ -1,0 +1,14 @@
+/* eslint-disable */
+import * as Types from '../../graphql.generated';
+
+import { HomeScreenContent_QueryFragment } from './components/HomeScreenContent.generated';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type HomeScreenQueryVariables = Types.Exact<{
+  year: Types.Scalars['String']['input'];
+}>;
+
+
+export type HomeScreenQuery = { ' $fragmentRefs'?: { 'HomeScreenContent_QueryFragment': HomeScreenContent_QueryFragment } };
+
+
+export const HomeScreenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HomeScreen"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"year"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"HomeScreenContent_Query"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ScheduleListItem_SchedSession"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SchedSession"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"venue"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"subtype"}},{"kind":"Field","name":{"kind":"Name","value":"speakers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"HomeScreenContent_Query"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"events"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"year"},"value":{"kind":"Variable","name":{"kind":"Name","value":"year"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"start_time_ts"}},{"kind":"Field","name":{"kind":"Name","value":"end_date"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ScheduleListItem_SchedSession"}}]}}]}}]} as unknown as DocumentNode<HomeScreenQuery, HomeScreenQueryVariables>;

@@ -1,0 +1,164 @@
+import { FragmentType, gql } from "@apollo/client";
+import {
+  QueryRef,
+  useQueryRefHandlers,
+  useSuspenseFragment,
+} from "@apollo/client/react";
+import { useMemo, useTransition } from "react";
+import { ScrollView, RefreshControl, StyleSheet } from "react-native";
+import { ScheduleListItem } from "@/screens/Schedule/components/ScheduleListItem";
+import { fragmentRegistry } from "@/apollo_client";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { HomeScreenContent_QueryFragmentDoc } from "./HomeScreenContent.generated";
+import { Fonts } from "@/constants/theme";
+
+if (false) {
+  // eslint-disable-next-line no-unused-expressions
+  gql`
+    fragment HomeScreenContent_Query on Query {
+      events(year: $year) {
+        id
+        start_time_ts
+        end_date
+        end_time
+        ...ScheduleListItem_SchedSession
+      }
+    }
+  `;
+}
+
+HomeScreenContent.fragments = {
+  Query: HomeScreenContent_QueryFragmentDoc,
+} as const;
+fragmentRegistry.register(HomeScreenContent.fragments.Query);
+
+export function HomeScreenContent({
+  parent,
+  queryRef,
+  variables,
+}: {
+  parent: FragmentType<typeof HomeScreenContent.fragments.Query>;
+  queryRef: QueryRef;
+  variables: { year: string };
+}) {
+  const { refetch } = useQueryRefHandlers(queryRef);
+  const [refreshing, transition] = useTransition();
+  const onRefresh = () => {
+    transition(() => {
+      refetch();
+    });
+  };
+
+  const { data } = useSuspenseFragment({
+    fragment: HomeScreenContent.fragments.Query,
+    fragmentName: "HomeScreenContent_Query",
+    from: parent,
+    variables,
+  });
+
+  const { ongoingTalks, upcomingTalk } = useMemo(() => {
+    const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+    const events = data.events || [];
+
+    // Helper function to convert end_date and end_time to timestamp
+    const getEndTimestamp = (event: {
+      end_date: string;
+      end_time: string;
+    }): number | null => {
+      if (!event.end_date || !event.end_time) return null;
+      try {
+        const dateTimeStr = `${event.end_date}T${event.end_time}`;
+        return Math.floor(new Date(dateTimeStr).getTime() / 1000);
+      } catch {
+        return null;
+      }
+    };
+
+    // Find ongoing talks (start_time_ts <= now < end_time_ts)
+    const ongoing = events.filter((event) => {
+      const endTs = getEndTimestamp(event);
+      return (
+        event.start_time_ts &&
+        endTs &&
+        event.start_time_ts <= now &&
+        endTs > now
+      );
+    });
+
+    // Find next upcoming talk (start_time_ts > now, sorted by start time)
+    const upcoming = events
+      .filter((event) => event.start_time_ts && event.start_time_ts > now)
+      .sort((a, b) => (a.start_time_ts ?? 0) - (b.start_time_ts ?? 0))[0];
+
+    return {
+      ongoingTalks: ongoing,
+      upcomingTalk: upcoming,
+    };
+  }, [data.events]);
+
+  return (
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <ThemedView style={styles.section}>
+        <ThemedText type="title" style={styles.title}>
+          GraphQLConf
+        </ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle" style={styles.sectionTitle}>
+          Happening Now
+        </ThemedText>
+        {ongoingTalks.length === 0 ? (
+          <ThemedText style={styles.emptyText}>
+            No talks are currently in progress
+          </ThemedText>
+        ) : (
+          ongoingTalks.map((talk) => (
+            <ScheduleListItem key={talk.id} SchedSession={talk} />
+          ))
+        )}
+      </ThemedView>
+
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle" style={styles.sectionTitle}>
+          Up Next
+        </ThemedText>
+        {!upcomingTalk ? (
+          <ThemedText style={styles.emptyText}>
+            No upcoming talks scheduled
+          </ThemedText>
+        ) : (
+          <ScheduleListItem SchedSession={upcomingTalk} />
+        )}
+      </ThemedView>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  section: {
+    marginBottom: 24,
+  },
+  title: {
+    fontFamily: Fonts.rounded,
+    marginBottom: 8,
+  },
+  sectionTitle: {
+    marginBottom: 12,
+  },
+  emptyText: {
+    fontStyle: "italic",
+    opacity: 0.6,
+    padding: 16,
+  },
+});
