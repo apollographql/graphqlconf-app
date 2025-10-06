@@ -1,5 +1,5 @@
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { createOauth } from "./utils/oauth/create";
+import { createOauth } from "../utils/oauth/create";
 import { experimental_createMCPClient } from "ai";
 
 export const oauth = createOauth({

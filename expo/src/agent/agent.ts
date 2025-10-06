@@ -1,0 +1,74 @@
+import { createOpenAI } from "@ai-sdk/openai";
+import {
+  streamText,
+  UIMessage,
+  convertToModelMessages,
+  stepCountIs,
+  smoothStream,
+} from "ai";
+import { componentTools } from "@/availableFragmentComponents";
+import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
+import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
+import { readFile } from "node:fs/promises";
+
+export async function runAgent({
+  messages,
+  request,
+}: {
+  messages: UIMessage[];
+  request: Request;
+}) {
+  const [supergraphMcp, remoteEventsMcp] = await Promise.all([
+    getSupergraphMcpTools(),
+    getBuildersMcpTools(request),
+  ]);
+  const tools = {
+    ...supergraphMcp.tools,
+    ...remoteEventsMcp.tools,
+    ...componentTools,
+  };
+
+  console.log("Available tools:", Object.keys(tools));
+
+  const prompt = await readFile("./prompt.txt", "utf-8");
+  return streamText({
+    model: createOpenAI({
+      apiKey: process.env.OPENAI_API_KEY!,
+      organization: process.env.OPENAI_ORG_ID!,
+    })("gpt-4.1-mini"),
+    // https://github.com/vercel/ai/issues/7099#issuecomment-3069539156
+    // avoid "Item 'rs_03e6d4960e393c150068dbd1b235cc819ca60b4f637ad981e2' of type 'reasoning' was provided without its required following item." error
+    // this seems to only be necessary when using GPT 5 tools
+    // providerOptions: {
+    //   openai: {
+    //     store: false,
+    //     reasoningEffort: "low",
+    //     reasoningSummary: "auto",
+    //     include: ["reasoning.encrypted_content"],
+    //   } satisfies OpenAIResponsesProviderOptions,
+    // },
+    system: prompt,
+    messages: convertToModelMessages(messages),
+    tools,
+    stopWhen: stepCountIs(10),
+    onStepFinish: async (step) => {
+      console.dir(
+        {
+          toolCalls: step.toolCalls?.length || 0,
+          toolResults: step.toolResults?.length || 0,
+          hasText: !!step.text,
+          fullResults: step.toolResults.map((r) => r.output),
+        },
+        { depth: 7 }
+      );
+    },
+    experimental_transform: smoothStream({
+      delayInMs: 20,
+      chunking: "line",
+    }),
+    onFinish() {
+      supergraphMcp.close();
+      remoteEventsMcp.close();
+    },
+  });
+}
