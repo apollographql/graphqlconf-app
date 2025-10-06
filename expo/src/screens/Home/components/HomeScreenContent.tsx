@@ -19,11 +19,13 @@ if (false) {
     fragment HomeScreenContent_Query on Query {
       event(id: $eventId) {
         id
+        name
         sessions {
           id
           start_time_ts
           end_date
           end_time
+          type
           ...ScheduleListItem_SchedSession
         }
       }
@@ -62,7 +64,10 @@ export function HomeScreenContent({
 
   const { ongoingTalks, upcomingTalk } = useMemo(() => {
     const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-    const sessions = data.event?.sessions;
+    const sessions = data.event?.sessions || [];
+
+    // Organizational session types to filter out (normalized in connectors)
+    const organizationalTypes = ["Registration", "Breaks"];
 
     // Helper function to convert end_date and end_time to timestamp
     const getEndTimestamp = (event: {
@@ -78,27 +83,33 @@ export function HomeScreenContent({
       }
     };
 
-    // Find ongoing talks (start_time_ts <= now < end_time_ts)
+    // Find ongoing talks (start_time_ts <= now < end_time_ts), excluding organizational sessions
     const ongoing = sessions.filter((session) => {
       const endTs = getEndTimestamp(session);
       return (
         session.start_time_ts &&
         endTs &&
         session.start_time_ts <= now &&
-        endTs > now
+        endTs > now &&
+        !organizationalTypes.includes(session.type)
       );
     });
 
-    // Find next upcoming talk (start_time_ts > now, sorted by start time)
+    // Find next upcoming talk (start_time_ts > now, sorted by start time), excluding organizational sessions
     const upcoming = sessions
-      .filter((session) => session.start_time_ts && session.start_time_ts > now)
+      .filter(
+        (session) =>
+          session.start_time_ts &&
+          session.start_time_ts > now &&
+          !organizationalTypes.includes(session.type)
+      )
       .sort((a, b) => (a.start_time_ts ?? 0) - (b.start_time_ts ?? 0))[0];
 
     return {
       ongoingTalks: ongoing,
       upcomingTalk: upcoming,
     };
-  }, [data.events]);
+  }, [data.event?.sessions]);
 
   return (
     <ScrollView
@@ -109,7 +120,7 @@ export function HomeScreenContent({
     >
       <ThemedView style={styles.section}>
         <ThemedText type="title" style={styles.title}>
-          GraphQLConf
+          {data.event?.name ?? "Event"}
         </ThemedText>
       </ThemedView>
 

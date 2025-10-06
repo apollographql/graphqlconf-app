@@ -124,6 +124,7 @@ type SchedEvent
     year
     start_date
     end_date
+    city
     """
   ) {
   id: String!
@@ -165,8 +166,15 @@ type SchedEvent
       seats
       audience
       invite_only
-      type
-      subtype
+      type: type->match(
+        ["Registration + Badge Pick-Up", "Registration"],
+        ["Registration & Badge Pick-up", "Registration"],
+        ["Registration + Badge Pick-up", "Registration"],
+        ["Events & Experiences", "Breaks"],
+        ["Breaks & Special Events", "Breaks"],
+        ["Breaks / Networking / Special Events", "Breaks"],
+        [@, ""]
+      )
       start_time_ts
       start_date
       start_time
@@ -201,7 +209,15 @@ type SchedSession
     seats
     audience
     invite_only
-    type
+      type: type->match(
+        ["Registration + Badge Pick-Up", "Registration"],
+        ["Registration & Badge Pick-up", "Registration"],
+        ["Registration + Badge Pick-up", "Registration"],
+        ["Events & Experiences", "Breaks"],
+        ["Breaks & Special Events", "Breaks"],
+        ["Breaks / Networking / Special Events", "Breaks"],
+        [@, ""]
+      )
     subtype
     start_time_ts
     start_date
