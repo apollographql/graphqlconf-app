@@ -3,9 +3,21 @@ type File {
   name: String!
 }
 type Query {
-  events(year: String, ids: [String!], nameLike: String, descriptionLike: String, venueId: String, start: Int, end: Int, limit: Int): [SchedSession!]!
+  event(id: String!): SchedEvent
+  session(id: String!): SchedEvent
+  venue(id: String!): SchedEvent
+  speaker(id: String!): SchedEvent
+  events(year: String, ids: [String!]): [SchedEvent!]!
   speakers(ids: [String!], company: String, username: String, nameLike: String): [SchedSpeaker!]
   venues(ids: [String!], nameLike: String): [SchedVenue!]!
+}
+type SchedEvent {
+  id: String!
+  name: String!
+  year: String!
+  start_date: String!
+  end_date: String!
+  sessions(nameLike: String, descriptionLike: String, venueId: String, start: Int, end: Int, limit: Int): [SchedSession!]!
 }
 type SchedSession {
   id: String!
@@ -26,9 +38,11 @@ type SchedSession {
   end_date: String!
   end_time: String!
   year: String!
+  event_id: String!
   video_stream: String
   venue: SchedVenue
   speakers: [SchedSpeaker!]!
+  event: SchedEvent
   files: [File!]!
 }
 type SchedSpeaker {

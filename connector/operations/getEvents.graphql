@@ -1,0 +1,9 @@
+query GetEvents($year: String) {
+  events(year: $year) {
+    id
+    name
+    year
+    start_date
+    end_date
+  }
+}

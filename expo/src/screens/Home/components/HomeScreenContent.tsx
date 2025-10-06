@@ -17,12 +17,15 @@ if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     fragment HomeScreenContent_Query on Query {
-      events(year: $year) {
+      event(id: $eventId) {
         id
-        start_time_ts
-        end_date
-        end_time
-        ...ScheduleListItem_SchedSession
+        sessions {
+          id
+          start_time_ts
+          end_date
+          end_time
+          ...ScheduleListItem_SchedSession
+        }
       }
     }
   `;
@@ -40,7 +43,7 @@ export function HomeScreenContent({
 }: {
   parent: FragmentType<typeof HomeScreenContent.fragments.Query>;
   queryRef: QueryRef;
-  variables: { year: string };
+  variables: { eventIds: string[] };
 }) {
   const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
@@ -59,7 +62,7 @@ export function HomeScreenContent({
 
   const { ongoingTalks, upcomingTalk } = useMemo(() => {
     const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-    const events = data.events || [];
+    const sessions = data.event?.sessions;
 
     // Helper function to convert end_date and end_time to timestamp
     const getEndTimestamp = (event: {
@@ -76,19 +79,19 @@ export function HomeScreenContent({
     };
 
     // Find ongoing talks (start_time_ts <= now < end_time_ts)
-    const ongoing = events.filter((event) => {
-      const endTs = getEndTimestamp(event);
+    const ongoing = sessions.filter((session) => {
+      const endTs = getEndTimestamp(session);
       return (
-        event.start_time_ts &&
+        session.start_time_ts &&
         endTs &&
-        event.start_time_ts <= now &&
+        session.start_time_ts <= now &&
         endTs > now
       );
     });
 
     // Find next upcoming talk (start_time_ts > now, sorted by start time)
-    const upcoming = events
-      .filter((event) => event.start_time_ts && event.start_time_ts > now)
+    const upcoming = sessions
+      .filter((session) => session.start_time_ts && session.start_time_ts > now)
       .sort((a, b) => (a.start_time_ts ?? 0) - (b.start_time_ts ?? 0))[0];
 
     return {

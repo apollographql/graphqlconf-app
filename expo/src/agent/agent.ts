@@ -14,6 +14,7 @@ import { prompt } from "./prompt";
 
 export interface AgentContext {
   currentTime: string;
+  currentEvent: string;
 }
 
 export async function runAgent({

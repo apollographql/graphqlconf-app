@@ -7,7 +7,11 @@ import { ScheduleScreen } from "@/screens/Schedule/ScheduleScreen";
 import { VariablesOf } from "@graphql-typed-document-node/core";
 
 export default function ScheduleRoute() {
-  const variables: VariablesOf<typeof ScheduleScreen.Query> = { year: "2025" };
+  const currentEvent =
+    process.env.EXPO_PUBLIC_CURRENT_EVENT || "graphqlconf-2025";
+  const variables: VariablesOf<typeof ScheduleScreen.Query> = {
+    eventId: currentEvent,
+  };
 
   const [queryRef] = useBackgroundQuery(ScheduleScreen.Query, {
     variables,

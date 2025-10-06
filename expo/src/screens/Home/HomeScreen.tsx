@@ -7,7 +7,7 @@ import { ResultOf, VariablesOf } from "@graphql-typed-document-node/core";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    query HomeScreen($year: String!) {
+    query HomeScreen($eventId: String!) {
       ...HomeScreenContent_Query
     }
   `;

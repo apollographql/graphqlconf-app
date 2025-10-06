@@ -37,6 +37,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
           messages,
           context: {
             currentTime: now.toISOString(),
+            currentEvent: process.env.EXPO_PUBLIC_CURRENT_EVENT!,
           } satisfies AgentContext,
         };
       },

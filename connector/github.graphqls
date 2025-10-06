@@ -3,7 +3,7 @@
 # a graph. To learn more, visit Apollo's documentation: 🔗https://www.apollographql.com/docs/graphos/schema-design/connectors
 
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.10") # Enable this schema to use Apollo Federation features
+  @link(url: "https://specs.apollo.dev/federation/v2.10", import: ["@key"]) # Enable this schema to use Apollo Federation features
   @link( # Enable this schema to use Apollo Connectors
     url: "https://specs.apollo.dev/connect/v0.3"
     import: ["@connect", "@source"]
@@ -11,16 +11,31 @@ extend schema
   @source(name: "conf", http: { baseURL: "http://localhost:8081/api/conf/" })
 
 type Query {
-  events(
-    year: String
-    ids: [String!]
-    nameLike: String
-    descriptionLike: String
-    venueId: String
-    start: Int
-    end: Int
-    limit: Int
-  ): [SchedSession!]!
+  event(id: String!): SchedEvent
+    @connect(
+      source: "conf"
+      http: { GET: "events/{$args.id}" }
+      selection: "id"
+    )
+
+  session(id: String!): SchedEvent
+    @connect(
+      source: "conf"
+      http: { GET: "session/{$args.id}" }
+      selection: "id"
+    )
+
+  venue(id: String!): SchedEvent
+    @connect(source: "conf", http: { GET: "venue/{$args.id}" }, selection: "id")
+
+  speaker(id: String!): SchedEvent
+    @connect(
+      source: "conf"
+      http: { GET: "speaker/{$args.id}" }
+      selection: "id"
+    )
+
+  events(year: String, ids: [String!]): [SchedEvent!]!
     @connect(
       source: "conf"
       http: {
@@ -28,40 +43,15 @@ type Query {
         queryParams: """
         year: $args.year
         id: $args.ids
-        name_like: $args.nameLike
-        description_like: $args.descriptionLike
-        venue_id: $args.venueId
-        _start: $args.start
-        _end: $args.end
-        _limit: $args.limit
         """
       }
       selection: """
       id
-      event_key
-      active
-      pinned
       name
-      description
-      goers
-      seats
-      audience
-      invite_only
-      type
-      subtype
-      start_time_ts
-      start_date
-      start_time
-      end_date
-      end_time
       year
-      video_stream
-      venue: venue_id? { id: $ }
-      speakers: speaker_id->map({id: @}) {id}
-      files {
-        path
-        name
-      }
+      start_date
+      end_date
+      city
       """
     )
 
@@ -124,7 +114,112 @@ enum YN {
   N
 }
 
-type SchedSession {
+type SchedEvent
+  @connect(
+    source: "conf"
+    http: { GET: "events", queryParams: "id: $batch.id" }
+    selection: """
+    id
+    name
+    year
+    start_date
+    end_date
+    """
+  ) {
+  id: String!
+  name: String!
+  year: String!
+  start_date: String!
+  end_date: String!
+  city: String!
+  sessions(
+    nameLike: String
+    descriptionLike: String
+    venueId: String
+    start: Int
+    end: Int
+    limit: Int
+  ): [SchedSession!]!
+    @connect(
+      source: "conf"
+      http: {
+        GET: "sessions"
+        queryParams: """
+        event_id: $this.id
+        name_like: $args.nameLike
+        description_like: $args.descriptionLike
+        venue_id: $args.venueId
+        _start: $args.start
+        _end: $args.end
+        _limit: $args.limit
+        """
+      }
+      selection: """
+      id
+      event_key
+      active
+      pinned
+      name
+      description
+      goers
+      seats
+      audience
+      invite_only
+      type
+      subtype
+      start_time_ts
+      start_date
+      start_time
+      end_date
+      end_time
+      year
+      event_id
+      video_stream
+      venue: venue_id? { id: $ }
+      speakers: speaker_id->map({id: @}) {id}
+      files {
+        path
+        name
+      }
+      """
+    )
+}
+
+type SchedSession
+  @key(fields: "id")
+  @connect(
+    source: "conf"
+    http: { GET: "sessions", queryParams: "id: $batch.id" }
+    selection: """
+    id
+    event_key
+    active
+    pinned
+    name
+    description
+    goers
+    seats
+    audience
+    invite_only
+    type
+    subtype
+    start_time_ts
+    start_date
+    start_time
+    end_date
+    end_time
+    year
+    event_id
+    video_stream
+    venue: venue_id? { id: $ }
+    speakers: speaker_id->map({id: @}) {id}
+    event: event_id? { id: $ }
+    files {
+      path
+      name
+    }
+    """
+  ) {
   id: String!
   event_key: String!
   active: YN!
@@ -143,9 +238,11 @@ type SchedSession {
   end_date: String!
   end_time: String!
   year: String!
+  event_id: String!
   video_stream: String
   venue: SchedVenue
   speakers: [SchedSpeaker!]!
+  event: SchedEvent
   files: [File!]!
 }
 

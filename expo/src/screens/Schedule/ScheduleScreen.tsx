@@ -7,7 +7,7 @@ import { ResultOf, VariablesOf } from "@graphql-typed-document-node/core";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    query ScheduleScreen($year: String!) {
+    query ScheduleScreen($eventId: String!) {
       ...ScheduleList_Query
     }
   `;

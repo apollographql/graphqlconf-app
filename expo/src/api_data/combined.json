@@ -3575,6 +3575,32 @@
   ],
   "events": [
     {
+      "id": "graphqlconf-2023",
+      "name": "GraphQLConf 2023",
+      "year": "2023",
+      "start_date": "2023-09-19",
+      "end_date": "2023-09-21",
+      "city": "San Francisco"
+    },
+    {
+      "id": "graphqlconf-2024",
+      "name": "GraphQLConf 2024",
+      "year": "2024",
+      "start_date": "2024-09-10",
+      "end_date": "2024-09-12",
+      "city": "San Francisco"
+    },
+    {
+      "id": "graphqlconf-2025",
+      "name": "GraphQLConf 2025",
+      "year": "2025",
+      "start_date": "2025-09-07",
+      "end_date": "2025-09-09",
+      "city": "Amsterdam"
+    }
+  ],
+  "sessions": [
+    {
       "id": "247898ad29d5e594611af3cecf82f5e3",
       "event_key": "511231",
       "active": "Y",
@@ -3593,6 +3619,7 @@
       "end_date": "2023-09-19",
       "end_time": "16:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749431",
       "speaker_id": [],
@@ -3617,6 +3644,7 @@
       "end_date": "2023-09-19",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749449",
       "speaker_id": [],
@@ -3641,6 +3669,7 @@
       "end_date": "2023-09-19",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762202",
       "speaker_id": [
@@ -3672,6 +3701,7 @@
       "end_date": "2023-09-19",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762200",
       "speaker_id": [
@@ -3703,6 +3733,7 @@
       "end_date": "2023-09-19",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -3735,6 +3766,7 @@
       "end_date": "2023-09-19",
       "end_time": "13:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749431",
       "speaker_id": [],
@@ -3759,6 +3791,7 @@
       "end_date": "2023-09-19",
       "end_time": "14:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749449",
       "speaker_id": [],
@@ -3783,6 +3816,7 @@
       "end_date": "2023-09-19",
       "end_time": "14:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -3810,6 +3844,7 @@
       "end_date": "2023-09-19",
       "end_time": "14:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -3842,6 +3877,7 @@
       "end_date": "2023-09-19",
       "end_time": "15:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749431",
       "speaker_id": [],
@@ -3866,6 +3902,7 @@
       "end_date": "2023-09-19",
       "end_time": "16:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749449",
       "speaker_id": [],
@@ -3890,6 +3927,7 @@
       "end_date": "2023-09-19",
       "end_time": "16:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -3916,6 +3954,7 @@
       "end_date": "2023-09-19",
       "end_time": "16:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -3942,6 +3981,7 @@
       "end_date": "2023-09-20",
       "end_time": "09:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749431",
       "speaker_id": [],
@@ -3966,6 +4006,7 @@
       "end_date": "2023-09-20",
       "end_time": "18:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749431",
       "speaker_id": [],
@@ -3990,6 +4031,7 @@
       "end_date": "2023-09-20",
       "end_time": "09:15:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4016,6 +4058,7 @@
       "end_date": "2023-09-20",
       "end_time": "09:35:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4042,6 +4085,7 @@
       "end_date": "2023-09-20",
       "end_time": "09:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4068,6 +4112,7 @@
       "end_date": "2023-09-20",
       "end_time": "10:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4094,6 +4139,7 @@
       "end_date": "2023-09-20",
       "end_time": "10:05:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4125,6 +4171,7 @@
       "end_date": "2023-09-20",
       "end_time": "10:15:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4151,6 +4198,7 @@
       "end_date": "2023-09-20",
       "end_time": "10:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4177,6 +4225,7 @@
       "end_date": "2023-09-20",
       "end_time": "10:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -4201,6 +4250,7 @@
       "end_date": "2023-09-20",
       "end_time": "19:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -4225,6 +4275,7 @@
       "end_date": "2023-09-20",
       "end_time": "11:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -4256,6 +4307,7 @@
       "end_date": "2023-09-20",
       "end_time": "11:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4283,6 +4335,7 @@
       "end_date": "2023-09-20",
       "end_time": "11:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4314,6 +4367,7 @@
       "end_date": "2023-09-20",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -4340,6 +4394,7 @@
       "end_date": "2023-09-20",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4367,6 +4422,7 @@
       "end_date": "2023-09-20",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4393,6 +4449,7 @@
       "end_date": "2023-09-20",
       "end_time": "13:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -4417,6 +4474,7 @@
       "end_date": "2023-09-20",
       "end_time": "13:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4448,6 +4506,7 @@
       "end_date": "2023-09-20",
       "end_time": "14:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -4479,6 +4538,7 @@
       "end_date": "2023-09-20",
       "end_time": "14:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4510,6 +4570,7 @@
       "end_date": "2023-09-20",
       "end_time": "13:55:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4541,6 +4602,7 @@
       "end_date": "2023-09-20",
       "end_time": "14:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4572,6 +4634,7 @@
       "end_date": "2023-09-20",
       "end_time": "14:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -4603,6 +4666,7 @@
       "end_date": "2023-09-20",
       "end_time": "14:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4634,6 +4698,7 @@
       "end_date": "2023-09-20",
       "end_time": "15:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4666,6 +4731,7 @@
       "end_date": "2023-09-20",
       "end_time": "15:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4692,6 +4758,7 @@
       "end_date": "2023-09-20",
       "end_time": "15:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -4718,6 +4785,7 @@
       "end_date": "2023-09-20",
       "end_time": "15:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -4742,6 +4810,7 @@
       "end_date": "2023-09-20",
       "end_time": "15:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4773,6 +4842,7 @@
       "end_date": "2023-09-20",
       "end_time": "16:10:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -4804,6 +4874,7 @@
       "end_date": "2023-09-20",
       "end_time": "16:10:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4835,6 +4906,7 @@
       "end_date": "2023-09-20",
       "end_time": "16:05:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4866,6 +4938,7 @@
       "end_date": "2023-09-20",
       "end_time": "16:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -4897,6 +4970,7 @@
       "end_date": "2023-09-20",
       "end_time": "16:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -4928,6 +5002,7 @@
       "end_date": "2023-09-20",
       "end_time": "16:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -4959,6 +5034,7 @@
       "end_date": "2023-09-20",
       "end_time": "17:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [],
@@ -4983,6 +5059,7 @@
       "end_date": "2023-09-20",
       "end_time": "17:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5014,6 +5091,7 @@
       "end_date": "2023-09-20",
       "end_time": "17:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5045,6 +5123,7 @@
       "end_date": "2023-09-20",
       "end_time": "19:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -5069,6 +5148,7 @@
       "end_date": "2023-09-21",
       "end_time": "09:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749431",
       "speaker_id": [],
@@ -5093,6 +5173,7 @@
       "end_date": "2023-09-21",
       "end_time": "16:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749431",
       "speaker_id": [],
@@ -5117,6 +5198,7 @@
       "end_date": "2023-09-21",
       "end_time": "09:05:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5143,6 +5225,7 @@
       "end_date": "2023-09-21",
       "end_time": "09:15:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5169,6 +5252,7 @@
       "end_date": "2023-09-21",
       "end_time": "09:25:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5195,6 +5279,7 @@
       "end_date": "2023-09-21",
       "end_time": "09:35:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5221,6 +5306,7 @@
       "end_date": "2023-09-21",
       "end_time": "09:55:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5247,6 +5333,7 @@
       "end_date": "2023-09-21",
       "end_time": "10:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5277,6 +5364,7 @@
       "end_date": "2023-09-21",
       "end_time": "10:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5303,6 +5391,7 @@
       "end_date": "2023-09-21",
       "end_time": "10:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -5327,6 +5416,7 @@
       "end_date": "2023-09-21",
       "end_time": "17:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -5351,6 +5441,7 @@
       "end_date": "2023-09-21",
       "end_time": "11:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5382,6 +5473,7 @@
       "end_date": "2023-09-21",
       "end_time": "11:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -5413,6 +5505,7 @@
       "end_date": "2023-09-21",
       "end_time": "11:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5444,6 +5537,7 @@
       "end_date": "2023-09-21",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5470,6 +5564,7 @@
       "end_date": "2023-09-21",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5501,6 +5596,7 @@
       "end_date": "2023-09-21",
       "end_time": "12:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -5532,6 +5628,7 @@
       "end_date": "2023-09-21",
       "end_time": "13:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -5556,6 +5653,7 @@
       "end_date": "2023-09-21",
       "end_time": "13:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5582,6 +5680,7 @@
       "end_date": "2023-09-21",
       "end_time": "14:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -5613,6 +5712,7 @@
       "end_date": "2023-09-21",
       "end_time": "14:00:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5639,6 +5739,7 @@
       "end_date": "2023-09-21",
       "end_time": "13:55:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5670,6 +5771,7 @@
       "end_date": "2023-09-21",
       "end_time": "14:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5696,6 +5798,7 @@
       "end_date": "2023-09-21",
       "end_time": "14:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -5727,6 +5830,7 @@
       "end_date": "2023-09-21",
       "end_time": "14:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5753,6 +5857,7 @@
       "end_date": "2023-09-21",
       "end_time": "15:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5785,6 +5890,7 @@
       "end_date": "2023-09-21",
       "end_time": "15:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5816,6 +5922,7 @@
       "end_date": "2023-09-21",
       "end_time": "15:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -5847,6 +5954,7 @@
       "end_date": "2023-09-21",
       "end_time": "15:40:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749440",
       "speaker_id": [],
@@ -5871,6 +5979,7 @@
       "end_date": "2023-09-21",
       "end_time": "15:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5897,6 +6006,7 @@
       "end_date": "2023-09-21",
       "end_time": "16:10:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -5928,6 +6038,7 @@
       "end_date": "2023-09-21",
       "end_time": "16:10:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -5954,6 +6065,7 @@
       "end_date": "2023-09-21",
       "end_time": "16:05:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -5980,6 +6092,7 @@
       "end_date": "2023-09-21",
       "end_time": "16:20:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -6006,6 +6119,7 @@
       "end_date": "2023-09-21",
       "end_time": "16:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -6037,6 +6151,7 @@
       "end_date": "2023-09-21",
       "end_time": "16:50:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -6063,6 +6178,7 @@
       "end_date": "2023-09-21",
       "end_time": "17:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762196",
       "speaker_id": [
@@ -6098,6 +6214,7 @@
       "end_date": "2023-09-21",
       "end_time": "17:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1762208",
       "speaker_id": [
@@ -6124,6 +6241,7 @@
       "end_date": "2023-09-21",
       "end_time": "17:30:00",
       "year": "2023",
+      "event_id": "graphqlconf-2023",
       "video_stream": null,
       "venue_id": "1749452",
       "speaker_id": [
@@ -6155,6 +6273,7 @@
       "end_date": "2024-09-09",
       "end_time": "17:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -6179,6 +6298,7 @@
       "end_date": "2024-09-10",
       "end_time": "19:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -6203,6 +6323,7 @@
       "end_date": "2024-09-10",
       "end_time": "09:15:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=FTzPajvTw4c",
       "venue_id": "1944323",
       "speaker_id": [
@@ -6229,6 +6350,7 @@
       "end_date": "2024-09-10",
       "end_time": "09:25:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=xaTEuk-DKqI",
       "venue_id": "1944323",
       "speaker_id": [
@@ -6255,6 +6377,7 @@
       "end_date": "2024-09-10",
       "end_time": "09:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=Q8l9u5K5VBA",
       "venue_id": "1944323",
       "speaker_id": [
@@ -6281,6 +6404,7 @@
       "end_date": "2024-09-10",
       "end_time": "09:55:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=A8T1QHJj0WM",
       "venue_id": "1944323",
       "speaker_id": [
@@ -6307,6 +6431,7 @@
       "end_date": "2024-09-10",
       "end_time": "10:25:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=3UbcTEV54bI",
       "venue_id": "1944323",
       "speaker_id": [
@@ -6337,6 +6462,7 @@
       "end_date": "2024-09-10",
       "end_time": "10:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=5DpIO-isCMQ",
       "venue_id": "1944323",
       "speaker_id": [
@@ -6363,6 +6489,7 @@
       "end_date": "2024-09-10",
       "end_time": "11:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -6387,6 +6514,7 @@
       "end_date": "2024-09-10",
       "end_time": "19:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -6411,6 +6539,7 @@
       "end_date": "2024-09-10",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=ES-wIMcUyfs",
       "venue_id": "1944308",
       "speaker_id": [
@@ -6442,6 +6571,7 @@
       "end_date": "2024-09-10",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=LbANoddAVic",
       "venue_id": "1944314",
       "speaker_id": [
@@ -6474,6 +6604,7 @@
       "end_date": "2024-09-10",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=hFmJgR0vssY",
       "venue_id": "1944311",
       "speaker_id": [
@@ -6505,6 +6636,7 @@
       "end_date": "2024-09-10",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=GnjMUsvDcL4",
       "venue_id": "1944305",
       "speaker_id": [
@@ -6537,6 +6669,7 @@
       "end_date": "2024-09-10",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=cEijqq-KQsU",
       "venue_id": "1944314",
       "speaker_id": [
@@ -6568,6 +6701,7 @@
       "end_date": "2024-09-10",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=v3dY3Y9VHJ8",
       "venue_id": "1944308",
       "speaker_id": [
@@ -6594,6 +6728,7 @@
       "end_date": "2024-09-10",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=szGCeD_UzmY",
       "venue_id": "1944311",
       "speaker_id": [
@@ -6625,6 +6760,7 @@
       "end_date": "2024-09-10",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=9gY1vNw7Kcc",
       "venue_id": "1944305",
       "speaker_id": [
@@ -6656,6 +6792,7 @@
       "end_date": "2024-09-10",
       "end_time": "13:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1979828",
       "speaker_id": [],
@@ -6680,6 +6817,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=U3m0J8HFuqQ",
       "venue_id": "1944314",
       "speaker_id": [
@@ -6706,6 +6844,7 @@
       "end_date": "2024-09-10",
       "end_time": "13:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=tjmPJGMPZGQ",
       "venue_id": "1944308",
       "speaker_id": [
@@ -6737,6 +6876,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=0IcZGcO9Vm0",
       "venue_id": "1944311",
       "speaker_id": [
@@ -6768,6 +6908,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=kmxy32cDRT8",
       "venue_id": "1944305",
       "speaker_id": [
@@ -6800,6 +6941,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=SFQB8F0Ofcg",
       "venue_id": "1944308",
       "speaker_id": [
@@ -6831,6 +6973,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=eXWXRF6gYg8",
       "venue_id": "1944314",
       "speaker_id": [
@@ -6862,6 +7005,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=voeWmS-48Ag",
       "venue_id": "1944308",
       "speaker_id": [
@@ -6888,6 +7032,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=lKZMcixWf3o",
       "venue_id": "1944311",
       "speaker_id": [
@@ -6919,6 +7064,7 @@
       "end_date": "2024-09-10",
       "end_time": "14:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=PGBC-0E-kco",
       "venue_id": "1944305",
       "speaker_id": [
@@ -6950,6 +7096,7 @@
       "end_date": "2024-09-10",
       "end_time": "15:20:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=Nol_i1wZMOY",
       "venue_id": "1944314",
       "speaker_id": [
@@ -6976,6 +7123,7 @@
       "end_date": "2024-09-10",
       "end_time": "15:20:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=dDj6FF0y2YA",
       "venue_id": "1944308",
       "speaker_id": [
@@ -7007,6 +7155,7 @@
       "end_date": "2024-09-10",
       "end_time": "15:20:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=tuStK4r8AaI",
       "venue_id": "1944305",
       "speaker_id": [
@@ -7039,6 +7188,7 @@
       "end_date": "2024-09-10",
       "end_time": "15:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=obMcFwqtvUQ",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7070,6 +7220,7 @@
       "end_date": "2024-09-10",
       "end_time": "15:15:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=yrhGfVOzxbU",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7101,6 +7252,7 @@
       "end_date": "2024-09-10",
       "end_time": "15:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -7125,6 +7277,7 @@
       "end_date": "2024-09-10",
       "end_time": "16:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=kpeVT7J6Bsw",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7156,6 +7309,7 @@
       "end_date": "2024-09-10",
       "end_time": "16:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=x2tnnh9KKVs",
       "venue_id": "1944314",
       "speaker_id": [
@@ -7182,6 +7336,7 @@
       "end_date": "2024-09-10",
       "end_time": "16:50:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=CFIqWwWLSb8",
       "venue_id": "1944314",
       "speaker_id": [
@@ -7213,6 +7368,7 @@
       "end_date": "2024-09-10",
       "end_time": "16:50:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=Esb7oQ0PuXw",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7244,6 +7400,7 @@
       "end_date": "2024-09-10",
       "end_time": "17:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=K9HCb5Q2Juc",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7275,6 +7432,7 @@
       "end_date": "2024-09-10",
       "end_time": "17:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=_TSYKAtaK5A",
       "venue_id": "1944314",
       "speaker_id": [
@@ -7306,6 +7464,7 @@
       "end_date": "2024-09-10",
       "end_time": "19:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -7330,6 +7489,7 @@
       "end_date": "2024-09-11",
       "end_time": "17:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -7354,6 +7514,7 @@
       "end_date": "2024-09-11",
       "end_time": "09:05:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=VgndfUI_xKI",
       "venue_id": "1944323",
       "speaker_id": [
@@ -7380,6 +7541,7 @@
       "end_date": "2024-09-11",
       "end_time": "09:25:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=QbuRTGdt4fA",
       "venue_id": "1944323",
       "speaker_id": [
@@ -7406,6 +7568,7 @@
       "end_date": "2024-09-11",
       "end_time": "09:35:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=vLFWJ5FO7GI",
       "venue_id": "1944323",
       "speaker_id": [
@@ -7432,6 +7595,7 @@
       "end_date": "2024-09-11",
       "end_time": "09:55:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=VqVBGM4XEiE",
       "venue_id": "1944323",
       "speaker_id": [
@@ -7458,6 +7622,7 @@
       "end_date": "2024-09-11",
       "end_time": "10:05:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=wqRKO_vLY_c",
       "venue_id": "1944323",
       "speaker_id": [
@@ -7484,6 +7649,7 @@
       "end_date": "2024-09-11",
       "end_time": "10:15:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=0K_Sp0g1ogc",
       "venue_id": "1944323",
       "speaker_id": [
@@ -7510,6 +7676,7 @@
       "end_date": "2024-09-11",
       "end_time": "10:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=t9swX1jpLSU",
       "venue_id": "1944323",
       "speaker_id": [
@@ -7536,6 +7703,7 @@
       "end_date": "2024-09-11",
       "end_time": "11:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -7560,6 +7728,7 @@
       "end_date": "2024-09-11",
       "end_time": "17:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -7584,6 +7753,7 @@
       "end_date": "2024-09-11",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=ZilgUSmo_hA",
       "venue_id": "1944314",
       "speaker_id": [
@@ -7615,6 +7785,7 @@
       "end_date": "2024-09-11",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=Zjz2ou41-LI",
       "venue_id": "1944308",
       "speaker_id": [
@@ -7647,6 +7818,7 @@
       "end_date": "2024-09-11",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=WUiDRozAcQk",
       "venue_id": "1944305",
       "speaker_id": [
@@ -7678,6 +7850,7 @@
       "end_date": "2024-09-11",
       "end_time": "11:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=Ef6qv26fZHk",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7709,6 +7882,7 @@
       "end_date": "2024-09-11",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=M3wGkC7rzmE",
       "venue_id": "1944314",
       "speaker_id": [
@@ -7740,6 +7914,7 @@
       "end_date": "2024-09-11",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=IzJeffH_x_s",
       "venue_id": "1944308",
       "speaker_id": [
@@ -7771,6 +7946,7 @@
       "end_date": "2024-09-11",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=WZjwk_tRgvA",
       "venue_id": "1944305",
       "speaker_id": [
@@ -7803,6 +7979,7 @@
       "end_date": "2024-09-11",
       "end_time": "12:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=W7qIux5BAvs",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7834,6 +8011,7 @@
       "end_date": "2024-09-11",
       "end_time": "13:40:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1979819",
       "speaker_id": [],
@@ -7858,6 +8036,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=3msKy5VOml0",
       "venue_id": "1944314",
       "speaker_id": [
@@ -7889,6 +8068,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=U4gCky2TFWE",
       "venue_id": "1944308",
       "speaker_id": [
@@ -7921,6 +8101,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=jv8q7kFyxo0",
       "venue_id": "1944305",
       "speaker_id": [
@@ -7952,6 +8133,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=kVYlplb1gKk",
       "venue_id": "1944311",
       "speaker_id": [
@@ -7983,6 +8165,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:50:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=jreLGIzgZ9U",
       "venue_id": "1944314",
       "speaker_id": [
@@ -8009,6 +8192,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:50:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=4xCcSqdablo",
       "venue_id": "1944308",
       "speaker_id": [
@@ -8040,6 +8224,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:50:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=45rKrmW7NLA",
       "venue_id": "1944311",
       "speaker_id": [
@@ -8066,6 +8251,7 @@
       "end_date": "2024-09-11",
       "end_time": "14:50:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=CujBv8L6tVQ",
       "venue_id": "1944305",
       "speaker_id": [
@@ -8096,6 +8282,7 @@
       "end_date": "2024-09-11",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=kLUbcEABH0s",
       "venue_id": "1944314",
       "speaker_id": [
@@ -8122,6 +8309,7 @@
       "end_date": "2024-09-11",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=eb8EoGGZCjY",
       "venue_id": "1944308",
       "speaker_id": [
@@ -8148,6 +8336,7 @@
       "end_date": "2024-09-11",
       "end_time": "15:10:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=90dc_NelaA0",
       "venue_id": "1944305",
       "speaker_id": [
@@ -8179,6 +8368,7 @@
       "end_date": "2024-09-11",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=vb4T51DO3Z4",
       "venue_id": "1944311",
       "speaker_id": [
@@ -8205,6 +8395,7 @@
       "end_date": "2024-09-11",
       "end_time": "15:20:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=w7ubbGmadso",
       "venue_id": "1944305",
       "speaker_id": [
@@ -8231,6 +8422,7 @@
       "end_date": "2024-09-11",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=r4ryfiBfDIQ",
       "venue_id": "1944305",
       "speaker_id": [
@@ -8257,6 +8449,7 @@
       "end_date": "2024-09-11",
       "end_time": "15:50:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -8281,6 +8474,7 @@
       "end_date": "2024-09-11",
       "end_time": "16:20:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=sf8ac2NtwPY",
       "venue_id": "1944308",
       "speaker_id": [
@@ -8310,6 +8504,7 @@
       "end_date": "2024-09-11",
       "end_time": "16:20:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=pVNODy8fDTM",
       "venue_id": "1944305",
       "speaker_id": [
@@ -8341,6 +8536,7 @@
       "end_date": "2024-09-11",
       "end_time": "16:20:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=V4CJR_vkELo",
       "venue_id": "1944311",
       "speaker_id": [
@@ -8367,6 +8563,7 @@
       "end_date": "2024-09-11",
       "end_time": "17:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944311",
       "speaker_id": [
@@ -8393,6 +8590,7 @@
       "end_date": "2024-09-11",
       "end_time": "17:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=ex8dqeWwt5A",
       "venue_id": "1944305",
       "speaker_id": [
@@ -8419,6 +8617,7 @@
       "end_date": "2024-09-11",
       "end_time": "17:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=b45lWgkVLYA",
       "venue_id": "1944308",
       "speaker_id": [
@@ -8445,6 +8644,7 @@
       "end_date": "2024-09-12",
       "end_time": "15:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -8469,6 +8669,7 @@
       "end_date": "2024-09-12",
       "end_time": "12:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -8493,6 +8694,7 @@
       "end_date": "2024-09-12",
       "end_time": "10:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=ZDECb__f4h4",
       "venue_id": "1944308",
       "speaker_id": [
@@ -8520,6 +8722,7 @@
       "end_date": "2024-09-12",
       "end_time": "10:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=4XbzBb_YHw0",
       "venue_id": "1944311",
       "speaker_id": [],
@@ -8544,6 +8747,7 @@
       "end_date": "2024-09-12",
       "end_time": "10:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=8W9N-I1G80o",
       "venue_id": "1944305",
       "speaker_id": [
@@ -8570,6 +8774,7 @@
       "end_date": "2024-09-12",
       "end_time": "10:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=andRX3esq9s",
       "venue_id": "1944314",
       "speaker_id": [
@@ -8596,6 +8801,7 @@
       "end_date": "2024-09-12",
       "end_time": "11:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944317",
       "speaker_id": [],
@@ -8620,6 +8826,7 @@
       "end_date": "2024-09-12",
       "end_time": "12:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": "https://www.youtube.com/watch?v=O4I2BhHgYq8",
       "venue_id": "1944314",
       "speaker_id": [
@@ -8646,6 +8853,7 @@
       "end_date": "2024-09-12",
       "end_time": "11:15:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944305",
       "speaker_id": [],
@@ -8670,6 +8878,7 @@
       "end_date": "2024-09-12",
       "end_time": "12:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944305",
       "speaker_id": [],
@@ -8694,6 +8903,7 @@
       "end_date": "2024-09-12",
       "end_time": "12:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944308",
       "speaker_id": [],
@@ -8718,6 +8928,7 @@
       "end_date": "2024-09-12",
       "end_time": "12:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944311",
       "speaker_id": [],
@@ -8742,6 +8953,7 @@
       "end_date": "2024-09-12",
       "end_time": "14:00:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1979819",
       "speaker_id": [],
@@ -8766,6 +8978,7 @@
       "end_date": "2024-09-12",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944305",
       "speaker_id": [],
@@ -8790,6 +9003,7 @@
       "end_date": "2024-09-12",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944308",
       "speaker_id": [],
@@ -8814,6 +9028,7 @@
       "end_date": "2024-09-12",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944314",
       "speaker_id": [],
@@ -8838,6 +9053,7 @@
       "end_date": "2024-09-12",
       "end_time": "15:30:00",
       "year": "2024",
+      "event_id": "graphqlconf-2024",
       "video_stream": null,
       "venue_id": "1944311",
       "speaker_id": [],
@@ -8862,6 +9078,7 @@
       "end_date": "2025-09-07",
       "end_time": "17:00:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": null,
       "speaker_id": [],
@@ -8886,6 +9103,7 @@
       "end_date": "2025-09-08",
       "end_time": "19:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2191087",
       "speaker_id": [],
@@ -8910,6 +9128,7 @@
       "end_date": "2025-09-08",
       "end_time": "18:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152797",
       "speaker_id": [],
@@ -8934,6 +9153,7 @@
       "end_date": "2025-09-08",
       "end_time": "09:05:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -8960,6 +9180,7 @@
       "end_date": "2025-09-08",
       "end_time": "09:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -8986,6 +9207,7 @@
       "end_date": "2025-09-08",
       "end_time": "09:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9014,6 +9236,7 @@
       "end_date": "2025-09-08",
       "end_time": "09:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9045,6 +9268,7 @@
       "end_date": "2025-09-08",
       "end_time": "10:00:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9076,6 +9300,7 @@
       "end_date": "2025-09-08",
       "end_time": "10:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9102,6 +9327,7 @@
       "end_date": "2025-09-08",
       "end_time": "10:20:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9128,6 +9354,7 @@
       "end_date": "2025-09-08",
       "end_time": "10:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -9152,6 +9379,7 @@
       "end_date": "2025-09-08",
       "end_time": "18:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2178053",
       "speaker_id": [],
@@ -9176,6 +9404,7 @@
       "end_date": "2025-09-08",
       "end_time": "11:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9207,6 +9436,7 @@
       "end_date": "2025-09-08",
       "end_time": "11:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9233,6 +9463,7 @@
       "end_date": "2025-09-08",
       "end_time": "11:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9262,6 +9493,7 @@
       "end_date": "2025-09-08",
       "end_time": "11:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9288,6 +9520,7 @@
       "end_date": "2025-09-08",
       "end_time": "11:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9318,6 +9551,7 @@
       "end_date": "2025-09-08",
       "end_time": "11:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9344,6 +9578,7 @@
       "end_date": "2025-09-08",
       "end_time": "11:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9375,6 +9610,7 @@
       "end_date": "2025-09-08",
       "end_time": "12:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9406,6 +9642,7 @@
       "end_date": "2025-09-08",
       "end_time": "12:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9437,6 +9674,7 @@
       "end_date": "2025-09-08",
       "end_time": "12:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9468,6 +9706,7 @@
       "end_date": "2025-09-08",
       "end_time": "13:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -9492,6 +9731,7 @@
       "end_date": "2025-09-08",
       "end_time": "14:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9524,6 +9764,7 @@
       "end_date": "2025-09-08",
       "end_time": "14:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9555,6 +9796,7 @@
       "end_date": "2025-09-08",
       "end_time": "14:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9581,6 +9823,7 @@
       "end_date": "2025-09-08",
       "end_time": "14:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9612,6 +9855,7 @@
       "end_date": "2025-09-08",
       "end_time": "14:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9643,6 +9887,7 @@
       "end_date": "2025-09-08",
       "end_time": "14:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9675,6 +9920,7 @@
       "end_date": "2025-09-08",
       "end_time": "15:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9706,6 +9952,7 @@
       "end_date": "2025-09-08",
       "end_time": "15:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9737,6 +9984,7 @@
       "end_date": "2025-09-08",
       "end_time": "15:35:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9768,6 +10016,7 @@
       "end_date": "2025-09-08",
       "end_time": "15:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -9792,6 +10041,7 @@
       "end_date": "2025-09-08",
       "end_time": "16:25:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9823,6 +10073,7 @@
       "end_date": "2025-09-08",
       "end_time": "16:05:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9854,6 +10105,7 @@
       "end_date": "2025-09-08",
       "end_time": "16:25:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -9885,6 +10137,7 @@
       "end_date": "2025-09-08",
       "end_time": "16:25:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9916,6 +10169,7 @@
       "end_date": "2025-09-08",
       "end_time": "17:05:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -9947,6 +10201,7 @@
       "end_date": "2025-09-08",
       "end_time": "17:05:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -9979,6 +10234,7 @@
       "end_date": "2025-09-08",
       "end_time": "17:05:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10005,6 +10261,7 @@
       "end_date": "2025-09-08",
       "end_time": "17:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -10036,6 +10293,7 @@
       "end_date": "2025-09-08",
       "end_time": "17:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10067,6 +10325,7 @@
       "end_date": "2025-09-08",
       "end_time": "17:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10098,6 +10357,7 @@
       "end_date": "2025-09-08",
       "end_time": "18:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -10122,6 +10382,7 @@
       "end_date": "2025-09-09",
       "end_time": "18:00:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2191087",
       "speaker_id": [],
@@ -10146,6 +10407,7 @@
       "end_date": "2025-09-09",
       "end_time": "17:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -10170,6 +10432,7 @@
       "end_date": "2025-09-09",
       "end_time": "10:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [],
@@ -10194,6 +10457,7 @@
       "end_date": "2025-09-09",
       "end_time": "17:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2178053",
       "speaker_id": [],
@@ -10218,6 +10482,7 @@
       "end_date": "2025-09-09",
       "end_time": "10:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10244,6 +10509,7 @@
       "end_date": "2025-09-09",
       "end_time": "10:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -10275,6 +10541,7 @@
       "end_date": "2025-09-09",
       "end_time": "10:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -10299,6 +10566,7 @@
       "end_date": "2025-09-09",
       "end_time": "11:25:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10325,6 +10593,7 @@
       "end_date": "2025-09-09",
       "end_time": "12:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [],
@@ -10349,6 +10618,7 @@
       "end_date": "2025-09-09",
       "end_time": "12:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10381,6 +10651,7 @@
       "end_date": "2025-09-09",
       "end_time": "12:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10407,6 +10678,7 @@
       "end_date": "2025-09-09",
       "end_time": "14:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": null,
       "speaker_id": [],
@@ -10431,6 +10703,7 @@
       "end_date": "2025-09-09",
       "end_time": "14:55:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10458,6 +10731,7 @@
       "end_date": "2025-09-09",
       "end_time": "15:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [],
@@ -10482,6 +10756,7 @@
       "end_date": "2025-09-09",
       "end_time": "15:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10509,6 +10784,7 @@
       "end_date": "2025-09-09",
       "end_time": "15:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10535,6 +10811,7 @@
       "end_date": "2025-09-09",
       "end_time": "16:00:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -10559,6 +10836,7 @@
       "end_date": "2025-09-09",
       "end_time": "16:40:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10590,6 +10868,7 @@
       "end_date": "2025-09-09",
       "end_time": "17:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [],
@@ -10614,6 +10893,7 @@
       "end_date": "2025-09-09",
       "end_time": "17:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10640,6 +10920,7 @@
       "end_date": "2025-09-09",
       "end_time": "17:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [],
@@ -10664,6 +10945,7 @@
       "end_date": "2025-09-10",
       "end_time": "17:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2191087",
       "speaker_id": [],
@@ -10688,6 +10970,7 @@
       "end_date": "2025-09-10",
       "end_time": "17:00:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -10712,6 +10995,7 @@
       "end_date": "2025-09-10",
       "end_time": "09:10:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10743,6 +11027,7 @@
       "end_date": "2025-09-10",
       "end_time": "09:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10775,6 +11060,7 @@
       "end_date": "2025-09-10",
       "end_time": "09:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -10806,6 +11092,7 @@
       "end_date": "2025-09-10",
       "end_time": "16:00:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2178053",
       "speaker_id": [],
@@ -10830,6 +11117,7 @@
       "end_date": "2025-09-10",
       "end_time": "09:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10861,6 +11149,7 @@
       "end_date": "2025-09-10",
       "end_time": "10:10:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -10892,6 +11181,7 @@
       "end_date": "2025-09-10",
       "end_time": "10:10:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10923,6 +11213,7 @@
       "end_date": "2025-09-10",
       "end_time": "10:10:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -10954,6 +11245,7 @@
       "end_date": "2025-09-10",
       "end_time": "10:50:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -10985,6 +11277,7 @@
       "end_date": "2025-09-10",
       "end_time": "10:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11016,6 +11309,7 @@
       "end_date": "2025-09-10",
       "end_time": "10:50:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -11048,6 +11342,7 @@
       "end_date": "2025-09-10",
       "end_time": "10:50:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11079,6 +11374,7 @@
       "end_date": "2025-09-10",
       "end_time": "11:15:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -11103,6 +11399,7 @@
       "end_date": "2025-09-10",
       "end_time": "11:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11134,6 +11431,7 @@
       "end_date": "2025-09-10",
       "end_time": "11:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -11165,6 +11463,7 @@
       "end_date": "2025-09-10",
       "end_time": "11:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -11196,6 +11495,7 @@
       "end_date": "2025-09-10",
       "end_time": "12:25:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11222,6 +11522,7 @@
       "end_date": "2025-09-10",
       "end_time": "12:25:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -11253,6 +11554,7 @@
       "end_date": "2025-09-10",
       "end_time": "12:25:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -11284,6 +11586,7 @@
       "end_date": "2025-09-10",
       "end_time": "13:40:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -11308,6 +11611,7 @@
       "end_date": "2025-09-10",
       "end_time": "14:10:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11339,6 +11643,7 @@
       "end_date": "2025-09-10",
       "end_time": "14:10:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -11371,6 +11676,7 @@
       "end_date": "2025-09-10",
       "end_time": "14:10:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -11398,6 +11704,7 @@
       "end_date": "2025-09-10",
       "end_time": "14:50:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11433,6 +11740,7 @@
       "end_date": "2025-09-10",
       "end_time": "14:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -11464,6 +11772,7 @@
       "end_date": "2025-09-10",
       "end_time": "14:50:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -11495,6 +11804,7 @@
       "end_date": "2025-09-10",
       "end_time": "15:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11526,6 +11836,7 @@
       "end_date": "2025-09-10",
       "end_time": "15:30:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -11557,6 +11868,7 @@
       "end_date": "2025-09-10",
       "end_time": "15:50:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152803",
       "speaker_id": [],
@@ -11581,6 +11893,7 @@
       "end_date": "2025-09-10",
       "end_time": "16:20:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152806",
       "speaker_id": [
@@ -11613,6 +11926,7 @@
       "end_date": "2025-09-10",
       "end_time": "16:20:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152809",
       "speaker_id": [
@@ -11644,6 +11958,7 @@
       "end_date": "2025-09-10",
       "end_time": "16:45:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [
@@ -11670,6 +11985,7 @@
       "end_date": "2025-09-10",
       "end_time": "17:00:00",
       "year": "2025",
+      "event_id": "graphqlconf-2025",
       "video_stream": null,
       "venue_id": "2152800",
       "speaker_id": [

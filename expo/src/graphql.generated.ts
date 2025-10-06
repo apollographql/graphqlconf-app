@@ -23,21 +23,34 @@ export type File = {
 
 export type Query = {
   __typename?: 'Query';
-  events: Array<SchedSession>;
+  event?: Maybe<SchedEvent>;
+  events: Array<SchedEvent>;
+  session?: Maybe<SchedEvent>;
+  speaker?: Maybe<SchedEvent>;
   speakers?: Maybe<Array<SchedSpeaker>>;
+  venue?: Maybe<SchedEvent>;
   venues: Array<SchedVenue>;
 };
 
 
+export type QueryEventArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryEventsArgs = {
-  descriptionLike?: InputMaybe<Scalars['String']['input']>;
-  end?: InputMaybe<Scalars['Int']['input']>;
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  nameLike?: InputMaybe<Scalars['String']['input']>;
-  start?: InputMaybe<Scalars['Int']['input']>;
-  venueId?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QuerySessionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QuerySpeakerArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -49,9 +62,34 @@ export type QuerySpeakersArgs = {
 };
 
 
+export type QueryVenueArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryVenuesArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
   nameLike?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SchedEvent = {
+  __typename?: 'SchedEvent';
+  end_date: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  sessions: Array<SchedSession>;
+  start_date: Scalars['String']['output'];
+  year: Scalars['String']['output'];
+};
+
+
+export type SchedEventSessionsArgs = {
+  descriptionLike?: InputMaybe<Scalars['String']['input']>;
+  end?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  nameLike?: InputMaybe<Scalars['String']['input']>;
+  start?: InputMaybe<Scalars['Int']['input']>;
+  venueId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SchedSession = {
@@ -61,6 +99,8 @@ export type SchedSession = {
   description: Scalars['String']['output'];
   end_date: Scalars['String']['output'];
   end_time: Scalars['String']['output'];
+  event?: Maybe<SchedEvent>;
+  event_id: Scalars['String']['output'];
   event_key: Scalars['String']['output'];
   files: Array<File>;
   goers?: Maybe<Scalars['Int']['output']>;

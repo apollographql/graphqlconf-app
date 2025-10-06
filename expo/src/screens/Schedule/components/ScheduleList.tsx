@@ -16,14 +16,17 @@ if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     fragment ScheduleList_Query on Query {
-      events(year: $year) {
+      event(id: $eventId) {
         id
-        start_time_ts
-        venue {
+        sessions {
           id
+          start_time_ts
+          venue {
+            id
+          }
+          ...ScheduleListItem_SchedSession
+          ...SectionHeader_SchedEvent
         }
-        ...ScheduleListItem_SchedSession
-        ...SectionHeader_SchedEvent
       }
     }
   `;
@@ -41,7 +44,7 @@ export function ScheduleList({
 }: {
   parent: FragmentType<typeof ScheduleList.fragments.Query>;
   queryRef: QueryRef;
-  variables: { year: string };
+  variables: { eventIds: string[] };
 }) {
   const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
@@ -58,10 +61,9 @@ export function ScheduleList({
     variables,
   });
   const sections = useMemo(() => {
-    const grouped = Object.groupBy(
-      data.events || [],
-      (item) => item.start_time_ts ?? 0
-    );
+    // Flatten sessions from all events (typically just one event per year)
+    const sessions = data.event?.sessions || [];
+    const grouped = Object.groupBy(sessions, (item) => item.start_time_ts ?? 0);
     let previousDay: undefined | string;
     return Object.entries(grouped)
       .map(([timeslot, items]) => {
@@ -85,7 +87,7 @@ export function ScheduleList({
         }
         return { ...section, firstEventOfDay: false };
       });
-  }, [data.events]);
+  }, [data.event]);
   return (
     <SectionList
       refreshing={refreshing}

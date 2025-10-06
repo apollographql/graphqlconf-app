@@ -6,7 +6,11 @@ import { HomeScreen } from "@/screens/Home/HomeScreen";
 import { VariablesOf } from "@graphql-typed-document-node/core";
 
 export default function Home() {
-  const variables: VariablesOf<typeof HomeScreen.Query> = { year: "2025" };
+  const currentEvent =
+    process.env.EXPO_PUBLIC_CURRENT_EVENT || "graphqlconf-2025";
+  const variables: VariablesOf<typeof HomeScreen.Query> = {
+    eventId: currentEvent,
+  };
 
   const [queryRef] = useBackgroundQuery(HomeScreen.Query, {
     variables,
