@@ -61,7 +61,7 @@ export default function HomeScreen() {
         </Link>
 
         <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
+          Check out the other tabs to see what this app can do.
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
