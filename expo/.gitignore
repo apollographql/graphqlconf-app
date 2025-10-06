@@ -32,6 +32,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env.keys
 
 # MCP OAuth client registration
 oauth-mcpBuilders.json

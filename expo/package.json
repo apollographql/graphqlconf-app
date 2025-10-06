@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "dotenvx run -fk ~/.dotenvx.keys -f .env.local -- expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -15,6 +15,7 @@
     "@ai-sdk/openai": "^2.1.0-beta.11",
     "@ai-sdk/react": "^2.1.0-beta.19",
     "@apollo/client": "^4.0.5",
+    "@dotenvx/dotenvx": "^1.51.0",
     "@expo/vector-icons": "^15.0.2",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@modelcontextprotocol/sdk": "^1.18.2",
