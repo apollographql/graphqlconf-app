@@ -5,19 +5,26 @@ import {
   convertToModelMessages,
   stepCountIs,
   smoothStream,
+  StreamTextResult,
 } from "ai";
 import { componentTools } from "@/availableFragmentComponents";
 import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
 import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
-import { readFile } from "node:fs/promises";
+import { prompt } from "./prompt";
+
+export interface AgentContext {
+  currentTime: string;
+}
 
 export async function runAgent({
   messages,
+  context,
   request,
 }: {
   messages: UIMessage[];
+  context: AgentContext;
   request: Request;
-}) {
+}): Promise<StreamTextResult<any, unknown>> {
   const [supergraphMcp, remoteEventsMcp] = await Promise.all([
     getSupergraphMcpTools(),
     getBuildersMcpTools(request),
@@ -30,7 +37,6 @@ export async function runAgent({
 
   console.log("Available tools:", Object.keys(tools));
 
-  const prompt = await readFile("./prompt.txt", "utf-8");
   return streamText({
     model: createOpenAI({
       apiKey: process.env.OPENAI_API_KEY!,
@@ -47,8 +53,22 @@ export async function runAgent({
     //     include: ["reasoning.encrypted_content"],
     //   } satisfies OpenAIResponsesProviderOptions,
     // },
-    system: prompt,
-    messages: convertToModelMessages(messages),
+    messages: convertToModelMessages([
+      { role: "system", parts: [{ type: "text", text: prompt }] },
+      {
+        role: "system",
+        parts: [
+          {
+            type: "text",
+            text: `
+This message contains information about the current state of the UI.
+Date and time: ${context.currentTime}
+        `.trim(),
+          },
+        ],
+      },
+      ...messages,
+    ]),
     tools,
     stopWhen: stepCountIs(10),
     onStepFinish: async (step) => {

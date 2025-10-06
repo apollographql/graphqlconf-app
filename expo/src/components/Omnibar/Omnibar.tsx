@@ -8,6 +8,7 @@ import { useChat } from "@ai-sdk/react";
 import {
   DefaultChatTransport,
   lastAssistantMessageIsCompleteWithToolCalls,
+  UIMessage,
 } from "ai";
 import { fetch as expoFetch } from "expo/fetch";
 import { useRef, useState } from "react";
@@ -17,6 +18,7 @@ import { IconSymbol } from "../ui/icon-symbol";
 import { useApolloClient } from "@apollo/client/react";
 import { Message } from "./Message";
 import { handleShowEmbedToolCall } from "./ShowEmbedTool";
+import { AgentContext } from "@/agent/agent";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   const theme = useColorScheme() ?? "light";
@@ -29,6 +31,15 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
     transport: new DefaultChatTransport({
       fetch: expoFetch as unknown as typeof globalThis.fetch,
       api: generateAPIUrl("/api/chat"),
+      body: (messages: UIMessage[]) => {
+        const now = new Date();
+        return {
+          messages,
+          context: {
+            currentTime: now.toISOString(),
+          } satisfies AgentContext,
+        };
+      },
     }),
     onError: (error) => console.error(error, "ERROR"),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
