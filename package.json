@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "start_rover": "cd connector && dotenvx run -v -fk ~/.dotenvx.keys --convention=nextjs  -- rover dev --supergraph-config supergraph.yaml --router-config router.yaml --mcp mcp.yaml"
+  },
   "devDependencies": {
     "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.0"
   }
 }
