@@ -1,6 +1,6 @@
 subgraphs:
-  github:
+  conferences:
     routing_url: http://ignore
     schema:
-      file: github.graphqls
+      file: conferences.graphqls
 federation_version: =2.12.0-preview.7
