@@ -3,7 +3,10 @@
 # a graph. To learn more, visit Apollo's documentation: 🔗https://www.apollographql.com/docs/graphos/schema-design/connectors
 
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.10", import: ["@key"]) # Enable this schema to use Apollo Federation features
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.10"
+    import: ["@key", "@shareable"]
+  ) # Enable this schema to use Apollo Federation features
   @link( # Enable this schema to use Apollo Connectors
     url: "https://specs.apollo.dev/connect/v0.3"
     import: ["@connect", "@source"]
@@ -114,6 +117,7 @@ type SchedEvent
     start_date
     end_date
     city
+    location: ${ latitude longitude }
     """
   ) {
   id: String!
@@ -122,6 +126,7 @@ type SchedEvent
   start_date: String!
   end_date: String!
   city: String!
+  location: LatLng!
   sessions(
     nameLike: String
     descriptionLike: String
@@ -254,6 +259,11 @@ type SchedSession
 type File {
   path: String!
   name: String!
+}
+
+type LatLng @shareable {
+  latitude: Float!
+  longitude: Float!
 }
 
 type SchedVenue

@@ -1,6 +1,69 @@
+type AddressComponent {
+  longText: String!
+  shortText: String!
+  types: [String!]!
+  languageCode: String!
+}
+type Attribution {
+  provider: String!
+  providerUri: String!
+}
+type AuthorAttribution {
+  displayName: String!
+  uri: String!
+  photoUri: String!
+}
 type File {
   path: String!
   name: String!
+}
+type GoogleMapsLinks {
+  directionsUri: String!
+  placeUri: String!
+  writeAReviewUri: String!
+  reviewsUri: String!
+  photosUri: String!
+}
+type LatLng {
+  latitude: Float!
+  longitude: Float!
+}
+type LocalizedText {
+  text: String!
+  languageCode: String!
+}
+type Photo {
+  name: String!
+  widthPx: Int!
+  heightPx: Int!
+  authorAttributions: [AuthorAttribution!]!
+  flagContentUri: String!
+  googleMapsUri: String!
+}
+type Place {
+  name: String!
+  id: String!
+  displayName: LocalizedText!
+  types: [String!]!
+  primaryType: String!
+  primaryTypeDisplayName: LocalizedText!
+  formattedAddress: String!
+  shortFormattedAddress: String!
+  postalAddress: String!
+  addressComponents: [AddressComponent!]!
+  plusCode: PlusCode!
+  location: LatLng!
+  viewport: Viewport!
+  googleMapsUri: String!
+  photos: [Photo!]!
+  adrFormatAddress: String!
+  businessStatus: String!
+  attributions: [Attribution!]!
+  googleMapsLinks: GoogleMapsLinks!
+}
+type PlusCode {
+  globalCode: String!
+  compoundCode: String!
 }
 type Query {
   event(id: String!): SchedEvent
@@ -10,6 +73,7 @@ type Query {
   events(year: String, ids: [String!]): [SchedEvent!]!
   speakers(ids: [String!], company: String, username: String, nameLike: String): [SchedSpeaker!]
   venues(ids: [String!], nameLike: String): [SchedVenue!]!
+  nearbyPlaces(includedTypes: [NearbyPlaceType!]!, maxResultCount: Int = 10, locationRestriction: LocationRestrictionInput!): [Place!]!
 }
 type SchedEvent {
   id: String!
@@ -17,6 +81,8 @@ type SchedEvent {
   year: String!
   start_date: String!
   end_date: String!
+  city: String!
+  location: LatLng!
   sessions(nameLike: String, descriptionLike: String, venueId: String, start: Int, end: Int, limit: Int): [SchedSession!]!
 }
 type SchedSession {
@@ -66,9 +132,84 @@ type SocialUrl {
   service: String!
   url: String!
 }
+type Viewport {
+  low: LatLng!
+  high: LatLng!
+}
+enum NearbyPlaceType {
+  acai_shop
+  afghani_restaurant
+  african_restaurant
+  american_restaurant
+  asian_restaurant
+  bagel_shop
+  bakery
+  bar
+  bar_and_grill
+  barbecue_restaurant
+  brazilian_restaurant
+  breakfast_restaurant
+  brunch_restaurant
+  buffet_restaurant
+  cafe
+  cafeteria
+  candy_store
+  cat_cafe
+  chinese_restaurant
+  chocolate_factory
+  chocolate_shop
+  coffee_shop
+  confectionery
+  deli
+  dessert_restaurant
+  dessert_shop
+  diner
+  dog_cafe
+  donut_shop
+  fast_food_restaurant
+  fine_dining_restaurant
+  food_court
+  french_restaurant
+  greek_restaurant
+  hamburger_restaurant
+  ice_cream_shop
+  indian_restaurant
+  indonesian_restaurant
+  italian_restaurant
+  japanese_restaurant
+  juice_shop
+  korean_restaurant
+  lebanese_restaurant
+  meal_delivery
+  meal_takeaway
+  mediterranean_restaurant
+  mexican_restaurant
+  middle_eastern_restaurant
+  pizza_restaurant
+  pub
+  ramen_restaurant
+  restaurant
+  sandwich_shop
+  seafood_restaurant
+  spanish_restaurant
+  steak_house
+  sushi_restaurant
+  tea_house
+  thai_restaurant
+  turkish_restaurant
+  vegan_restaurant
+  vegetarian_restaurant
+  vietnamese_restaurant
+  wine_bar
+}
 enum YN {
   Y
   N
+}
+input LocationRestrictionInput {
+  latitude: Float!
+  longitude: Float!
+  radiusInMeters: Int!
 }
 "Exposes a URL that specifies the behavior of this scalar."
 directive @specifiedBy(

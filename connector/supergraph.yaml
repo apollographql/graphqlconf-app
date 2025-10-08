@@ -3,4 +3,8 @@ subgraphs:
     routing_url: http://ignore
     schema:
       file: conferences.graphqls
+  places:
+    routing_url: http://ignore
+    schema:
+      file: places.graphqls
 federation_version: =2.12.0-preview.7

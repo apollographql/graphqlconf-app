@@ -4,3 +4,7 @@ supergraph:
   listen: 0.0.0.0:4000
 connectors:
   preview_connect_v0_3: true
+  subgraphs:
+    places:
+      $config:
+        api_key: ${env.GOOGLE_MAPS_API_KEY}

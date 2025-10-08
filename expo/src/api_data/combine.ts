@@ -28,6 +28,8 @@ interface Event {
   start_date: string;
   end_date: string;
   city: string;
+  latitude: number;
+  longitude: number;
 }
 
 interface Session {
@@ -79,6 +81,8 @@ const combined: {
       start_date: "2023-09-19",
       end_date: "2023-09-21",
       city: "San Francisco",
+      latitude: 37.5939,
+      longitude: -122.3651,
     },
     "graphqlconf-2024": {
       id: "graphqlconf-2024",
@@ -87,6 +91,8 @@ const combined: {
       start_date: "2024-09-10",
       end_date: "2024-09-12",
       city: "San Francisco",
+      latitude: 37.788311,
+      longitude: -122.41046,
     },
     "graphqlconf-2025": {
       id: "graphqlconf-2025",
@@ -95,6 +101,8 @@ const combined: {
       start_date: "2025-09-07",
       end_date: "2025-09-09",
       city: "Amsterdam",
+      latitude: 52.376877,
+      longitude: 4.92205,
     },
   },
   sessions: {},

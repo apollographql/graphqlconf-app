@@ -1,0 +1,37 @@
+query getNearbyPlaces(
+  $types: [NearbyPlaceType!]! = [restaurant, cafe]
+  $latitude: Float!
+  $longitude: Float!
+  $radiusInMeters: Int! = 500
+) {
+  nearbyPlaces(
+    includedTypes: $types
+    locationRestriction: {
+      latitude: $latitude
+      longitude: $longitude
+      radiusInMeters: $radiusInMeters
+    }
+  ) {
+    __typename
+    id
+    types
+    displayName {
+      text
+      languageCode
+    }
+    location {
+      latitude
+      longitude
+    }
+    viewport {
+      low {
+        latitude
+        longitude
+      }
+      high {
+        latitude
+        longitude
+      }
+    }
+  }
+}
