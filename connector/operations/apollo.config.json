@@ -1,9 +1,7 @@
 {
   "client": {
     "service": {
-      "localSchemaFile": [
-        "../supergraph.graphql"
-      ]
+      "url": "http://localhost:4000"
     },
     "includes": [
       "*.graphql"

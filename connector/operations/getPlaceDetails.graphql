@@ -1,0 +1,38 @@
+query getPlaceDetails($id: String!) {
+  place(id: $id) {
+    __typename
+    id
+    types
+    displayName {
+      text
+      languageCode
+    }
+    location {
+      latitude
+      longitude
+    }
+    viewport {
+      low {
+        latitude
+        longitude
+      }
+      high {
+        latitude
+        longitude
+      }
+    }
+    formattedAddress
+    businessStatus
+    googleMapsLinks {
+      directionsUri
+      placeUri
+      writeAReviewUri
+      reviewsUri
+      photosUri
+    }
+    photos {
+      __typename
+      id
+    }
+  }
+}

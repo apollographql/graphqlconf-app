@@ -10,7 +10,7 @@ extend schema
   @source(
     name: "places"
     http: {
-      baseURL: "https://places.googleapis.com/v1/places"
+      baseURL: "https://places.googleapis.com/v1/"
       headers: [
         { name: "Content-Type", value: "application/json" }
         { name: "x-goog-api-key", value: "{$config.api_key}" }
@@ -33,7 +33,7 @@ type Query {
     @connect(
       source: "places"
       http: {
-        POST: ":searchNearby"
+        POST: "places:searchNearby"
         body: """
         includedTypes: $args.includedTypes
         maxResultCount: $args.maxResultCount
@@ -50,12 +50,36 @@ type Query {
         headers: [
           {
             name: "X-Goog-FieldMask"
-            value: "places.addressComponents,places.adrFormatAddress,places.attributions,places.businessStatus,places.containingPlaces,places.displayName,places.formattedAddress,places.googleMapsLinks,places.googleMapsUri,places.iconBackgroundColor,places.iconMaskBaseUri,places.id,places.location,places.name,places.photos,places.plusCode,places.postalAddress,places.primaryType,places.primaryTypeDisplayName,places.pureServiceAreaBusiness,places.shortFormattedAddress,places.subDestinations,places.types,places.utcOffsetMinutes,places.viewport"
+            value: "places.id,places.displayName,places.primaryTypeDisplayName,places.formattedAddress,places.location,places.viewport"
           }
         ]
       }
       selection: """
       $.places {
+          id
+          displayName { text languageCode }
+          primaryTypeDisplayName { text languageCode }
+          formattedAddress
+          location { latitude longitude }
+          viewport { low { latitude longitude } high { latitude longitude } }
+      }
+      """
+    )
+
+  place(id: String!): Place
+    @connect(
+      source: "places"
+      http: {
+        GET: "places/{$args.id}"
+        headers: [
+          {
+            name: "X-Goog-FieldMask"
+            value: "name,id,displayName,types,primaryType,primaryTypeDisplayName,formattedAddress,shortFormattedAddress,postalAddress,addressComponents,plusCode,location,viewport,googleMapsUri,photos,adrFormatAddress,businessStatus,attributions,googleMapsLinks"
+          }
+        ]
+      }
+      selection: """
+      ${
           name
           id
           displayName { text languageCode }
@@ -70,7 +94,7 @@ type Query {
           location { latitude longitude }
           viewport { low { latitude longitude } high { latitude longitude } }
           googleMapsUri
-          photos { name widthPx heightPx authorAttributions { displayName uri photoUri } flagContentUri googleMapsUri }
+          photos { id: name widthPx heightPx authorAttributions { displayName uri photoUri } flagContentUri googleMapsUri }
           adrFormatAddress
           businessStatus
           attributions { provider providerUri }
@@ -85,6 +109,7 @@ type Query {
         #   accessibilityOptions {}
       }
       """
+      entity: true
     )
 }
 
@@ -388,7 +413,7 @@ type AuthorAttribution {
 #   "version": string
 # }
 type Photo {
-  name: String!
+  id: String!
   widthPx: Int!
   heightPx: Int!
   authorAttributions: [AuthorAttribution!]!

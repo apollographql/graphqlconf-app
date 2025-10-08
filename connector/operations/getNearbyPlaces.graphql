@@ -14,11 +14,15 @@ query getNearbyPlaces(
   ) {
     __typename
     id
-    types
     displayName {
       text
       languageCode
     }
+    primaryTypeDisplayName {
+      text
+      languageCode
+    }
+    formattedAddress
     location {
       latitude
       longitude
