@@ -5,10 +5,12 @@ import {
   useSuspenseFragment,
 } from "@apollo/client/react";
 import { useTransition } from "react";
-import { ScrollView, RefreshControl, StyleSheet } from "react-native";
+import { ScrollView, RefreshControl, StyleSheet, useWindowDimensions } from "react-native";
+import RenderHtml from "react-native-render-html";
 import { fragmentRegistry, FromParent } from "@/apollo_client";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { SessionDetailContent_SchedSessionFragmentDoc } from "./SessionDetailContent.generated";
 import { Fonts } from "@/constants/theme";
 
@@ -58,6 +60,8 @@ export function SessionDetailContent({
     | FromParent<typeof SessionDetailContent.fragments.SchedSession>;
   queryRef: QueryRef;
 }) {
+  const { width } = useWindowDimensions();
+  const textColor = useThemeColor({}, 'text');
   const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
   const onRefresh = () => {
@@ -115,7 +119,18 @@ export function SessionDetailContent({
             <ThemedText type="defaultSemiBold" style={styles.label}>
               Description
             </ThemedText>
-            <ThemedText>{session.description}</ThemedText>
+            <RenderHtml
+              contentWidth={width}
+              source={{ html: session.description }}
+              baseStyle={{
+                color: textColor,
+                fontSize: 16,
+                lineHeight: 24,
+              }}
+              defaultTextProps={{
+                selectable: true,
+              }}
+            />
           </ThemedView>
         )}
 
