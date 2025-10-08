@@ -1,6 +1,7 @@
 import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 
 import { ScheduleListItem } from "@/screens/Schedule/components/ScheduleListItem";
+import { PlacesMap } from "@/components/PlacesMap";
 import { FragmentType } from "@apollo/client";
 import { tool } from "ai";
 import { z } from "zod/v4";
@@ -65,6 +66,34 @@ export const availableFragmentComponents = {
     description: `Display a schedule item, e.g. a conference talk or any other item with \`__typename\` of \`SchedSession\`.
 Will display event name, venue name, time (start and end) as well as event speakers (if available).`,
   }),
+  PlacesMap: expose(PlacesMap, {
+    name: "PlacesMap" as const,
+    description: `Display a map with markers for one or more locations.
+Will show markers for all locations and automatically center/zoom to fit all markers.
+Use this to visualize places on a map, such as nearby restaurants, venues, or conference locations.`,
+    extraProps: z.object({
+      locations: z
+        .array(
+          z.object({
+            latitude: z.number().describe("Latitude coordinate"),
+            longitude: z.number().describe("Longitude coordinate"),
+            title: z
+              .string()
+              .optional()
+              .describe("Title/name of the location to show on marker"),
+            description: z
+              .string()
+              .optional()
+              .describe("Description to show on marker"),
+          })
+        )
+        .describe("Array of locations to show on the map"),
+      height: z
+        .number()
+        .optional()
+        .describe("Height of the map in pixels (default: 300)"),
+    }),
+  }),
 };
 
 // // exposing all components via a single tool seems to make tool discovery harder
@@ -95,7 +124,7 @@ export const componentTools = mapEntries(
     tool({
       name: v.name,
       description: v.description,
-      inputSchema: v.schema,
+      inputSchema: v.schema as any,
     })
 );
 
