@@ -44,7 +44,7 @@ export function ScheduleList({
 }: {
   parent: FragmentType<typeof ScheduleList.fragments.Query>;
   queryRef: QueryRef;
-  variables: { eventIds: string[] };
+  variables: { eventId: string };
 }) {
   const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();

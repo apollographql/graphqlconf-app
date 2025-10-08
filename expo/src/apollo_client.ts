@@ -44,6 +44,14 @@ export const fragmentRegistry = createFragmentRegistry();
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     fragments: fragmentRegistry,
+    typePolicies: {
+      File: {
+        keyFields: ["path"],
+      },
+      SocialUrl: {
+        keyFields: ["service", "url"],
+      },
+    },
   }),
   link: new HttpLink({
     uri,

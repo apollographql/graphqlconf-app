@@ -67,9 +67,9 @@ type PlusCode {
 }
 type Query {
   event(id: String!): SchedEvent
-  session(id: String!): SchedEvent
-  venue(id: String!): SchedEvent
-  speaker(id: String!): SchedEvent
+  session(id: String!): SchedSession
+  venue(id: String!): SchedVenue
+  speaker(id: String!): SchedSpeaker
   events(year: String, ids: [String!]): [SchedEvent!]!
   speakers(ids: [String!], company: String, username: String, nameLike: String): [SchedSpeaker!]
   venues(ids: [String!], nameLike: String): [SchedVenue!]!

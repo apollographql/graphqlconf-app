@@ -1,6 +1,8 @@
 import { fragmentRegistry, FromParent } from "@/apollo_client";
 import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
+import { Pressable, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
 import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleListItem.generated";
@@ -21,6 +23,7 @@ if (false) {
       type
       subtype
       speakers {
+        id
         username
         name
       }
@@ -40,26 +43,40 @@ export function ScheduleListItem({
     | FragmentType<typeof ScheduleListItem.fragments.SchedSession>
     | FromParent<typeof ScheduleListItem.fragments.SchedSession>;
 }) {
+  const router = useRouter();
   const { data } = useSuspenseFragment({
     fragment: ScheduleListItem.fragments.SchedSession,
     fragmentName: "ScheduleListItem_SchedSession",
     from: SchedSession,
   });
 
+  const handlePress = () => {
+    router.push(`/session/${data.id}`);
+  };
+
   return (
-    <ThemedView
-      style={{ padding: 5, margin: 10, borderWidth: 1, borderBottomWidth: 1 }}
-    >
-      <ThemedText>{data.name}</ThemedText>
-      {!data.venue ? null : <ThemedText>{data.venue?.name}</ThemedText>}
-      <ThemedText>
-        {data.start_time} - {data.end_time}
-      </ThemedText>
-      {!data.speakers ? null : (
+    <Pressable onPress={handlePress}>
+      <ThemedView style={styles.container}>
+        <ThemedText>{data.name}</ThemedText>
+        {!data.venue ? null : <ThemedText>{data.venue?.name}</ThemedText>}
         <ThemedText>
-          {data.speakers?.map((s) => s.name ?? s.username).join(", ")}
+          {data.start_time} - {data.end_time}
         </ThemedText>
-      )}
-    </ThemedView>
+        {!data.speakers ? null : (
+          <ThemedText>
+            {data.speakers?.map((s) => s.name ?? s.username).join(", ")}
+          </ThemedText>
+        )}
+      </ThemedView>
+    </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 5,
+    margin: 10,
+    borderWidth: 1,
+    borderBottomWidth: 1,
+  },
+});

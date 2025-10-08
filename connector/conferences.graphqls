@@ -18,13 +18,13 @@ type Query {
   event(id: String!): SchedEvent
     @connect(source: "base", http: { GET: "noop" }, selection: "id: $args.id")
 
-  session(id: String!): SchedEvent
+  session(id: String!): SchedSession
     @connect(source: "base", http: { GET: "noop" }, selection: "id: $args.id")
 
-  venue(id: String!): SchedEvent
+  venue(id: String!): SchedVenue
     @connect(source: "base", http: { GET: "noop" }, selection: "id: $args.id")
 
-  speaker(id: String!): SchedEvent
+  speaker(id: String!): SchedSpeaker
     @connect(source: "base", http: { GET: "noop" }, selection: "id: $args.id")
 
   events(year: String, ids: [String!]): [SchedEvent!]!

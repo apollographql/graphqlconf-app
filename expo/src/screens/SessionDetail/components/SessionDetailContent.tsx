@@ -1,0 +1,179 @@
+import { FragmentType, gql } from "@apollo/client";
+import {
+  QueryRef,
+  useQueryRefHandlers,
+  useSuspenseFragment,
+} from "@apollo/client/react";
+import { useTransition } from "react";
+import { ScrollView, RefreshControl, StyleSheet } from "react-native";
+import { fragmentRegistry, FromParent } from "@/apollo_client";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { SessionDetailContent_SchedSessionFragmentDoc } from "./SessionDetailContent.generated";
+import { Fonts } from "@/constants/theme";
+
+if (false) {
+  // eslint-disable-next-line no-unused-expressions
+  gql`
+    fragment SessionDetailContent_SchedSession on SchedSession {
+      id
+      name
+      description
+      type
+      subtype
+      start_date
+      start_time
+      end_date
+      end_time
+      venue {
+        id
+        name
+      }
+      speakers {
+        id
+        username
+        name
+        company
+        position
+      }
+      files {
+        path
+        name
+      }
+    }
+  `;
+}
+
+SessionDetailContent.fragments = {
+  SchedSession: SessionDetailContent_SchedSessionFragmentDoc,
+} as const;
+fragmentRegistry.register(SessionDetailContent.fragments.SchedSession);
+
+export function SessionDetailContent({
+  SchedSession,
+  queryRef,
+}: {
+  SchedSession:
+    | FragmentType<typeof SessionDetailContent.fragments.SchedSession>
+    | FromParent<typeof SessionDetailContent.fragments.SchedSession>;
+  queryRef: QueryRef;
+}) {
+  const { refetch } = useQueryRefHandlers(queryRef);
+  const [refreshing, transition] = useTransition();
+  const onRefresh = () => {
+    transition(() => {
+      refetch();
+    });
+  };
+
+  const { data: session } = useSuspenseFragment({
+    fragment: SessionDetailContent.fragments.SchedSession,
+    fragmentName: "SessionDetailContent_SchedSession",
+    from: SchedSession,
+  });
+
+  return (
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <ThemedView style={styles.content}>
+        <ThemedText type="title" style={styles.title}>
+          {session.name}
+        </ThemedText>
+
+        <ThemedView style={styles.section}>
+          <ThemedText type="defaultSemiBold" style={styles.label}>
+            Type
+          </ThemedText>
+          <ThemedText>{session.type}</ThemedText>
+          {!session.subtype ? null : <ThemedText>{session.subtype}</ThemedText>}
+        </ThemedView>
+
+        <ThemedView style={styles.section}>
+          <ThemedText type="defaultSemiBold" style={styles.label}>
+            Time
+          </ThemedText>
+          <ThemedText>
+            {session.start_date} {session.start_time} - {session.end_time}
+          </ThemedText>
+        </ThemedView>
+
+        {!session.venue ? null : (
+          <ThemedView style={styles.section}>
+            <ThemedText type="defaultSemiBold" style={styles.label}>
+              Venue
+            </ThemedText>
+            <ThemedText>{session.venue.name}</ThemedText>
+          </ThemedView>
+        )}
+
+        {!session.description ? null : (
+          <ThemedView style={styles.section}>
+            <ThemedText type="defaultSemiBold" style={styles.label}>
+              Description
+            </ThemedText>
+            <ThemedText>{session.description}</ThemedText>
+          </ThemedView>
+        )}
+
+        {!session.speakers
+          ? null
+          : session.speakers.length > 0 && (
+              <ThemedView style={styles.section}>
+                <ThemedText type="defaultSemiBold" style={styles.label}>
+                  Speakers
+                </ThemedText>
+                {session.speakers.map((speaker) => (
+                  <ThemedView key={speaker.id} style={styles.speaker}>
+                    <ThemedText type="defaultSemiBold">
+                      {speaker.name}
+                    </ThemedText>
+                    {speaker.position && speaker.company && (
+                      <ThemedText>
+                        {speaker.position} at {speaker.company}
+                      </ThemedText>
+                    )}
+                  </ThemedView>
+                ))}
+              </ThemedView>
+            )}
+
+        {!session.files || session.files.length === 0 ? null : (
+          <ThemedView style={styles.section}>
+            <ThemedText type="defaultSemiBold" style={styles.label}>
+              Files
+            </ThemedText>
+            {session.files.map((file, idx) => (
+              <ThemedText key={idx}>{file.name}</ThemedText>
+            ))}
+          </ThemedView>
+        )}
+      </ThemedView>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  title: {
+    fontFamily: Fonts.rounded,
+    marginBottom: 16,
+  },
+  section: {
+    marginBottom: 24,
+  },
+  label: {
+    marginBottom: 8,
+  },
+  speaker: {
+    marginBottom: 12,
+  },
+});

@@ -59,6 +59,7 @@
     "@graphql-codegen/typed-document-node": "^6.0.0",
     "@graphql-codegen/typescript": "^5.0.0",
     "@graphql-codegen/typescript-operations": "^5.0.0",
+    "@parcel/watcher": "^2.5.1",
     "@types/json-server": "^0.14.8",
     "@types/react": "~19.1.0",
     "eslint": "^9.25.0",
