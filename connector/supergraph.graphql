@@ -46,7 +46,7 @@ type Place {
   displayName: LocalizedText!
   types: [String!]!
   primaryType: String!
-  primaryTypeDisplayName: LocalizedText!
+  primaryTypeDisplayName: LocalizedText
   formattedAddress: String!
   shortFormattedAddress: String!
   postalAddress: String!
