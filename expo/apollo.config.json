@@ -1,11 +1,13 @@
 {
   "client": {
     "service": {
-      "localSchemaFile": [
-        "../connector/supergraph.graphql",
-        "./localSchema.graphql"
-      ]
+      "url": "http://localhost:4000"
     },
+    "includes": [
+      "./src/**/*.graphql",
+      "./src/**/*.ts",
+      "./src/**/*.tsx"
+    ],
     "excludes": [
       "**/*.generated.ts"
     ]

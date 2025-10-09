@@ -1,11 +1,13 @@
 import { fragmentRegistry, FromParent } from "@/apollo_client";
 import { FragmentType, gql } from "@apollo/client";
-import { useSuspenseFragment } from "@apollo/client/react";
+import { useSuspenseFragment, useMutation } from "@apollo/client/react";
 import { Pressable, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
 import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleListItem.generated";
+import { ToggleFavoriteDocument } from "@/mutations/ToggleFavorite";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -14,6 +16,7 @@ if (false) {
       __typename
       id
       name
+      isFavorite @client
       venue {
         id
         name
@@ -50,14 +53,37 @@ export function ScheduleListItem({
     from: SchedSession,
   });
 
+  const [toggleFavorite] = useMutation(ToggleFavoriteDocument);
+
   const handlePress = () => {
     router.push(`/session/${data.id}`);
+  };
+
+  const handleToggleFavorite = (e: any) => {
+    e.stopPropagation();
+    toggleFavorite({
+      variables: {
+        id: data.id,
+        typename: data.__typename,
+      },
+    });
   };
 
   return (
     <Pressable onPress={handlePress}>
       <ThemedView style={styles.container}>
-        <ThemedText>{data.name}</ThemedText>
+        <ThemedView style={styles.header}>
+          <ThemedView style={styles.titleContainer}>
+            <ThemedText>{data.name}</ThemedText>
+          </ThemedView>
+          <Pressable onPress={handleToggleFavorite} hitSlop={8}>
+            <Ionicons
+              name={data.isFavorite ? "bookmark" : "bookmark-outline"}
+              size={24}
+              color="#007AFF"
+            />
+          </Pressable>
+        </ThemedView>
         {!data.venue ? null : <ThemedText>{data.venue?.name}</ThemedText>}
         <ThemedText>
           {data.start_time} - {data.end_time}
@@ -78,5 +104,15 @@ const styles = StyleSheet.create({
     margin: 10,
     borderWidth: 1,
     borderBottomWidth: 1,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  titleContainer: {
+    flex: 1,
+    marginRight: 8,
   },
 });

@@ -3,23 +3,34 @@ import {
   QueryRef,
   useQueryRefHandlers,
   useSuspenseFragment,
+  useMutation,
 } from "@apollo/client/react";
 import { useTransition } from "react";
-import { ScrollView, RefreshControl, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  RefreshControl,
+  StyleSheet,
+  useWindowDimensions,
+  Pressable,
+} from "react-native";
 import RenderHtml from "react-native-render-html";
+import { Ionicons } from "@expo/vector-icons";
 import { fragmentRegistry, FromParent } from "@/apollo_client";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { SessionDetailContent_SchedSessionFragmentDoc } from "./SessionDetailContent.generated";
 import { Fonts } from "@/constants/theme";
+import { ToggleFavoriteDocument } from "@/mutations/ToggleFavorite";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     fragment SessionDetailContent_SchedSession on SchedSession {
+      __typename
       id
       name
+      isFavorite @client
       description
       type
       subtype
@@ -61,7 +72,7 @@ export function SessionDetailContent({
   queryRef: QueryRef;
 }) {
   const { width } = useWindowDimensions();
-  const textColor = useThemeColor({}, 'text');
+  const textColor = useThemeColor({}, "text");
   const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
   const onRefresh = () => {
@@ -76,6 +87,17 @@ export function SessionDetailContent({
     from: SchedSession,
   });
 
+  const [toggleFavorite] = useMutation(ToggleFavoriteDocument);
+
+  const handleToggleFavorite = () => {
+    toggleFavorite({
+      variables: {
+        id: session.id,
+        typename: session.__typename,
+      },
+    });
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -84,9 +106,18 @@ export function SessionDetailContent({
       }
     >
       <ThemedView style={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          {session.name}
-        </ThemedText>
+        <ThemedView style={styles.titleRow}>
+          <ThemedText type="title" style={styles.title}>
+            {session.name}
+          </ThemedText>
+          <Pressable onPress={handleToggleFavorite} hitSlop={8}>
+            <Ionicons
+              name={session.isFavorite ? "bookmark" : "bookmark-outline"}
+              size={32}
+              color="#007AFF"
+            />
+          </Pressable>
+        </ThemedView>
 
         <ThemedView style={styles.section}>
           <ThemedText type="defaultSemiBold" style={styles.label}>
@@ -178,9 +209,16 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
   title: {
     fontFamily: Fonts.rounded,
-    marginBottom: 16,
+    flex: 1,
+    marginRight: 12,
   },
   section: {
     marginBottom: 24,

@@ -36,6 +36,18 @@ export type AuthorAttribution = {
   uri: Scalars['String']['output'];
 };
 
+export type Favorite = {
+  __typename?: 'Favorite';
+  id: Scalars['String']['output'];
+  timestamp: Scalars['String']['output'];
+  typename: Scalars['String']['output'];
+};
+
+export type FavoriteEntity = {
+  id: Scalars['String']['output'];
+  isFavorite: Scalars['Boolean']['output'];
+};
+
 export type File = {
   __typename?: 'File';
   name: Scalars['String']['output'];
@@ -67,6 +79,31 @@ export type LocationRestrictionInput = {
   latitude: Scalars['Float']['input'];
   longitude: Scalars['Float']['input'];
   radiusInMeters: Scalars['Int']['input'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  addFavorite: FavoriteEntity;
+  removeFavorite: FavoriteEntity;
+  toggleFavorite: FavoriteEntity;
+};
+
+
+export type MutationAddFavoriteArgs = {
+  id: Scalars['String']['input'];
+  typename: Scalars['String']['input'];
+};
+
+
+export type MutationRemoveFavoriteArgs = {
+  id: Scalars['String']['input'];
+  typename: Scalars['String']['input'];
+};
+
+
+export type MutationToggleFavoriteArgs = {
+  id: Scalars['String']['input'];
+  typename: Scalars['String']['input'];
 };
 
 export enum NearbyPlaceType {
@@ -146,7 +183,7 @@ export type Photo = {
   widthPx: Scalars['Int']['output'];
 };
 
-export type Place = {
+export type Place = FavoriteEntity & {
   __typename?: 'Place';
   addressComponents: Array<AddressComponent>;
   adrFormatAddress: Scalars['String']['output'];
@@ -157,13 +194,14 @@ export type Place = {
   googleMapsLinks: GoogleMapsLinks;
   googleMapsUri: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  isFavorite: Scalars['Boolean']['output'];
   location: LatLng;
   name: Scalars['String']['output'];
   photos: Array<Photo>;
   plusCode: PlusCode;
   postalAddress: Scalars['String']['output'];
   primaryType: Scalars['String']['output'];
-  primaryTypeDisplayName: LocalizedText;
+  primaryTypeDisplayName?: Maybe<LocalizedText>;
   shortFormattedAddress: Scalars['String']['output'];
   types: Array<Scalars['String']['output']>;
   viewport: Viewport;
@@ -179,6 +217,7 @@ export type Query = {
   __typename?: 'Query';
   event?: Maybe<SchedEvent>;
   events: Array<SchedEvent>;
+  favorites: Array<Favorite>;
   nearbyPlaces: Array<Place>;
   place?: Maybe<Place>;
   session?: Maybe<SchedSession>;
@@ -197,6 +236,11 @@ export type QueryEventArgs = {
 export type QueryEventsArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
   year?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryFavoritesArgs = {
+  typename?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -262,7 +306,7 @@ export type SchedEventSessionsArgs = {
   venueId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SchedSession = {
+export type SchedSession = FavoriteEntity & {
   __typename?: 'SchedSession';
   active: Yn;
   audience?: Maybe<Scalars['String']['output']>;
@@ -276,6 +320,7 @@ export type SchedSession = {
   goers?: Maybe<Scalars['Int']['output']>;
   id: Scalars['String']['output'];
   invite_only: Yn;
+  isFavorite: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   pinned: Yn;
   seats?: Maybe<Scalars['Int']['output']>;
@@ -290,12 +335,13 @@ export type SchedSession = {
   year: Scalars['String']['output'];
 };
 
-export type SchedSpeaker = {
+export type SchedSpeaker = FavoriteEntity & {
   __typename?: 'SchedSpeaker';
   about: Scalars['String']['output'];
   avatar: Scalars['String']['output'];
   company: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  isFavorite: Scalars['Boolean']['output'];
   location: Scalars['String']['output'];
   name: Scalars['String']['output'];
   position: Scalars['String']['output'];
