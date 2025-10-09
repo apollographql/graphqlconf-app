@@ -10,6 +10,7 @@ import {
 import { componentTools } from "@/availableFragmentComponents";
 import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
 import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
+import { clientTools } from "@/agent/clientTools";
 import { prompt } from "./prompt";
 
 export interface AgentContext {
@@ -34,6 +35,7 @@ export async function runAgent({
     ...supergraphMcp.tools,
     ...remoteEventsMcp.tools,
     ...componentTools,
+    ...clientTools,
   };
 
   console.log("Available tools:", Object.keys(tools));

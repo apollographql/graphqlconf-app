@@ -18,6 +18,7 @@ import { IconSymbol } from "../ui/icon-symbol";
 import { useApolloClient } from "@apollo/client/react";
 import { Message } from "./Message";
 import { handleShowEmbedToolCall } from "./ShowEmbedTool";
+import { handleGetFavoritesToolCall } from "./GetFavoritesTool";
 import { AgentContext } from "@/agent/agent";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
@@ -44,14 +45,21 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
     }),
     onError: (error) => console.error(error, "ERROR"),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
-    onToolCall({ toolCall }) {
+    async onToolCall({ toolCall }) {
       if (toolCall.dynamic) {
         return;
       }
 
-      const handled = handleShowEmbedToolCall(toolCall, client);
-      if (handled) {
-        addToolResult(handled);
+      const showEmbedHandled = handleShowEmbedToolCall(toolCall, client);
+      if (showEmbedHandled) {
+        addToolResult(showEmbedHandled);
+        return;
+      }
+
+      const getFavoritesHandled = await handleGetFavoritesToolCall(toolCall);
+      if (getFavoritesHandled) {
+        addToolResult(getFavoritesHandled);
+        return;
       }
     },
   });

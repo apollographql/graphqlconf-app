@@ -48,11 +48,11 @@ const resolvers = {
   Query: {
     entities: (
       _: unknown,
-      { entities }: { entities: { typename: string; id: string }[] }
+      { identifiers }: { identifiers: { typename: string; id: string }[] }
     ) => {
-      return entities.map((entity) => ({
-        __typename: entity.typename,
-        id: entity.id,
+      return identifiers.map(({ typename, id }) => ({
+        __typename: typename,
+        id,
       }));
     },
   },

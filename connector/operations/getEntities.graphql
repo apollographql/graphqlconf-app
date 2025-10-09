@@ -1,0 +1,48 @@
+query GetEntities($identifiers: [EntityIdentifier!]!) {
+  entities(identifiers: $identifiers) {
+    ... on SchedEvent {
+      __typename
+      id
+      name
+      year
+      start_date
+      end_date
+      city
+    }
+
+    ... on SchedSession {
+      __typename
+      id
+      name
+      start_time_ts
+    }
+
+    ... on SchedSpeaker {
+      __typename
+      id
+      name
+      company
+    }
+
+    ... on SchedVenue {
+      __typename
+      id
+      venueName: name
+    }
+
+    ... on Place {
+      __typename
+      id
+      displayName {
+        text
+      }
+      location {
+        latitude
+        longitude
+      }
+      primaryTypeDisplayName {
+        text
+      }
+    }
+  }
+}
