@@ -34,8 +34,8 @@ npm run codegen         # Generate GraphQL types from operations
 ### GraphQL Router & MCP Server
 
 ```bash
-# From connector/ directory:
-rover dev --supergraph-config supergraph.yaml --router-config router.yaml --mcp mcp.yaml
+# From root directory:
+npm run start_rover
 ```
 
 ## Architecture
@@ -70,8 +70,7 @@ rover dev --supergraph-config supergraph.yaml --router-config router.yaml --mcp 
 1. Start the GraphQL router first (required for the app):
 
    ```bash
-   cd connector
-   rover dev --supergraph-config supergraph.yaml --router-config router.yaml --mcp mcp.yaml
+   npm run start_rover
    ```
 
 1.5 (If developing with a local AI model with ollama): Start the ollama server:
@@ -90,7 +89,6 @@ rover dev --supergraph-config supergraph.yaml --router-config router.yaml --mcp 
 3. When modifying GraphQL operations, regenerate types:
 
    ```bash
-   (cd connector; rover graph introspect http://localhost:4000 >| supergraph.graphql)
    (cd expo; npm run codegen)
    ```
 

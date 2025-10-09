@@ -107,6 +107,7 @@ enum YN {
 }
 
 type SchedEvent
+  @key(fields: "id")
   @connect(
     source: "conf"
     http: { GET: "events", queryParams: "id: $batch.id" }
@@ -267,6 +268,7 @@ type LatLng @shareable {
 }
 
 type SchedVenue
+  @key(fields: "id")
   @connect(
     source: "conf"
     http: { GET: "venues", queryParams: "id: $batch.id" }
@@ -280,6 +282,7 @@ type SchedVenue
 }
 
 type SchedSpeaker
+  @key(fields: "id")
   @connect(
     source: "conf"
     http: { GET: "speakers", queryParams: "id: $batch.id" }

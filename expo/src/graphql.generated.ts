@@ -36,6 +36,15 @@ export type AuthorAttribution = {
   uri: Scalars['String']['output'];
 };
 
+export type Entity = {
+  id: Scalars['String']['output'];
+};
+
+export type EntityIdentifier = {
+  id: Scalars['String']['input'];
+  typename: Scalars['String']['input'];
+};
+
 export type Favorite = {
   __typename?: 'Favorite';
   id: Scalars['String']['output'];
@@ -183,7 +192,7 @@ export type Photo = {
   widthPx: Scalars['Int']['output'];
 };
 
-export type Place = FavoriteEntity & {
+export type Place = Entity & FavoriteEntity & {
   __typename?: 'Place';
   addressComponents: Array<AddressComponent>;
   adrFormatAddress: Scalars['String']['output'];
@@ -215,6 +224,7 @@ export type PlusCode = {
 
 export type Query = {
   __typename?: 'Query';
+  entities: Array<Entity>;
   event?: Maybe<SchedEvent>;
   events: Array<SchedEvent>;
   favorites: Array<Favorite>;
@@ -225,6 +235,11 @@ export type Query = {
   speakers?: Maybe<Array<SchedSpeaker>>;
   venue?: Maybe<SchedVenue>;
   venues: Array<SchedVenue>;
+};
+
+
+export type QueryEntitiesArgs = {
+  identifiers: Array<EntityIdentifier>;
 };
 
 
@@ -284,7 +299,7 @@ export type QueryVenuesArgs = {
   nameLike?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SchedEvent = {
+export type SchedEvent = Entity & {
   __typename?: 'SchedEvent';
   city: Scalars['String']['output'];
   end_date: Scalars['String']['output'];
@@ -306,7 +321,7 @@ export type SchedEventSessionsArgs = {
   venueId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SchedSession = FavoriteEntity & {
+export type SchedSession = Entity & FavoriteEntity & {
   __typename?: 'SchedSession';
   active: Yn;
   audience?: Maybe<Scalars['String']['output']>;
@@ -335,7 +350,7 @@ export type SchedSession = FavoriteEntity & {
   year: Scalars['String']['output'];
 };
 
-export type SchedSpeaker = FavoriteEntity & {
+export type SchedSpeaker = Entity & FavoriteEntity & {
   __typename?: 'SchedSpeaker';
   about: Scalars['String']['output'];
   avatar: Scalars['String']['output'];
@@ -351,7 +366,7 @@ export type SchedSpeaker = FavoriteEntity & {
   years?: Maybe<Array<Scalars['Int']['output']>>;
 };
 
-export type SchedVenue = {
+export type SchedVenue = Entity & {
   __typename?: 'SchedVenue';
   id: Scalars['String']['output'];
   name?: Maybe<Scalars['String']['output']>;

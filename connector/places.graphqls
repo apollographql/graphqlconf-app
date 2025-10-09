@@ -182,7 +182,7 @@ enum NearbyPlaceType {
 }
 
 #https://developers.google.com/maps/documentation/places/web-service/reference/rest/v1/places
-type Place {
+type Place @key(fields: "id") {
   name: String!
   id: String!
   displayName: LocalizedText!
