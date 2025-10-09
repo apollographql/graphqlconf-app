@@ -7,16 +7,14 @@ import { useMemo } from "react";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { StyleSheet } from "react-native";
 import { ThemedView } from "@/components/themed-view";
-if (false) {
-  // eslint-disable-next-line no-unused-expressions
-  gql`
-    fragment SectionHeader_SchedEvent on SchedSession {
-      id
-      start_time
-      start_time_ts
-    }
-  `;
-}
+// eslint-disable-next-line no-unused-expressions
+gql`
+  fragment SectionHeader_SchedEvent on SchedSession {
+    id
+    start_time
+    start_time_ts
+  }
+`;
 SectionHeader.fragments = {
   SchedEvent: SectionHeader_SchedEventFragmentDoc,
 } as const;

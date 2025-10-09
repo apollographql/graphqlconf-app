@@ -2,21 +2,21 @@ import { tool } from "ai";
 import { z } from "zod/v4";
 
 export const clientTools = {
-  getFavorites: tool({
+  getBookmarks: tool({
     description:
-      "Get all favorited items (sessions, speakers, places, etc). Returns an array of objects with __typename and id fields that can be used with GetEntities to fetch more details.",
+      "Get all bookmarked items (sessions, speakers, places, etc). Returns an array of objects with __typename and id fields that can be used with GetEntities to fetch more details.",
     inputSchema: z.object({
       typename: z
         .string()
         .optional()
         .describe(
-          "Optional filter to only return favorites of a specific typename (e.g., 'SchedSession', 'SchedSpeaker', 'Place')"
+          "Optional filter to only return bookmarks of a specific typename (e.g., 'SchedSession', 'SchedSpeaker', 'Place')"
         ),
     }),
   }),
   toggleBookmarks: tool({
     description:
-      "Toggle bookmark/favorite status for one or more items. Can bookmark, unbookmark, or toggle items. The bookmarked state persists across app sessions.",
+      "Toggle bookmark status for one or more items. Can bookmark, unbookmark, or toggle items. The bookmarked state persists across app sessions.",
     inputSchema: z.object({
       items: z
         .array(

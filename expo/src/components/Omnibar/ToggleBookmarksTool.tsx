@@ -1,6 +1,6 @@
 import { AbstractChat, UIMessage } from "ai";
 import { ApolloClient } from "@apollo/client";
-import { ToggleFavoriteDocument } from "@/mutations/ToggleFavorite";
+import { ToggleBookmarkDocument } from "@/mutations/ToggleBookmark";
 
 type ToolCall = {
   toolCallId: string;
@@ -45,15 +45,15 @@ export function handleToggleBookmarksToolCall(
       items.map(async (item) => {
         console.log("bookmarking", item);
         const { data } = await client.mutate({
-          mutation: ToggleFavoriteDocument,
+          mutation: ToggleBookmarkDocument,
           variables: {
             id: item.id,
             typename: item.typename,
-            isFavorite: item.bookmarked,
+            isBookmarked: item.bookmarked,
           },
         });
         console.log("bookmark result", data);
-        return data?.toggleFavorite;
+        return data?.toggleBookmark;
       })
     );
 

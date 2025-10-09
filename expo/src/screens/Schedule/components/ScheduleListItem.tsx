@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
 import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleListItem.generated";
-import { ToggleFavoriteDocument } from "@/mutations/ToggleFavorite";
+import { ToggleBookmarkDocument } from "@/mutations/ToggleBookmark";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -16,7 +16,7 @@ if (false) {
       __typename
       id
       name
-      isFavorite @client
+      isBookmarked @client
       venue {
         id
         name
@@ -53,15 +53,15 @@ export function ScheduleListItem({
     from: SchedSession,
   });
 
-  const [toggleFavorite] = useMutation(ToggleFavoriteDocument);
+  const [toggleBookmark] = useMutation(ToggleBookmarkDocument);
 
   const handlePress = () => {
     router.push(`/session/${data.id}`);
   };
 
-  const handleToggleFavorite = (e: any) => {
+  const handleToggleBookmark = (e: any) => {
     e.stopPropagation();
-    toggleFavorite({
+    toggleBookmark({
       variables: {
         id: data.id,
         typename: data.__typename,
@@ -76,9 +76,9 @@ export function ScheduleListItem({
           <ThemedView style={styles.titleContainer}>
             <ThemedText>{data.name}</ThemedText>
           </ThemedView>
-          <Pressable onPress={handleToggleFavorite} hitSlop={8}>
+          <Pressable onPress={handleToggleBookmark} hitSlop={8}>
             <Ionicons
-              name={data.isFavorite ? "bookmark" : "bookmark-outline"}
+              name={data.isBookmarked ? "bookmark" : "bookmark-outline"}
               size={24}
               color="#007AFF"
             />

@@ -18,7 +18,7 @@ import { IconSymbol } from "../ui/icon-symbol";
 import { useApolloClient } from "@apollo/client/react";
 import { Message } from "./Message";
 import { handleShowEmbedToolCall } from "./ShowEmbedTool";
-import { handleGetFavoritesToolCall } from "./GetFavoritesTool";
+import { handleGetBookmarksToolCall } from "./GetBookmarksTool";
 import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
 import { AgentContext } from "@/agent/agent";
 
@@ -52,7 +52,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
       }
       const handled =
         handleShowEmbedToolCall(toolCall, client) ||
-        handleGetFavoritesToolCall(toolCall) ||
+        handleGetBookmarksToolCall(toolCall) ||
         handleToggleBookmarksToolCall(toolCall, client);
 
       if (handled) {

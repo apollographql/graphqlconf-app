@@ -12,38 +12,38 @@ gql`
     always: Boolean
   ) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
 
-  interface FavoriteEntity {
+  interface BookmarkEntity {
     id: String!
-    isFavorite: Boolean!
+    isBookmarked: Boolean!
   }
 
-  type Favorite {
+  type Bookmark {
     id: String!
     typename: String!
     timestamp: String!
   }
 
-  extend type SchedSession implements FavoriteEntity {
-    isFavorite: Boolean!
+  extend type SchedSession implements BookmarkEntity {
+    isBookmarked: Boolean!
   }
 
-  extend type SchedSpeaker implements FavoriteEntity {
-    isFavorite: Boolean!
+  extend type SchedSpeaker implements BookmarkEntity {
+    isBookmarked: Boolean!
   }
 
-  extend type Place implements FavoriteEntity {
-    isFavorite: Boolean!
+  extend type Place implements BookmarkEntity {
+    isBookmarked: Boolean!
   }
 
   extend type Query {
-    favorites(typename: String): [Favorite!]!
+    bookmarks(typename: String): [Bookmark!]!
   }
 
   type Mutation {
-    toggleFavorite(
+    toggleBookmark(
       id: String!
       typename: String!
-      isFavorite: Boolean
-    ): FavoriteEntity!
+      isBookmarked: Boolean
+    ): BookmarkEntity!
   }
 `;

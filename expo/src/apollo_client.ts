@@ -8,7 +8,7 @@ import {
 } from "@graphql-typed-document-node/core";
 import { HKT } from "@apollo/client/utilities";
 import { LocalState } from "@apollo/client/local-state";
-import { favoritesResolvers } from "@/apollo/favoritesResolvers";
+import { bookmarksResolvers } from "@/apollo/bookmarksResolvers";
 
 type AdjustedFragmentType<TData> =
   TData extends DocumentTypeDecoration<infer RealTData, any>
@@ -63,7 +63,7 @@ export const client =
           uri,
         }),
         localState: new LocalState({
-          resolvers: favoritesResolvers,
+          resolvers: bookmarksResolvers,
         }),
         dataMasking: true,
       });

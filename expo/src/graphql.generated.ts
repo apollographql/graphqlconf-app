@@ -36,6 +36,18 @@ export type AuthorAttribution = {
   uri: Scalars['String']['output'];
 };
 
+export type Bookmark = {
+  __typename?: 'Bookmark';
+  id: Scalars['String']['output'];
+  timestamp: Scalars['String']['output'];
+  typename: Scalars['String']['output'];
+};
+
+export type BookmarkEntity = {
+  id: Scalars['String']['output'];
+  isBookmarked: Scalars['Boolean']['output'];
+};
+
 export type Entity = {
   id: Scalars['String']['output'];
 };
@@ -43,18 +55,6 @@ export type Entity = {
 export type EntityIdentifier = {
   id: Scalars['String']['input'];
   typename: Scalars['String']['input'];
-};
-
-export type Favorite = {
-  __typename?: 'Favorite';
-  id: Scalars['String']['output'];
-  timestamp: Scalars['String']['output'];
-  typename: Scalars['String']['output'];
-};
-
-export type FavoriteEntity = {
-  id: Scalars['String']['output'];
-  isFavorite: Scalars['Boolean']['output'];
 };
 
 export type File = {
@@ -92,13 +92,13 @@ export type LocationRestrictionInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  toggleFavorite: FavoriteEntity;
+  toggleBookmark: BookmarkEntity;
 };
 
 
-export type MutationToggleFavoriteArgs = {
+export type MutationToggleBookmarkArgs = {
   id: Scalars['String']['input'];
-  isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
+  isBookmarked?: InputMaybe<Scalars['Boolean']['input']>;
   typename: Scalars['String']['input'];
 };
 
@@ -179,7 +179,7 @@ export type Photo = {
   widthPx: Scalars['Int']['output'];
 };
 
-export type Place = Entity & FavoriteEntity & {
+export type Place = BookmarkEntity & Entity & {
   __typename?: 'Place';
   addressComponents: Array<AddressComponent>;
   adrFormatAddress: Scalars['String']['output'];
@@ -190,7 +190,7 @@ export type Place = Entity & FavoriteEntity & {
   googleMapsLinks: GoogleMapsLinks;
   googleMapsUri: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  isFavorite: Scalars['Boolean']['output'];
+  isBookmarked: Scalars['Boolean']['output'];
   location: LatLng;
   name: Scalars['String']['output'];
   photos: Array<Photo>;
@@ -211,10 +211,10 @@ export type PlusCode = {
 
 export type Query = {
   __typename?: 'Query';
+  bookmarks: Array<Bookmark>;
   entities: Array<Entity>;
   event?: Maybe<SchedEvent>;
   events: Array<SchedEvent>;
-  favorites: Array<Favorite>;
   nearbyPlaces: Array<Place>;
   place?: Maybe<Place>;
   session?: Maybe<SchedSession>;
@@ -222,6 +222,11 @@ export type Query = {
   speakers?: Maybe<Array<SchedSpeaker>>;
   venue?: Maybe<SchedVenue>;
   venues: Array<SchedVenue>;
+};
+
+
+export type QueryBookmarksArgs = {
+  typename?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -238,11 +243,6 @@ export type QueryEventArgs = {
 export type QueryEventsArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
   year?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryFavoritesArgs = {
-  typename?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -308,7 +308,7 @@ export type SchedEventSessionsArgs = {
   venueId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SchedSession = Entity & FavoriteEntity & {
+export type SchedSession = BookmarkEntity & Entity & {
   __typename?: 'SchedSession';
   active: Yn;
   audience?: Maybe<Scalars['String']['output']>;
@@ -322,7 +322,7 @@ export type SchedSession = Entity & FavoriteEntity & {
   goers?: Maybe<Scalars['Int']['output']>;
   id: Scalars['String']['output'];
   invite_only: Yn;
-  isFavorite: Scalars['Boolean']['output'];
+  isBookmarked: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   pinned: Yn;
   seats?: Maybe<Scalars['Int']['output']>;
@@ -337,13 +337,13 @@ export type SchedSession = Entity & FavoriteEntity & {
   year: Scalars['String']['output'];
 };
 
-export type SchedSpeaker = Entity & FavoriteEntity & {
+export type SchedSpeaker = BookmarkEntity & Entity & {
   __typename?: 'SchedSpeaker';
   about: Scalars['String']['output'];
   avatar: Scalars['String']['output'];
   company: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  isFavorite: Scalars['Boolean']['output'];
+  isBookmarked: Scalars['Boolean']['output'];
   location: Scalars['String']['output'];
   name: Scalars['String']['output'];
   position: Scalars['String']['output'];

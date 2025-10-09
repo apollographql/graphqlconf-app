@@ -1,20 +1,20 @@
 import { gql } from "@apollo/client";
+export * from "./ToggleBookmark.generated";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    mutation ToggleFavorite(
+    mutation ToggleBookmark(
       $id: String!
       $typename: String!
-      $isFavorite: Boolean
+      $isBookmarked: Boolean
     ) {
-      toggleFavorite(id: $id, typename: $typename, isFavorite: $isFavorite)
+      toggleBookmark(id: $id, typename: $typename, isBookmarked: $isBookmarked)
         @client {
         __typename
         id
-        isFavorite
+        isBookmarked
       }
     }
   `;
 }
-export { ToggleFavoriteDocument } from "./ToggleFavorite.generated";

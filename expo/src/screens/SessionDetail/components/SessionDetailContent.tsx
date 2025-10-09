@@ -21,7 +21,7 @@ import { ThemedView } from "@/components/themed-view";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { SessionDetailContent_SchedSessionFragmentDoc } from "./SessionDetailContent.generated";
 import { Fonts } from "@/constants/theme";
-import { ToggleFavoriteDocument } from "@/mutations/ToggleFavorite";
+import { ToggleBookmarkDocument } from "@/mutations/ToggleBookmark";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -30,7 +30,7 @@ if (false) {
       __typename
       id
       name
-      isFavorite @client
+      isBookmarked @client
       description
       type
       subtype
@@ -87,10 +87,10 @@ export function SessionDetailContent({
     from: SchedSession,
   });
 
-  const [toggleFavorite] = useMutation(ToggleFavoriteDocument);
+  const [toggleBookmark] = useMutation(ToggleBookmarkDocument);
 
-  const handleToggleFavorite = () => {
-    toggleFavorite({
+  const handleToggleBookmark = () => {
+    toggleBookmark({
       variables: {
         id: session.id,
         typename: session.__typename,
@@ -110,9 +110,9 @@ export function SessionDetailContent({
           <ThemedText type="title" style={styles.title}>
             {session.name}
           </ThemedText>
-          <Pressable onPress={handleToggleFavorite} hitSlop={8}>
+          <Pressable onPress={handleToggleBookmark} hitSlop={8}>
             <Ionicons
-              name={session.isFavorite ? "bookmark" : "bookmark-outline"}
+              name={session.isBookmarked ? "bookmark" : "bookmark-outline"}
               size={32}
               color="#007AFF"
             />
