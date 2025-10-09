@@ -22,7 +22,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={client!}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack
           screenOptions={{

@@ -92,26 +92,13 @@ export type LocationRestrictionInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addFavorite: FavoriteEntity;
-  removeFavorite: FavoriteEntity;
   toggleFavorite: FavoriteEntity;
-};
-
-
-export type MutationAddFavoriteArgs = {
-  id: Scalars['String']['input'];
-  typename: Scalars['String']['input'];
-};
-
-
-export type MutationRemoveFavoriteArgs = {
-  id: Scalars['String']['input'];
-  typename: Scalars['String']['input'];
 };
 
 
 export type MutationToggleFavoriteArgs = {
   id: Scalars['String']['input'];
+  isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
   typename: Scalars['String']['input'];
 };
 

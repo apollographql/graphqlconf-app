@@ -40,8 +40,10 @@ gql`
   }
 
   type Mutation {
-    addFavorite(id: String!, typename: String!): FavoriteEntity!
-    removeFavorite(id: String!, typename: String!): FavoriteEntity!
-    toggleFavorite(id: String!, typename: String!): FavoriteEntity!
+    toggleFavorite(
+      id: String!
+      typename: String!
+      isFavorite: Boolean
+    ): FavoriteEntity!
   }
 `;

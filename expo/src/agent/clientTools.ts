@@ -14,4 +14,28 @@ export const clientTools = {
         ),
     }),
   }),
+  toggleBookmarks: tool({
+    description:
+      "Toggle bookmark/favorite status for one or more items. Can bookmark, unbookmark, or toggle items. The bookmarked state persists across app sessions.",
+    inputSchema: z.object({
+      items: z
+        .array(
+          z.object({
+            typename: z
+              .string()
+              .describe(
+                "The __typename of the entity (e.g., 'SchedSession', 'SchedSpeaker', 'Place')"
+              ),
+            id: z.string().describe("The id of the entity"),
+            bookmarked: z
+              .boolean()
+              .optional()
+              .describe(
+                "If a specific target state is desired, set this to true (to bookmark) or false (to unbookmark). Otherwise this operation will just toggle, which might not end up in the desired state."
+              ),
+          })
+        )
+        .describe("Array of items to bookmark/unbookmark"),
+    }),
+  }),
 };

@@ -1,11 +1,5 @@
 import type { LocalState } from "@apollo/client/local-state";
-import {
-  getFavorites,
-  addFavorite,
-  removeFavorite,
-  toggleFavorite,
-  isFavorite,
-} from "@/utils/favoritesStorage";
+import { getFavorites, toggleFavorite, isFavorite } from "@/utils/favoritesStorage";
 
 export const favoritesResolvers = {
   Query: {
@@ -19,27 +13,15 @@ export const favoritesResolvers = {
   },
 
   Mutation: {
-    addFavorite: async (
-      _root: unknown,
-      args: { id: string; typename: string }
-    ) => {
-      await addFavorite(args.id, args.typename);
-      return { __typename: args.typename, id: args.id, isFavorite: true };
-    },
-
-    removeFavorite: async (
-      _root: unknown,
-      args: { id: string; typename: string }
-    ) => {
-      await removeFavorite(args.id, args.typename);
-      return { __typename: args.typename, id: args.id, isFavorite: false };
-    },
-
     toggleFavorite: async (
       _root: unknown,
-      args: { id: string; typename: string }
+      args: { id: string; typename: string; isFavorite?: boolean }
     ) => {
-      const newState = await toggleFavorite(args.id, args.typename);
+      const newState = await toggleFavorite(
+        args.id,
+        args.typename,
+        args.isFavorite
+      );
       return { __typename: args.typename, id: args.id, isFavorite: newState };
     },
   },

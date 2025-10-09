@@ -19,6 +19,7 @@ import { useApolloClient } from "@apollo/client/react";
 import { Message } from "./Message";
 import { handleShowEmbedToolCall } from "./ShowEmbedTool";
 import { handleGetFavoritesToolCall } from "./GetFavoritesTool";
+import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
 import { AgentContext } from "@/agent/agent";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
@@ -49,16 +50,13 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
       if (toolCall.dynamic) {
         return;
       }
+      const handled =
+        handleShowEmbedToolCall(toolCall, client) ||
+        handleGetFavoritesToolCall(toolCall) ||
+        handleToggleBookmarksToolCall(toolCall, client);
 
-      const showEmbedHandled = handleShowEmbedToolCall(toolCall, client);
-      if (showEmbedHandled) {
-        addToolResult(showEmbedHandled);
-        return;
-      }
-
-      const getFavoritesHandled = await handleGetFavoritesToolCall(toolCall);
-      if (getFavoritesHandled) {
-        addToolResult(getFavoritesHandled);
+      if (handled) {
+        addToolResult(await handled);
         return;
       }
     },

@@ -1,6 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Mutex } from "async-mutex";
 
 const FAVORITES_KEY = "@graphqlconf:favorites";
+const favoritesMutex = new Mutex();
 
 export interface FavoriteItem {
   id: string;
@@ -69,40 +71,36 @@ export async function isFavorite(parent: {
 }
 
 /**
- * Add a favorite
- */
-export async function addFavorite(id: string, typename: string): Promise<void> {
-  const favoritesMap = await getFavoritesMap();
-  const key = createKey(typename, id);
-  favoritesMap[key] = true;
-  await saveFavoritesMap(favoritesMap);
-}
-
-/**
- * Remove a favorite
- */
-export async function removeFavorite(
-  id: string,
-  typename: string
-): Promise<void> {
-  const favoritesMap = await getFavoritesMap();
-  const key = createKey(typename, id);
-  delete favoritesMap[key];
-  await saveFavoritesMap(favoritesMap);
-}
-
-/**
  * Toggle favorite status
+ * @param id - The entity id
+ * @param __typename - The entity typename
+ * @param shouldBeFavorite - Optional: if specified, set to this value; if omitted, toggle current state
+ * @returns The new favorite state (true if favorited, false if not)
  */
 export async function toggleFavorite(
   id: string,
-  __typename: string
+  __typename: string,
+  shouldBeFavorite?: boolean
 ): Promise<boolean> {
-  if (await isFavorite({ id, __typename })) {
-    await removeFavorite(id, __typename);
-    return false;
-  } else {
-    await addFavorite(id, __typename);
-    return true;
-  }
+  return await favoritesMutex.runExclusive(async () => {
+    const favoritesMap = await getFavoritesMap();
+    const key = createKey(__typename, id);
+    if (shouldBeFavorite === undefined) {
+      // Toggle the current state
+      if (favoritesMap[key]) {
+        delete favoritesMap[key];
+      } else {
+        favoritesMap[key] = true;
+      }
+    } else if (shouldBeFavorite) {
+      // Explicitly set to favorite
+      favoritesMap[key] = true;
+    } else {
+      // Explicitly remove from favorites
+      delete favoritesMap[key];
+    }
+
+    await saveFavoritesMap(favoritesMap);
+    return !!favoritesMap[key];
+  });
 }
