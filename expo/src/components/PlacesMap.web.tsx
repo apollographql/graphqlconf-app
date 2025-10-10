@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   APIProvider,
   Map,
   AdvancedMarker,
   Pin,
+  InfoWindow,
 } from "@vis.gl/react-google-maps";
 import type { MapLocation, PlacesMapProps } from "./PlacesMap";
 export type { MapLocation, PlacesMapProps };
@@ -11,6 +13,10 @@ export type { MapLocation, PlacesMapProps };
 PlacesMap.fragments = {} as const;
 
 export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
+  const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number | null>(
+    null
+  );
+
   if (locations.length === 0) {
     return null;
   }
@@ -47,7 +53,7 @@ export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
         <Map
           defaultCenter={{ lat: centerLat, lng: centerLng }}
           defaultZoom={zoom}
-          mapId="map"
+          mapId={process.env.EXPO_PUBLIC_GOOGLE_MAPS_MAP_ID || "map"}
           style={{ width: "100%", height: "100%" }}
         >
           {locations.map((location, idx) => (
@@ -55,10 +61,39 @@ export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
               key={idx}
               position={{ lat: location.latitude, lng: location.longitude }}
               title={location.title}
+              onClick={() => setSelectedMarkerIndex(idx)}
             >
               <Pin />
             </AdvancedMarker>
           ))}
+          {selectedMarkerIndex !== null && (
+            <InfoWindow
+              position={{
+                lat: locations[selectedMarkerIndex].latitude,
+                lng: locations[selectedMarkerIndex].longitude,
+              }}
+              onCloseClick={() => setSelectedMarkerIndex(null)}
+            >
+              <div style={{ padding: "8px", maxWidth: "200px" }}>
+                {locations[selectedMarkerIndex].title && (
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      marginBottom: "4px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {locations[selectedMarkerIndex].title}
+                  </div>
+                )}
+                {locations[selectedMarkerIndex].description && (
+                  <div style={{ fontSize: "12px", color: "#666" }}>
+                    {locations[selectedMarkerIndex].description}
+                  </div>
+                )}
+              </div>
+            </InfoWindow>
+          )}
         </Map>
       </APIProvider>
     </View>
