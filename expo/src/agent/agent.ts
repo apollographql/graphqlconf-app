@@ -7,10 +7,10 @@ import {
   smoothStream,
   StreamTextResult,
 } from "ai";
-import { componentTools } from "@/availableFragmentComponents";
+import { componentTools } from "@/agent/clientTools/embeds/fragments";
 import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
 import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
-import { clientTools } from "@/agent/clientTools";
+import { clientTools } from "@/agent/clientTools/bookmarks";
 import { prompt } from "./prompt";
 
 export interface AgentContext {

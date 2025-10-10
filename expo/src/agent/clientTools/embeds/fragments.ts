@@ -5,7 +5,7 @@ import { PlacesMap } from "@/components/PlacesMap";
 import { FragmentType } from "@apollo/client";
 import { tool } from "ai";
 import { z } from "zod/v4";
-import { FromParent } from "./apollo_client";
+import { FromParent } from "@/apollo_client";
 
 function expose<
   Fragments extends Record<string, TypedDocumentNode>,
