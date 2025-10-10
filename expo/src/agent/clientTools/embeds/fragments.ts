@@ -1,98 +1,90 @@
-import { TypedDocumentNode } from "@graphql-typed-document-node/core";
-
 import { ScheduleListItem } from "@/screens/Schedule/components/ScheduleListItem";
-import { PlacesMap } from "@/components/PlacesMap";
-import { FragmentType } from "@apollo/client";
-import { tool } from "ai";
-import { z } from "zod/v4";
-import { FromParent } from "@/apollo_client";
+import { PlacesMap } from "@/components/PlacesMap/PlacesMap";
+import { DocumentNode } from "@apollo/client";
+import { jsonSchema, tool } from "ai";
+import { getFragmentJSONSchema } from "./fragmentSchemaGenerator";
+import type { JSONSchema7Definition } from "json-schema";
+import { firstFragment } from "@/utils/firstFragment";
+import { client } from "@/apollo/client";
+
+function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition {
+  const fragment = firstFragment(fragmentDoc);
+  const __typename = fragment.typeCondition.name.value;
+
+  return {
+    type: "object" as const,
+    properties: {
+      __typename: { type: "string" as const, const: __typename },
+      id: { type: "string" as const },
+    },
+    required: ["__typename", "id"],
+    additionalProperties: false,
+  };
+}
+
+function fullFragmentData(fragmentDoc: DocumentNode) {
+  const fragment = firstFragment(
+    client.documentTransform.transformDocument(fragmentDoc)
+  );
+  return getFragmentJSONSchema(fragmentDoc, fragment.name.value);
+}
 
 function expose<
-  Fragments extends Record<string, TypedDocumentNode>,
   Name extends string,
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  ExtraProps extends z.ZodObject = z.ZodObject<{}>,
+  Props extends Record<string, JSONSchema7Definition>,
 >(
-  Component: React.FunctionComponent<
-    {
-      -readonly [K in keyof Fragments]:
-        | FragmentType<Fragments[K]>
-        | FromParent<Fragments[K]>;
-    } & NoInfer<z.input<ExtraProps>>
-  > & {
-    fragments: Fragments;
-  },
+  Component: React.FunctionComponent<Record<keyof Props, any>>,
   {
     name,
-    extraProps,
+    props,
     description,
   }: {
     name: Name;
     description: string;
-    extraProps?: ExtraProps;
+    props: Props;
   }
 ) {
-  const fragmentSchema = z.looseObject(
-    Object.fromEntries(
-      Object.entries(Component.fragments).map(([key]) => [
-        key,
-        z.object({ __typename: z.literal(key), id: z.string() }),
-      ])
-    ) as {
-      [K in keyof Fragments & string]: z.ZodObject<{
-        __typename: z.ZodLiteral<K>;
-        id: z.ZodString;
-      }>;
-    }
-  );
-
   return {
     Component,
-    fragments: Component.fragments,
     name,
     description,
-    schema: z.object({
-      ...fragmentSchema.shape,
-      ...((extraProps?.shape || {}) as ExtraProps extends z.ZodObject<infer P>
-        ? P
-        : never),
+    schema: jsonSchema({
+      type: "object",
+      properties: props,
+      required: Object.keys(props),
+      additionalProperties: false,
     }),
   };
 }
+
+console.log(fullFragmentData(PlacesMap.fragments.Places));
 
 export const availableFragmentComponents = {
   ScheduleListItem: expose(ScheduleListItem, {
     name: "ScheduleListItem" as const,
     description: `Display a schedule item, e.g. a conference talk or any other item with \`__typename\` of \`SchedSession\`.
 Will display event name, venue name, time (start and end) as well as event speakers (if available).`,
+    props: {
+      SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
+    },
   }),
   PlacesMap: expose(PlacesMap, {
-    name: "PlacesMap" as const,
+    name: "PlacesMap",
     description: `Display a map with markers for one or more locations.
 Will show markers for all locations and automatically center/zoom to fit all markers.
 Use this to visualize places on a map, such as nearby restaurants, venues, or conference locations.`,
-    extraProps: z.object({
-      locations: z
-        .array(
-          z.object({
-            latitude: z.number().describe("Latitude coordinate"),
-            longitude: z.number().describe("Longitude coordinate"),
-            title: z
-              .string()
-              .optional()
-              .describe("Title/name of the location to show on marker"),
-            description: z
-              .string()
-              .optional()
-              .describe("Description to show on marker"),
-          })
-        )
-        .describe("Array of locations to show on the map"),
-      height: z
-        .number()
-        .optional()
-        .describe("Height of the map in pixels (default: 300)"),
-    }),
+    props: {
+      Places: {
+        type: "array",
+        items: fullFragmentData(PlacesMap.fragments.Places),
+        description: "Array of locations to show on the map",
+      },
+      height: {
+        type: "number",
+        description: "Height of the map in pixels",
+        default: 300,
+      },
+    },
   }),
 };
 
@@ -124,7 +116,7 @@ export const componentTools = mapEntries(
     tool({
       name: v.name,
       description: v.description,
-      inputSchema: v.schema as any,
+      inputSchema: v.schema,
     })
 );
 

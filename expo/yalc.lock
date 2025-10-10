@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@apollo/graphql-standard-schema": {
+      "signature": "d70fbd015348c485c664e8e71e647339",
+      "file": true
+    }
+  }
+}

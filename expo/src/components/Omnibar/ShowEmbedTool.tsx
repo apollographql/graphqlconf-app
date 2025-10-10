@@ -11,7 +11,8 @@ import {
 import { Suspense } from "react";
 import { ThemedView } from "../themed-view";
 import { ThemedText } from "../themed-text";
-import { ApolloClient } from "@apollo/client";
+import { ApolloClient, DocumentNode } from "@apollo/client";
+import { firstFragment } from "@/utils/firstFragment";
 
 type ShowEmbedToolUIInvocation<TOOL extends UITool | Tool> = {
   type: `tool-ShowEmbed-${string}`;
@@ -25,6 +26,14 @@ export function isShowEmbedToolUIPart(
   part: Parameters<typeof isToolUIPart>[0]
 ): part is ShowEmbedToolUIInvocation<UITool> {
   return isToolUIPart(part) && part.type.startsWith("tool-ShowEmbed-");
+}
+
+function hasFragmentDefinitions(
+  Component: React.FC<any>
+): Component is typeof Component & {
+  fragments: Record<string, DocumentNode>;
+} {
+  return "fragments" in Component;
 }
 
 /**
@@ -45,31 +54,71 @@ export function handleShowEmbedToolCall(
     ];
   const output: Record<string, unknown> = {};
   const props = toolCall.input as Record<string, any>;
-  for (const [targetTypeName, docs] of Object.entries(details.fragments)) {
-    const fragmentData = client.readFragment({
-      id: client.cache.identify(props[targetTypeName]),
-      fragment: docs,
-      fragmentName: docs.definitions.find(
-        (d) => d.kind === "FragmentDefinition"
-      )?.name.value,
-    });
-    if (!fragmentData) {
+  const { Component } = details;
+  if (!hasFragmentDefinitions(Component)) return;
+  return client.cache.batch({
+    update(cache): ToolResult {
+      for (const [key, fragment] of Object.entries(Component.fragments)) {
+        const firstDef = firstFragment(fragment);
+        const targetTypeName = firstDef.typeCondition.name.value;
+        const fragmentName = firstDef.name.value;
+
+        const propValue = props[key];
+        const propResult = [];
+        for (const item of Array.isArray(propValue) ? propValue : [propValue]) {
+          console.log({ targetTypeName, fragmentName, item });
+          const identifierOnly =
+            item.__typename && Object.keys(item).length === 2;
+          if (identifierOnly) {
+            const fragmentData = cache.readFragment({
+              id: cache.identify(props[targetTypeName]),
+              fragment,
+              fragmentName,
+            });
+            if (!fragmentData) {
+              return {
+                tool: toolCall.toolName,
+                toolCallId: toolCall.toolCallId,
+                state: "output-error",
+                errorText:
+                  "Could not render component in the app due to missing data. Fall back to giving the user a textual response.",
+              };
+            }
+            propResult.push(fragmentData);
+          } else {
+            try {
+              cache.writeFragment({
+                id: cache.identify(item),
+                fragment: fragment,
+                fragmentName: fragmentName,
+                data: item,
+              });
+              propResult.push(item);
+            } catch (e: any) {
+              return {
+                tool: toolCall.toolName,
+                toolCallId: toolCall.toolCallId,
+                state: "output-error",
+                errorText:
+                  "Data could not be written. This ususally means that the tool call arguments didn't satisfy the `inputSchema`. This tool call might be retried once before giving up, with more focus on strict adherence to the `inputSchema` for the tool.\n" +
+                  "Original error message:\n" +
+                  e.message,
+              };
+            }
+          }
+        }
+        output[targetTypeName] = Array.isArray(propValue)
+          ? propResult
+          : propResult[0];
+      }
+
       return {
         tool: toolCall.toolName,
         toolCallId: toolCall.toolCallId,
-        state: "output-error",
-        errorText:
-          "Could not render component in the app due to missing data. Fall back to giving the user a textual response.",
+        output: ["This data has been displayed to the user:", output],
       };
-    }
-    output[targetTypeName] = fragmentData;
-  }
-
-  return {
-    tool: toolCall.toolName,
-    toolCallId: toolCall.toolCallId,
-    output: ["This data has been displayed to the user:", output],
-  };
+    },
+  });
 }
 
 export function ShowEmbedPart({

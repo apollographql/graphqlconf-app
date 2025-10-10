@@ -8,6 +8,12 @@ const config: CodegenConfig = {
   // Don't exit with non-zero status when there are no documents
   ignoreNoDocuments: true,
   generates: {
+    "./src/schema.json": {
+      plugins: ["introspection"],
+      config: {
+        minify: false,
+      },
+    },
     "./src/graphql.generated.ts": {
       plugins: [
         {

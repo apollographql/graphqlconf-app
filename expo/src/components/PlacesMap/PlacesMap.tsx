@@ -1,5 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import RNMapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import {
+  PlaceMarkerInfoFragmentDoc,
+  getPlaceMarkerData,
+} from "./PlaceMarkerInfo";
+import { useApolloClient } from "@apollo/client/react";
+import { FragmentType } from "@apollo/client";
 
 // check export shape consistency between web and native versions of this file
 declare let native: typeof import("./PlacesMap");
@@ -9,28 +15,35 @@ if (false) {
   web = native;
 }
 
-export interface MapLocation {
-  latitude: number;
-  longitude: number;
-  title?: string;
-  description?: string;
-}
-
 export interface PlacesMapProps {
-  locations: MapLocation[];
+  Places: FragmentType<typeof PlaceMarkerInfoFragmentDoc>[];
   height?: number;
 }
 
-PlacesMap.fragments = {} as const;
+PlacesMap.fragments = {
+  Places: PlaceMarkerInfoFragmentDoc,
+} as const;
 
-export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
+export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
+  const client = useApolloClient();
+
   if (locations.length === 0) {
     return null;
   }
 
+  // Extract marker data from fragments
+  const markerData = locations.map((incoming) => {
+    const place = client.readFragment({
+      fragment: PlacesMap.fragments.Places,
+      fragmentName: "PlaceMarkerInfo",
+      id: client.cache.identify(incoming),
+    })!;
+    return getPlaceMarkerData(place);
+  });
+
   // Calculate the center and region to show all markers
-  const latitudes = locations.map((loc) => loc.latitude);
-  const longitudes = locations.map((loc) => loc.longitude);
+  const latitudes = markerData.map((loc) => loc.latitude);
+  const longitudes = markerData.map((loc) => loc.longitude);
 
   const minLat = Math.min(...latitudes);
   const maxLat = Math.max(...latitudes);
@@ -54,7 +67,7 @@ export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
           longitudeDelta: lngDelta,
         }}
       >
-        {locations.map((location, idx) => (
+        {markerData.map((location, idx) => (
           <Marker
             key={idx}
             coordinate={{

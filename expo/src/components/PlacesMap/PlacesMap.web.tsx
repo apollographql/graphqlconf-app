@@ -7,23 +7,43 @@ import {
   Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
-import type { MapLocation, PlacesMapProps } from "./PlacesMap";
-export type { MapLocation, PlacesMapProps };
+import type { PlacesMapProps } from "./PlacesMap";
+import {
+  PlaceMarkerInfo,
+  getPlaceMarkerData,
+  PlaceMarkerInfoFragmentDoc,
+} from "./PlaceMarkerInfo";
+import { useApolloClient } from "@apollo/client/react";
 
-PlacesMap.fragments = {} as const;
+export type { PlacesMapProps };
 
-export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
+PlacesMap.fragments = {
+  Places: PlaceMarkerInfoFragmentDoc,
+} as const;
+
+export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
   const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number | null>(
     null
   );
+  const client = useApolloClient();
 
   if (locations.length === 0) {
     return null;
   }
 
+  // Extract marker data from fragments
+  const markerData = locations.map((incoming) => {
+    const place = client.readFragment({
+      fragment: PlacesMap.fragments.Places,
+      fragmentName: "PlaceMarkerInfo",
+      id: client.cache.identify(incoming),
+    })!;
+    return getPlaceMarkerData(place);
+  });
+
   // Calculate the center and bounds to show all markers
-  const latitudes = locations.map((loc) => loc.latitude);
-  const longitudes = locations.map((loc) => loc.longitude);
+  const latitudes = markerData.map((loc) => loc.latitude);
+  const longitudes = markerData.map((loc) => loc.longitude);
 
   const minLat = Math.min(...latitudes);
   const maxLat = Math.max(...latitudes);
@@ -56,7 +76,7 @@ export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
           mapId={process.env.EXPO_PUBLIC_GOOGLE_MAPS_MAP_ID || "map"}
           style={{ width: "100%", height: "100%" }}
         >
-          {locations.map((location, idx) => (
+          {markerData.map((location, idx) => (
             <AdvancedMarker
               key={idx}
               position={{ lat: location.latitude, lng: location.longitude }}
@@ -69,29 +89,12 @@ export function PlacesMap({ locations, height = 300 }: PlacesMapProps) {
           {selectedMarkerIndex !== null && (
             <InfoWindow
               position={{
-                lat: locations[selectedMarkerIndex].latitude,
-                lng: locations[selectedMarkerIndex].longitude,
+                lat: markerData[selectedMarkerIndex].latitude,
+                lng: markerData[selectedMarkerIndex].longitude,
               }}
               onCloseClick={() => setSelectedMarkerIndex(null)}
             >
-              <div style={{ padding: "8px", maxWidth: "200px" }}>
-                {locations[selectedMarkerIndex].title && (
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      marginBottom: "4px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {locations[selectedMarkerIndex].title}
-                  </div>
-                )}
-                {locations[selectedMarkerIndex].description && (
-                  <div style={{ fontSize: "12px", color: "#666" }}>
-                    {locations[selectedMarkerIndex].description}
-                  </div>
-                )}
-              </div>
+              <PlaceMarkerInfo Place={locations[selectedMarkerIndex]} />
             </InfoWindow>
           )}
         </Map>

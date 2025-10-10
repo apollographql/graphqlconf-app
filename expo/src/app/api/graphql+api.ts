@@ -2,6 +2,7 @@ import { ApolloServer, HeaderMap } from "@apollo/server";
 import type { HTTPGraphQLRequest } from "@apollo/server";
 import { gql } from "@apollo/client";
 import { buildSubgraphSchema } from "@apollo/subgraph";
+import type { GraphQLSchema } from "graphql";
 
 const typeDefs = gql`
   extend schema
@@ -65,18 +66,32 @@ const resolvers = {
 
 const schema = buildSubgraphSchema({ typeDefs, resolvers });
 
-const server = new ApolloServer({
-  schema,
-});
+declare global {
+  var __apolloServer:
+    | (ApolloServer<any> & {
+        creationSchema: GraphQLSchema;
+        started: Promise<ApolloServer>;
+      })
+    | undefined;
+}
 
-let serverStarted = false;
+async function getServer() {
+  let server = global.__apolloServer;
+  if (!server) {
+    console.log("Starting new ApolloServer instance");
+    const plainServer = new ApolloServer({
+      schema,
+    });
+    global.__apolloServer = server = Object.assign(plainServer, {
+      creationSchema: schema,
+      started: plainServer.start().then(() => plainServer),
+    });
+  }
+  return server.started;
+}
 
 async function handler(request: Request) {
-  if (!serverStarted) {
-    await server.start();
-    serverStarted = true;
-  }
-
+  const server = await getServer();
   const headers = new HeaderMap();
   request.headers.forEach((value, key) => {
     headers.set(key, value);
