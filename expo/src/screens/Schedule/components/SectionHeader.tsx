@@ -2,7 +2,7 @@ import { FragmentType, gql } from "@apollo/client";
 import { ThemedText } from "@/components/themed-text";
 
 import { SectionHeader_SchedEventFragmentDoc } from "./SectionHeader.generated";
-import { fragmentRegistry } from "@/apollo_client";
+import { fragmentRegistry } from "@/apollo/client";
 import { useMemo } from "react";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { StyleSheet } from "react-native";

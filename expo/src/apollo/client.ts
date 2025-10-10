@@ -43,30 +43,34 @@ if (Platform.OS === "android") {
 
 export const fragmentRegistry = createFragmentRegistry();
 
+const _client = new ApolloClient({
+  cache: new InMemoryCache({
+    fragments: fragmentRegistry,
+    typePolicies: {
+      File: {
+        keyFields: ["path"],
+      },
+      SocialUrl: {
+        keyFields: ["service", "url"],
+      },
+    },
+  }),
+  link: new HttpLink({
+    uri,
+  }),
+  localState: new LocalState({
+    resolvers: bookmarksResolvers,
+  }),
+  dataMasking: true,
+});
+
 export const client =
   typeof window === "undefined"
-    ? // sometimes something tries to acces the client on the server, so we return null here to get a very early error instead of a stack trace that doesn't have anything to do with the real problem
-      null
-    : new ApolloClient({
-        cache: new InMemoryCache({
-          fragments: fragmentRegistry,
-          typePolicies: {
-            File: {
-              keyFields: ["path"],
-            },
-            SocialUrl: {
-              keyFields: ["service", "url"],
-            },
-          },
-        }),
-        link: new HttpLink({
-          uri,
-        }),
-        localState: new LocalState({
-          resolvers: bookmarksResolvers,
-        }),
-        dataMasking: true,
-      });
+    ? // sometimes something tries to access the client on the server, so we return a reduced version of AC here to get a very early error instead of a stack trace that doesn't have anything to do with the real problem
+      ({
+        documentTransform: _client.documentTransform,
+      } as typeof _client)
+    : _client;
 
 export type FromParent<TDocumentType extends TypedDocumentNode<any, any>> =
   TDocumentType extends TypedDocumentNode<infer TType, any>

@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import RenderHtml from "react-native-render-html";
 import { Ionicons } from "@expo/vector-icons";
-import { fragmentRegistry, FromParent } from "@/apollo_client";
+import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useThemeColor } from "@/hooks/use-theme-color";

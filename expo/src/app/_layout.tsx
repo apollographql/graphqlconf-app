@@ -11,7 +11,7 @@ import "react-native-reanimated";
 import { ApolloProvider } from "@apollo/client/react";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { client } from "@/apollo_client";
+import { client } from "@/apollo/client";
 import { Platform, StyleSheet } from "react-native";
 
 export const unstable_settings = {

@@ -1,4 +1,4 @@
-import { fragmentRegistry, FromParent } from "@/apollo_client";
+import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment, useMutation } from "@apollo/client/react";
 import { Pressable, StyleSheet } from "react-native";
