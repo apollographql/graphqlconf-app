@@ -44,7 +44,7 @@ export async function runAgent({
     model: createOpenAI({
       apiKey: process.env.OPENAI_API_KEY!,
       organization: process.env.OPENAI_ORG_ID!,
-    })("gpt-4.1-mini"),
+    })("gpt-4o"),
     // https://github.com/vercel/ai/issues/7099#issuecomment-3069539156
     // avoid "Item 'rs_03e6d4960e393c150068dbd1b235cc819ca60b4f637ad981e2' of type 'reasoning' was provided without its required following item." error
     // this seems to only be necessary when using GPT 5 tools
