@@ -58,6 +58,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
     onError: (error) => console.error(error, "ERROR"),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     async onToolCall({ toolCall }) {
+      console.log("Tool call:", toolCall);
       if (toolCall.dynamic) {
         return;
       }
@@ -72,8 +73,6 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
       }
     },
   });
-
-  console.log(messages);
 
   return (
     <View style={styles.wrapper}>
@@ -107,7 +106,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
             ref={inputRef}
             style={[styles.input, styles[theme].input]}
             textAlign="center"
-            placeholder="Ask, e.g. 'How will the weather be?'"
+            placeholder="Ask, e.g. 'What is the topic of the next talk?' or 'Can you find me a cafe nearby?'"
             submitBehavior="blurAndSubmit"
             editable={status === "ready"}
             onSubmitEditing={(e) => {
