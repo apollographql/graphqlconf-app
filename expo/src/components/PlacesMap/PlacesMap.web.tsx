@@ -14,6 +14,7 @@ import {
   PlaceMarkerInfoFragmentDoc,
 } from "./PlaceMarkerInfo";
 import { useApolloClient } from "@apollo/client/react";
+import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 
 export type { PlacesMapProps };
 
@@ -68,38 +69,45 @@ export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
     { ...process.env }["EXPO_PUBLIC_" + "GOOGLE_MAPS_API_KEY"] || "";
 
   return (
-    <View style={[styles.container, { height }]}>
-      <APIProvider apiKey={apiKey}>
-        <Map
-          defaultCenter={{ lat: centerLat, lng: centerLng }}
-          defaultZoom={zoom}
-          mapId={process.env.EXPO_PUBLIC_GOOGLE_MAPS_MAP_ID || "map"}
-          style={{ width: "100%", height: "100%" }}
-        >
-          {markerData.map((location, idx) => (
-            <AdvancedMarker
-              key={idx}
-              position={{ lat: location.latitude, lng: location.longitude }}
-              title={location.title}
-              onClick={() => setSelectedMarkerIndex(idx)}
-            >
-              <Pin />
-            </AdvancedMarker>
-          ))}
-          {selectedMarkerIndex !== null && (
-            <InfoWindow
-              position={{
-                lat: markerData[selectedMarkerIndex].latitude,
-                lng: markerData[selectedMarkerIndex].longitude,
-              }}
-              onCloseClick={() => setSelectedMarkerIndex(null)}
-            >
-              <PlaceMarkerInfo Place={locations[selectedMarkerIndex]} />
-            </InfoWindow>
-          )}
-        </Map>
-      </APIProvider>
-    </View>
+    <ThemeProvider value={DefaultTheme}>
+      <View style={[styles.container, { height }]}>
+        <APIProvider apiKey={apiKey}>
+          <Map
+            defaultCenter={{ lat: centerLat, lng: centerLng }}
+            defaultZoom={zoom}
+            mapId={process.env.EXPO_PUBLIC_GOOGLE_MAPS_MAP_ID || "map"}
+            style={{ width: "100%", height: "100%" }}
+          >
+            {markerData.map((location, idx) => (
+              <AdvancedMarker
+                key={idx}
+                position={{ lat: location.latitude, lng: location.longitude }}
+                title={location.title}
+                onClick={() => setSelectedMarkerIndex(idx)}
+              >
+                <Pin />
+              </AdvancedMarker>
+            ))}
+            {selectedMarkerIndex !== null && (
+              <InfoWindow
+                position={{
+                  lat: markerData[selectedMarkerIndex].latitude,
+                  lng: markerData[selectedMarkerIndex].longitude,
+                }}
+                onCloseClick={() => setSelectedMarkerIndex(null)}
+              >
+                <View style={styles.infoWindowContainer}>
+                  <PlaceMarkerInfo
+                    Place={locations[selectedMarkerIndex]}
+                    showLink
+                  />
+                </View>
+              </InfoWindow>
+            )}
+          </Map>
+        </APIProvider>
+      </View>
+    </ThemeProvider>
   );
 }
 
@@ -107,5 +115,9 @@ const styles = StyleSheet.create({
   container: {
     overflow: "hidden",
     borderRadius: 8,
+  },
+  infoWindowContainer: {
+    padding: 8,
+    maxWidth: 220,
   },
 });

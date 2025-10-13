@@ -34,6 +34,7 @@ function MessagePart({ part }: { part: UIMessagePart<UIDataTypes, UITools> }) {
 const styles = StyleSheet.create({
   assistantChat: {
     maxWidth: "90%",
+    width: "90%",
     alignSelf: "flex-start",
     borderWidth: 1,
     borderRadius: 8,

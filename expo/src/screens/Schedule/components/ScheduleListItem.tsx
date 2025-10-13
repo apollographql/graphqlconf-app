@@ -2,7 +2,7 @@ import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment, useMutation } from "@apollo/client/react";
 import { Pressable, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
@@ -46,7 +46,6 @@ export function ScheduleListItem({
     | FragmentType<typeof ScheduleListItem.fragments.SchedSession>
     | FromParent<typeof ScheduleListItem.fragments.SchedSession>;
 }) {
-  const router = useRouter();
   const { data } = useSuspenseFragment({
     fragment: ScheduleListItem.fragments.SchedSession,
     fragmentName: "ScheduleListItem_SchedSession",
@@ -55,12 +54,9 @@ export function ScheduleListItem({
 
   const [toggleBookmark] = useMutation(ToggleBookmarkDocument);
 
-  const handlePress = () => {
-    router.push(`/session/${data.id}`);
-  };
-
   const handleToggleBookmark = (e: any) => {
     e.stopPropagation();
+    e.preventDefault();
     toggleBookmark({
       variables: {
         id: data.id,
@@ -70,31 +66,33 @@ export function ScheduleListItem({
   };
 
   return (
-    <Pressable onPress={handlePress}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.header}>
-          <ThemedView style={styles.titleContainer}>
-            <ThemedText>{data.name}</ThemedText>
+    <Link href={`/session/${data.id}`} asChild>
+      <Pressable>
+        <ThemedView style={styles.container}>
+          <ThemedView style={styles.header}>
+            <ThemedView style={styles.titleContainer}>
+              <ThemedText>{data.name}</ThemedText>
+            </ThemedView>
+            <Pressable onPress={handleToggleBookmark} hitSlop={8}>
+              <Ionicons
+                name={data.isBookmarked ? "bookmark" : "bookmark-outline"}
+                size={24}
+                color="#007AFF"
+              />
+            </Pressable>
           </ThemedView>
-          <Pressable onPress={handleToggleBookmark} hitSlop={8}>
-            <Ionicons
-              name={data.isBookmarked ? "bookmark" : "bookmark-outline"}
-              size={24}
-              color="#007AFF"
-            />
-          </Pressable>
-        </ThemedView>
-        {!data.venue ? null : <ThemedText>{data.venue?.name}</ThemedText>}
-        <ThemedText>
-          {data.start_time} - {data.end_time}
-        </ThemedText>
-        {!data.speakers ? null : (
+          {!data.venue ? null : <ThemedText>{data.venue?.name}</ThemedText>}
           <ThemedText>
-            {data.speakers?.map((s) => s.name ?? s.username).join(", ")}
+            {data.start_time} - {data.end_time}
           </ThemedText>
-        )}
-      </ThemedView>
-    </Pressable>
+          {!data.speakers ? null : (
+            <ThemedText>
+              {data.speakers?.map((s) => s.name ?? s.username).join(", ")}
+            </ThemedText>
+          )}
+        </ThemedView>
+      </Pressable>
+    </Link>
   );
 }
 

@@ -6,6 +6,7 @@ import {
 } from "./PlaceMarkerInfo";
 import { useApolloClient } from "@apollo/client/react";
 import { FragmentType } from "@apollo/client";
+import { useRouter } from "expo-router";
 
 // check export shape consistency between web and native versions of this file
 declare let native: typeof import("./PlacesMap");
@@ -26,6 +27,7 @@ PlacesMap.fragments = {
 
 export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
   const client = useApolloClient();
+  const router = useRouter();
 
   if (locations.length === 0) {
     return null;
@@ -76,6 +78,19 @@ export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
             }}
             title={location.title}
             description={location.description}
+            onCalloutPress={() => {
+              router.push(`/place/${location.id}`);
+            }}
+            // Custom callout is not working with this version of react-native-maps (due to a bug)
+            // newer versions of react-native-maps have fixed this, but do not work
+            // with Expo go yet, so to keep this app simple we use the default callout
+            // children={
+            //   <Callout style={styles.calloutContainer}>
+            //   <View>
+            //     <Text>Test</Text>
+            //   </View>
+            // </Callout>
+            // }
           />
         ))}
       </RNMapView>
