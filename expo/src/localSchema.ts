@@ -20,7 +20,6 @@ gql`
   type Bookmark {
     id: String!
     typename: String!
-    timestamp: String!
   }
 
   extend type SchedSession implements BookmarkEntity {

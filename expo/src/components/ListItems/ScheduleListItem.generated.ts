@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as Types from '../../../graphql.generated';
+import * as Types from '../../graphql.generated';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type ScheduleListItem_SchedSessionFragment = { __typename: 'SchedSession', id: string, name: string, isBookmarked: boolean, start_time: string, end_time: string, type: string, subtype: string | null, venue: { __typename: 'SchedVenue', id: string, name: string | null } | null, speakers: Array<{ __typename: 'SchedSpeaker', id: string, username: string, name: string }> } & { ' $fragmentName'?: 'ScheduleListItem_SchedSessionFragment' };

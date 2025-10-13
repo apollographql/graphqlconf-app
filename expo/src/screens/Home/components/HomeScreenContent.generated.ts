@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as Types from '../../../graphql.generated';
 
-import { ScheduleListItem_SchedSessionFragment } from '../../Schedule/components/ScheduleListItem.generated';
+import { ScheduleListItem_SchedSessionFragment } from '../../../components/ListItems/ScheduleListItem.generated';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type HomeScreenContent_QueryFragment = { event: { __typename: 'SchedEvent', id: string, name: string, sessions: Array<(
       { __typename: 'SchedSession', id: string, start_time_ts: number | null, end_date: string, end_time: string, type: string }

@@ -25,6 +25,7 @@ const MAPPING = {
   "chevron.down": "expand-more",
   trash: "delete",
   gear: "settings",
+  "bookmark.fill": "bookmark",
 } as IconMapping;
 
 /**

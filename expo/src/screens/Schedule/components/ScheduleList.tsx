@@ -6,7 +6,7 @@ import {
 } from "@apollo/client/react";
 import { useMemo, useTransition } from "react";
 import { SectionList } from "react-native";
-import { ScheduleListItem } from "./ScheduleListItem";
+import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { fragmentRegistry } from "@/apollo/client";
 import { SectionHeader } from "./SectionHeader";
 import { ThemedText } from "@/components/themed-text";

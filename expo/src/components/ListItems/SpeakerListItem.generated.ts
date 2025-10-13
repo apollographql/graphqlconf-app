@@ -1,0 +1,7 @@
+/* eslint-disable */
+import * as Types from '../../graphql.generated';
+
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type SpeakerListItem_SchedSpeakerFragment = { __typename: 'SchedSpeaker', id: string, name: string, company: string, position: string, avatar: string, isBookmarked: boolean } & { ' $fragmentName'?: 'SpeakerListItem_SchedSpeakerFragment' };
+
+export const SpeakerListItem_SchedSpeakerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SpeakerListItem_SchedSpeaker"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SchedSpeaker"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"company"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"client"}}]}]}}]} as unknown as DocumentNode<SpeakerListItem_SchedSpeakerFragment, unknown>;

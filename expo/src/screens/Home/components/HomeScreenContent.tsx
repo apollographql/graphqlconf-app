@@ -6,7 +6,7 @@ import {
 } from "@apollo/client/react";
 import { useMemo, useTransition } from "react";
 import { ScrollView, RefreshControl, StyleSheet } from "react-native";
-import { ScheduleListItem } from "@/screens/Schedule/components/ScheduleListItem";
+import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { fragmentRegistry } from "@/apollo/client";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";

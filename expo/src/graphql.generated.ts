@@ -39,7 +39,6 @@ export type AuthorAttribution = {
 export type Bookmark = {
   __typename?: 'Bookmark';
   id: Scalars['String']['output'];
-  timestamp: Scalars['String']['output'];
   typename: Scalars['String']['output'];
 };
 

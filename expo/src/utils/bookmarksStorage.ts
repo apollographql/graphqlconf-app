@@ -7,7 +7,6 @@ const bookmarksMutex = new Mutex();
 export interface BookmarkItem {
   id: string;
   typename: string;
-  timestamp: string;
 }
 
 type BookmarksMap = Record<string, true>;
@@ -53,7 +52,6 @@ export async function getBookmarks(): Promise<BookmarkItem[]> {
     return {
       id,
       typename,
-      timestamp: new Date().toISOString(),
     };
   });
 }

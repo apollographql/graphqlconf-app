@@ -1,0 +1,31 @@
+/* eslint-disable */
+import * as Types from '../../graphql.generated';
+
+import { ScheduleListItem_SchedSessionFragment } from '../../components/ListItems/ScheduleListItem.generated';
+import { SpeakerListItem_SchedSpeakerFragment } from '../../components/ListItems/SpeakerListItem.generated';
+import { PlaceListItem_PlaceFragment } from '../../components/ListItems/PlaceListItem.generated';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type BookmarksScreenQueryQueryVariables = Types.Exact<{
+  identifiers: Array<Types.EntityIdentifier> | Types.EntityIdentifier;
+}>;
+
+
+export type BookmarksScreenQueryQuery = { bookmarks: Array<{ __typename: 'Bookmark', id: string, typename: string }>, entities: Array<
+    | (
+      { __typename: 'Place', id: string }
+      & { ' $fragmentRefs'?: { 'PlaceListItem_PlaceFragment': PlaceListItem_PlaceFragment } }
+    )
+    | { __typename: 'SchedEvent', id: string }
+    | (
+      { __typename: 'SchedSession', id: string }
+      & { ' $fragmentRefs'?: { 'ScheduleListItem_SchedSessionFragment': ScheduleListItem_SchedSessionFragment } }
+    )
+    | (
+      { __typename: 'SchedSpeaker', id: string }
+      & { ' $fragmentRefs'?: { 'SpeakerListItem_SchedSpeakerFragment': SpeakerListItem_SchedSpeakerFragment } }
+    )
+    | { __typename: 'SchedVenue', id: string }
+  > };
+
+
+export const BookmarksScreenQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"BookmarksScreenQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"identifiers"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EntityIdentifier"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bookmarks"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"client"}},{"kind":"Directive","name":{"kind":"Name","value":"export"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"as"},"value":{"kind":"StringValue","value":"identifiers","block":false}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"typename"}}]}},{"kind":"Field","name":{"kind":"Name","value":"entities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"identifiers"},"value":{"kind":"Variable","name":{"kind":"Name","value":"identifiers"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SchedSession"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ScheduleListItem_SchedSession"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SchedSpeaker"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SpeakerListItem_SchedSpeaker"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Place"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlaceListItem_Place"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ScheduleListItem_SchedSession"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SchedSession"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"client"}}]},{"kind":"Field","name":{"kind":"Name","value":"venue"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"start_time"}},{"kind":"Field","name":{"kind":"Name","value":"end_time"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"subtype"}},{"kind":"Field","name":{"kind":"Name","value":"speakers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SpeakerListItem_SchedSpeaker"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SchedSpeaker"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"company"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"client"}}]}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlaceListItem_Place"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Place"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"text"}}]}},{"kind":"Field","name":{"kind":"Name","value":"formattedAddress"}},{"kind":"Field","name":{"kind":"Name","value":"isBookmarked"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"client"}}]}]}}]} as unknown as DocumentNode<BookmarksScreenQueryQuery, BookmarksScreenQueryQueryVariables>;

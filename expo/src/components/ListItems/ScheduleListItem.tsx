@@ -1,13 +1,12 @@
 import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { FragmentType, gql } from "@apollo/client";
-import { useSuspenseFragment, useMutation } from "@apollo/client/react";
+import { useSuspenseFragment } from "@apollo/client/react";
 import { Pressable, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
 import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleListItem.generated";
-import { ToggleBookmarkDocument } from "@/mutations/ToggleBookmark";
+import { BookmarkIcon } from "@/components/BookmarkIcon";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -52,19 +51,6 @@ export function ScheduleListItem({
     from: SchedSession,
   });
 
-  const [toggleBookmark] = useMutation(ToggleBookmarkDocument);
-
-  const handleToggleBookmark = (e: any) => {
-    e.stopPropagation();
-    e.preventDefault();
-    toggleBookmark({
-      variables: {
-        id: data.id,
-        typename: data.__typename,
-      },
-    });
-  };
-
   return (
     <Link href={`/session/${data.id}`} asChild>
       <Pressable>
@@ -73,13 +59,11 @@ export function ScheduleListItem({
             <ThemedView style={styles.titleContainer}>
               <ThemedText>{data.name}</ThemedText>
             </ThemedView>
-            <Pressable onPress={handleToggleBookmark} hitSlop={8}>
-              <Ionicons
-                name={data.isBookmarked ? "bookmark" : "bookmark-outline"}
-                size={24}
-                color="#007AFF"
-              />
-            </Pressable>
+            <BookmarkIcon
+              id={data.id}
+              typename={data.__typename}
+              isBookmarked={data.isBookmarked}
+            />
           </ThemedView>
           {!data.venue ? null : <ThemedText>{data.venue?.name}</ThemedText>}
           <ThemedText>

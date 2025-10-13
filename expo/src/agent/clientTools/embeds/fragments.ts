@@ -1,4 +1,4 @@
-import { ScheduleListItem } from "@/screens/Schedule/components/ScheduleListItem";
+import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { PlacesMap } from "@/components/PlacesMap/PlacesMap";
 import { DocumentNode } from "@apollo/client";
 import { jsonSchema, tool } from "ai";
@@ -6,6 +6,8 @@ import { getFragmentJSONSchema } from "./fragmentSchemaGenerator";
 import type { JSONSchema7Definition } from "json-schema";
 import { firstFragment } from "@/utils/firstFragment";
 import { client } from "@/apollo/client";
+import { SpeakerListItem } from "@/components/ListItems/SpeakerListItem";
+import { PlaceListItem } from "@/components/ListItems/PlaceListItem";
 
 function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition {
   const fragment = firstFragment(fragmentDoc);
@@ -29,24 +31,18 @@ function fullFragmentData(fragmentDoc: DocumentNode) {
   return getFragmentJSONSchema(fragmentDoc, fragment.name.value);
 }
 
-function expose<
-  Name extends string,
-  Props extends Record<string, JSONSchema7Definition>,
->(
+function expose<Props extends Record<string, JSONSchema7Definition>>(
   Component: React.FunctionComponent<Record<keyof Props, any>>,
   {
-    name,
     props,
     description,
   }: {
-    name: Name;
     description: string;
     props: Props;
   }
 ) {
   return {
     Component,
-    name,
     description,
     schema: jsonSchema({
       type: "object",
@@ -57,19 +53,29 @@ function expose<
   };
 }
 
-console.log(fullFragmentData(PlacesMap.fragments.Places));
-
 export const availableFragmentComponents = {
   ScheduleListItem: expose(ScheduleListItem, {
-    name: "ScheduleListItem" as const,
     description: `Display a schedule item, e.g. a conference talk or any other item with \`__typename\` of \`SchedSession\`.
 Will display event name, venue name, time (start and end) as well as event speakers (if available).`,
     props: {
       SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
     },
   }),
+  SpeakerListItem: expose(SpeakerListItem, {
+    description: `Display a speaker item, e.g. a conference speaker or any other item with \`__typename\` of \`SchedSpeaker\`.
+Will display speaker name, position, company and avatar (if available).`,
+    props: {
+      SchedSpeaker: fragmentIdentifier(SpeakerListItem.fragments.SchedSpeaker),
+    },
+  }),
+  PlaceListItem: expose(PlaceListItem, {
+    description: `Display a place item, e.g. a venue, restaurant, cafe or any other item with \`__typename\` of \`Place\`.
+Will display place name, address and optionally an image (if available).`,
+    props: {
+      Place: fragmentIdentifier(PlaceListItem.fragments.Place),
+    },
+  }),
   PlacesMap: expose(PlacesMap, {
-    name: "PlacesMap",
     description: `Display a map with markers for one or more locations.
 Will show markers for all locations and automatically center/zoom to fit all markers.
 Use this to visualize places on a map, such as nearby restaurants, venues, or conference locations.`,
@@ -114,7 +120,6 @@ export const componentTools = mapEntries(
   "ShowEmbed-",
   (v) =>
     tool({
-      name: v.name,
       description: v.description,
       inputSchema: v.schema,
     })
