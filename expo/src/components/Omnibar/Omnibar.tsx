@@ -22,15 +22,25 @@ import { handleGetBookmarksToolCall } from "./GetBookmarksTool";
 import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
 import { AgentContext } from "@/agent/agent";
 import { TypingIndicator } from "./TypingIndicator";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   const theme = useColorScheme() ?? "light";
+  const textColor = useThemeColor({}, "text");
   const [showChat, setShowChat] = useState(false);
   const client = useApolloClient();
 
   const inputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<Animated.ScrollView>(null);
-  const { messages, error, sendMessage, status, addToolResult } = useChat({
+  const {
+    messages,
+    error,
+    sendMessage,
+    status,
+    addToolResult,
+    setMessages,
+    stop,
+  } = useChat({
     transport: new DefaultChatTransport({
       fetch: expoFetch as unknown as typeof globalThis.fetch,
       api: generateAPIUrl("/api/chat"),
@@ -108,6 +118,19 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
               });
             }}
           />
+          {messages.length > 0 && (
+            <Pressable
+              onPress={() => {
+                stop().then(() => {
+                  setMessages([]);
+                  setShowChat(false);
+                });
+              }}
+              style={styles.iconButton}
+            >
+              <IconSymbol size={28} name="trash" color={textColor} />
+            </Pressable>
+          )}
           <Pressable
             onPress={() => {
               setShowChat((v) => !v);
@@ -116,7 +139,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
             <IconSymbol
               size={28}
               name={showChat ? "chevron.up" : "chevron.down"}
-              color={theme === "light" ? Colors.light.text : Colors.dark.text}
+              color={textColor}
             />
           </Pressable>
         </View>
@@ -174,6 +197,12 @@ const styles = Object.assign(
       borderRadius: 8,
       padding: 8,
       margin: 8,
+    },
+    iconButton: {
+      width: 44,
+      height: 44,
+      justifyContent: "center",
+      alignItems: "center",
     },
   }),
   {

@@ -23,6 +23,8 @@ const MAPPING = {
   "chevron.right": "chevron-right",
   "chevron.up": "expand-less",
   "chevron.down": "expand-more",
+  trash: "delete",
+  gear: "settings",
 } as IconMapping;
 
 /**
