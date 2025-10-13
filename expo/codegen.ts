@@ -62,6 +62,26 @@ const config: CodegenConfig = {
         },
       },
     },
+    "./src/agent/mcp/supergraph-mcp-operations.ts": {
+      documents: ["../connector/operations/*.graphql"],
+      preset: "import-types",
+      plugins: [
+        {
+          add: {
+            content: "/* eslint-disable */",
+          },
+        },
+        "typescript-operations",
+        "typed-document-node",
+      ],
+      config: {
+        flattenGeneratedTypes: true,
+        documentVariableSuffix: "",
+      },
+      presetConfig: {
+        typesPath: "../../graphql.generated",
+      },
+    },
   },
 };
 

@@ -11,6 +11,7 @@ gql`
     """
     always: Boolean
   ) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+  directive @export(as: String) on FIELD
 
   interface BookmarkEntity {
     id: String!

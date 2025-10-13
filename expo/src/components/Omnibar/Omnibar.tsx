@@ -23,6 +23,7 @@ import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
 import { AgentContext } from "@/agent/agent";
 import { TypingIndicator } from "./TypingIndicator";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { GraphQLToolChatTransport } from "./GraphQLToolChatTransport";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   const theme = useColorScheme() ?? "light";
@@ -41,7 +42,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
     setMessages,
     stop,
   } = useChat({
-    transport: new DefaultChatTransport({
+    transport: new GraphQLToolChatTransport(client, {
       fetch: expoFetch as unknown as typeof globalThis.fetch,
       api: generateAPIUrl("/api/chat"),
       body: (messages: UIMessage[]) => {
@@ -71,6 +72,9 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
         addToolResult(await handled);
         return;
       }
+    },
+    async onData(data) {
+      console.log(data);
     },
   });
 
