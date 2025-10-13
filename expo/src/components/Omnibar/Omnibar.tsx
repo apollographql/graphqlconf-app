@@ -5,11 +5,7 @@ import { Colors } from "@/constants/theme";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
 import { useChat } from "@ai-sdk/react";
-import {
-  DefaultChatTransport,
-  lastAssistantMessageIsCompleteWithToolCalls,
-  UIMessage,
-} from "ai";
+import { lastAssistantMessageIsCompleteWithToolCalls, UIMessage } from "ai";
 import { fetch as expoFetch } from "expo/fetch";
 import { useRef, useState } from "react";
 import { generateAPIUrl } from "@/generateApiUrl";
