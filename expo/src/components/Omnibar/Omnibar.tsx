@@ -21,6 +21,7 @@ import { handleShowEmbedToolCall } from "./ShowEmbedTool";
 import { handleGetBookmarksToolCall } from "./GetBookmarksTool";
 import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
 import { AgentContext } from "@/agent/agent";
+import { TypingIndicator } from "./TypingIndicator";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   const theme = useColorScheme() ?? "light";
@@ -86,6 +87,8 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
               {messages.map((message) => (
                 <Message key={message.id} message={message} />
               ))}
+              {status === "streaming" ||
+                (status === "submitted" && <TypingIndicator />)}
             </View>
           </Animated.ScrollView>
         )}
@@ -162,6 +165,15 @@ const styles = Object.assign(
       borderWidth: 1,
       borderRadius: 8,
       padding: 8,
+    },
+    typingBubble: {
+      maxWidth: "90%",
+      width: "90%",
+      alignSelf: "flex-start",
+      borderWidth: 1,
+      borderRadius: 8,
+      padding: 8,
+      margin: 8,
     },
   }),
   {
