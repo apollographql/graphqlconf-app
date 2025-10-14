@@ -956,35 +956,56 @@ Tools are defined with the AI SDK and registered alongside MCP tools:
 
 ```tsx
 // expo/src/agent/clientTools/bookmarks.ts
-import { tool } from "ai";
-import { z } from "zod/v4";
+import { jsonSchema, tool } from "ai";
 
 export const clientTools = {
   getBookmarks: tool({
     description:
       "Get all bookmarked items (sessions, speakers, places, etc). Returns an array of objects with __typename and id fields.",
-    inputSchema: z.object({
-      typename: z
-        .string()
-        .optional()
-        .describe("Optional filter to only return bookmarks of a specific typename"),
+    inputSchema: jsonSchema({
+      type: "object",
+      properties: {
+        typename: {
+          type: "string",
+          description: "Optional filter to only return bookmarks of a specific typename",
+        },
+      },
+      additionalProperties: false,
     }),
   }),
 
   toggleBookmarks: tool({
     description:
       "Toggle bookmark status for one or more items. Bookmarked state persists across app sessions.",
-    inputSchema: z.object({
-      items: z.array(
-        z.object({
-          typename: z.string().describe("The __typename of the entity"),
-          id: z.string().describe("The id of the entity"),
-          bookmarked: z
-            .boolean()
-            .optional()
-            .describe("Set to true to bookmark, false to unbookmark, or omit to toggle"),
-        })
-      ),
+    inputSchema: jsonSchema({
+      type: "object",
+      properties: {
+        items: {
+          type: "array",
+          description: "Array of items to bookmark/unbookmark",
+          items: {
+            type: "object",
+            properties: {
+              typename: {
+                type: "string",
+                description: "The __typename of the entity",
+              },
+              id: {
+                type: "string",
+                description: "The id of the entity",
+              },
+              bookmarked: {
+                type: "boolean",
+                description: "Set to true to bookmark, false to unbookmark, or omit to toggle",
+              },
+            },
+            required: ["typename", "id"],
+            additionalProperties: false,
+          },
+        },
+      },
+      required: ["items"],
+      additionalProperties: false,
     }),
   }),
 };
@@ -993,7 +1014,7 @@ export const clientTools = {
 **Key aspects:**
 
 - Tools defined using Vercel AI SDK's `tool()` helper
-- Zod schemas provide type safety and LLM guidance
+- OpenAPI/JSON Schema format provides type safety and LLM guidance
 - Descriptions explain when and how to use each tool
 - No implementation - these are "shells" registered with the agent
 
@@ -1406,16 +1427,24 @@ if (false) {
 
 ```tsx
 // expo/src/agent/clientTools/myFeature.ts
-import { tool } from "ai";
-import { z } from "zod/v4";
+import { jsonSchema, tool } from "ai";
 
 export const myFeatureTool = {
   updateMyData: tool({
     description: "Update user's custom data",
-    inputSchema: z.object({
-      value: z.object({
-        // Define your data shape
-      }),
+    inputSchema: jsonSchema({
+      type: "object",
+      properties: {
+        value: {
+          type: "object",
+          properties: {
+            // Define your data shape
+          },
+          additionalProperties: false,
+        },
+      },
+      required: ["value"],
+      additionalProperties: false,
     }),
   }),
 };

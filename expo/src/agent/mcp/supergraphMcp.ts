@@ -1,6 +1,5 @@
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { experimental_createMCPClient, tool } from "ai";
-import { z } from "zod/v4";
+import { experimental_createMCPClient, jsonSchema, tool } from "ai";
 
 export async function getTools() {
   const supergraphMcpClient = await experimental_createMCPClient({
@@ -15,7 +14,11 @@ export async function getTools() {
       getCurrentEvent: tool({
         ...tools.GetEvents,
         description: `Get details about the current event.`,
-        inputSchema: z.object({}),
+        inputSchema: jsonSchema({
+          type: "object",
+          properties: {},
+          additionalProperties: false,
+        }),
         execute: (_, options) =>
           tools.GetEvents.execute(
             { ids: [process.env.EXPO_PUBLIC_CURRENT_EVENT] },
