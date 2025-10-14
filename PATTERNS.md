@@ -230,3 +230,395 @@ Generated files follow the pattern:
 - Apollo Client Data Masking: https://apollographql.com/docs/react/data/fragments/#data-masking
 - Fragment Colocation: https://apollographql.com/docs/react/data/fragments/#colocating-fragments
 - GraphQL Code Generator: https://the-guild.dev/graphql/codegen
+
+---
+
+## AI Embed Tools
+
+Embed Tools allow UI components originally designed for specific screen positions to be reused within the AI chat interface. They expose React components as AI tools using the Vercel AI SDK, enabling the AI agent to display rich, interactive content instead of plain text responses.
+
+### Core Concept
+
+Embed Tools bridge three systems:
+1. **React Components** - UI components with fragment-based data requirements
+2. **Apollo Cache** - Normalized GraphQL data storage
+3. **AI Tools** - LLM-callable functions with JSON Schema validation
+
+When the AI calls an embed tool, the system either:
+- Reads existing data from the Apollo cache, or
+- Writes new data to the cache first
+
+Then renders the component with a fragment identifier (`{ __typename, id }`), allowing the component to read its required data via `useSuspenseFragment`.
+
+### Two Embed Approaches
+
+#### Approach 1: Fragment Identifier Embeds
+
+**Use case**: Display entities assumed to be already in the cache from previous queries.
+
+**Example**: `ScheduleListItem`, `SpeakerListItem`, `PlaceListItem`
+
+```tsx
+// expo/src/agent/clientTools/embeds/fragments.ts
+/** A function returning a JSON Schema describing the necessary identifier object (id and __typename) for the first fragment in a DocumentNode */
+declare function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition
+
+export const availableFragmentComponents = {
+  ScheduleListItem: expose(ScheduleListItem, {
+    description: `Display a schedule item, e.g. a conference talk`,
+    props: {
+      SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
+    },
+  }),
+  // ...
+};
+```
+
+**Tool schema generated for the AI**:
+```json
+{
+  "type": "object",
+  "properties": {
+    "SchedSession": {
+      "type": "object",
+      "properties": {
+        "__typename": { "type": "string", "const": "SchedSession" },
+        "id": { "type": "string" }
+      },
+      "required": ["__typename", "id"]
+    }
+  }
+}
+```
+
+**AI calls the tool with**:
+```json
+{
+  "SchedSession": {
+    "__typename": "SchedSession",
+    "id": "12345"
+  }
+}
+```
+
+**Execution flow**:
+1. AI calls `ShowEmbed-ScheduleListItem` with `{ __typename, id }`
+2. `handleShowEmbedToolCall` detects identifier-only input (only 2 keys)
+3. Attempts to read fragment data from cache using `cache.readFragment()`
+4. If data exists: Returns success, component renders with cached data
+5. If data missing: Returns error, AI falls back to text response
+
+**Key characteristics**:
+- **Minimal payload**: Only `__typename` and `id` sent to tool
+- **Assumes data exists**: Relies on previous queries populating the cache
+- **Fast**: No data writing, direct cache read
+- **Error handling**: Returns error if data not found, prompting AI to use text fallback
+
+#### Approach 2: Full Fragment Data Embeds
+
+**Use case**: Display entities from external sources or when cache state is uncertain.
+
+**Example**: `PlacesMap`
+
+```tsx
+// expo/src/agent/clientTools/embeds/fragments.ts
+/** A function retunring a JSON Schema describing the full data shape of the first fragment in a DocumentNode */
+declare function fullFragmentData(fragmentDoc: DocumentNode): JSONSchema7Definition
+
+export const availableFragmentComponents = {
+  PlacesMap: expose(PlacesMap, {
+    description: `Display a map with markers for one or more locations`,
+    props: {
+      Places: {
+        type: "array",
+        items: fullFragmentData(PlacesMap.fragments.Places),
+      },
+    },
+  }),
+};
+```
+
+**Tool schema generated for the AI**:
+```json
+{
+  "type": "object",
+  "properties": {
+    "Places": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "__typename": { "type": "string", "const": "Place" },
+          "id": { "type": "string" },
+          "displayName": { "type": "string" },
+          "location": {
+            "type": "object",
+            "properties": {
+              "latitude": { "type": "number" },
+              "longitude": { "type": "number" }
+            }
+          }
+          // ... all fragment fields with full type information
+        }
+      }
+    }
+  }
+}
+```
+
+**AI calls the tool with complete data**:
+```json
+{
+  "Places": [
+    {
+      "__typename": "Place",
+      "id": "place_123",
+      "displayName": "Coffee Shop",
+      "location": { "latitude": 37.7749, "longitude": -122.4194 }
+    }
+  ]
+}
+```
+
+**Execution flow**:
+1. AI calls `ShowEmbed-PlacesMap` with full fragment data
+2. `handleShowEmbedToolCall` detects full data (more than 2 keys)
+3. Writes data to cache using `cache.writeFragment()`
+4. Component renders with identifier, reads from cache via `useSuspenseFragment`
+5. If write fails: Returns error with schema validation message
+
+**Key characteristics**:
+- **Complete payload**: All fragment fields included
+- **Self-contained**: Doesn't rely on existing cache state
+- **Schema-validated**: AI SDK validates data against fragment schema
+- **Data persistence**: Writes to cache, making data available to other components
+
+### Fragment Schema Generation
+
+Full fragment data embeds use `@apollo/graphql-standard-schema` to generate JSON Schema from GraphQL fragments (this package is not fully finished and currently not published yet, it is added directly to this repository):
+
+```tsx
+// expo/src/agent/clientTools/embeds/fragmentSchemaGenerator.ts
+import { GraphQLStandardSchemaGenerator } from "@apollo/graphql-standard-schema";
+
+export function getFragmentJSONSchema(
+  fragmentDoc: DocumentNode,
+  fragmentName?: string
+) {
+  const generator = new GraphQLStandardSchemaGenerator({ schema: cachedSchema });
+  const standardSchema = generator.getFragmentSchema(fragmentDoc, { fragmentName });
+
+  return standardSchema["~standard"].toJSONSchema({
+    io: "input",
+    target: "draft-2020-12",
+  });
+}
+```
+
+This generates strict JSON Schema matching the GraphQL fragment structure, ensuring:
+- Type safety between GraphQL and AI tool schemas
+- Automatic validation of AI-provided data
+- Accurate LLM tool descriptions for better AI decision-making
+
+Note that AI tools often use JSON Schema more as a recommendation on the argument shape rather than strict validation, so the AI may still call the tool with slightly different shapes. This can cause bugs. Additional validation might be necessary, especially for nested objects and arrays. More modern AI models are significantly better at following complex JSON Schema.
+
+### Tool Registration
+
+Embed tools are registered alongside other agent tools:
+
+```tsx
+// expo/src/agent/agent.ts
+import { componentTools } from "@/agent/clientTools/embeds/fragments";
+
+const tools = {
+  ...supergraphMcp.tools,      // MCP server tools
+  ...remoteEventsMcp.tools,    // Remote MCP tools
+  ...componentTools,           // Embed tools (ShowEmbed-*)
+  ...clientTools,              // Client-side tools
+};
+
+streamText({
+  model: createOpenAI(...)("gpt-4o"),
+  tools,
+  // ...
+});
+```
+
+All embed tools are prefixed with `ShowEmbed-` (e.g., `ShowEmbed-ScheduleListItem`, `ShowEmbed-PlacesMap`).
+The prompt instructs the AI to prefer these tools over text when possible.
+
+### Tool Execution and Rendering
+
+#### Server-Side: Tool Execution
+
+When the AI calls an embed tool, `handleShowEmbedToolCall` handles the execution in the browser:
+
+```tsx
+// expo/src/components/Omnibar/ShowEmbedTool.tsx
+export function handleShowEmbedToolCall(
+  toolCall: ToolCall,
+  client: ApolloClient
+): void | ToolResult {
+  if (!toolCall.toolName.startsWith("ShowEmbed-")) return;
+
+  const componentName = toolCall.toolName.substring("ShowEmbed-".length);
+  const { Component } = availableFragmentComponents[componentName];
+  const props = toolCall.input;
+
+  return client.cache.batch({
+    update(cache): ToolResult {
+      for (const [key, fragment] of Object.entries(Component.fragments)) {
+        const propValue = props[key];
+
+        for (const item of Array.isArray(propValue) ? propValue : [propValue]) {
+          const identifierOnly = item.__typename && Object.keys(item).length === 2;
+
+          if (identifierOnly) {
+            // Approach 1: Read from cache
+            const fragmentData = cache.readFragment({
+              id: cache.identify(item),
+              fragment,
+              fragmentName,
+            });
+
+            if (!fragmentData) {
+              return {
+                state: "output-error",
+                errorText: "Could not render component due to missing data. Fall back to text response.",
+              };
+            }
+          } else {
+            // Approach 2: Write to cache
+            try {
+              cache.writeFragment({
+                id: cache.identify(item),
+                fragment,
+                fragmentName,
+                data: item,
+              });
+            } catch (e) {
+              return {
+                state: "output-error",
+                errorText: "Data could not be written. Arguments didn't satisfy the inputSchema.",
+              };
+            }
+          }
+        }
+      }
+
+      return {
+        toolCallId: toolCall.toolCallId,
+        output: ["This data has been displayed to the user:", props],
+      };
+    },
+  });
+}
+```
+
+#### Client-Side: Component Rendering
+
+After tool execution succeeds, the chat UI renders the component:
+
+```tsx
+// expo/src/components/Omnibar/ShowEmbedTool.tsx
+export function ShowEmbedPart({ part }: { part: ShowEmbedToolUIInvocation }) {
+  const componentName = part.type.substring("tool-ShowEmbed-".length);
+
+  if (part.state === "output-available") {
+    const embed = availableFragmentComponents[componentName];
+
+    return (
+      <Suspense fallback={<ThemedText>Loading...</ThemedText>}>
+        <embed.Component {...(part.input as any)} />
+      </Suspense>
+    );
+  }
+}
+```
+
+The component receives fragment identifiers and reads full data via `useSuspenseFragment`.
+
+### AI Agent Instructions
+
+The agent is instructed to prefer rich embeds over text:
+
+```tsx
+// expo/src/agent/prompt.ts
+export const prompt = `
+If possible, use the "ShowEmbed-*" tools to show rich information.
+After calling a "ShowEmbed-*" tool, wait for the tool result before responding.
+Don't repeat the information displayed by that tool in text form.
+If the tool returns an error, fall back to giving the user a fully textual response.
+
+Even if the user asks for a "list", try to use the "ShowEmbed-*" tools
+rather than listing it out yourself.
+`;
+```
+
+### When to Use Each Approach
+
+#### Use Fragment Identifier Embeds When:
+- Displaying results from a previous query (e.g., search results, bookmarks)
+- The AI fetched data using an MCP tool that populated the cache
+- You want minimal tool payload size
+- Cache state is predictable
+
+#### Use Full Fragment Data Embeds When:
+- Displaying data from external APIs (e.g., Google Maps places)
+- Cache state is uncertain or the data wasn't fetched via GraphQL
+- The AI needs to transform or aggregate data before display
+- You want self-contained tool calls that don't depend on cache state
+
+### Creating New Embed Tools
+
+To expose a new component as an embed tool:
+
+1. **Ensure the component uses fragment colocation** (see Fragment Colocation section)
+
+2. **Register the component in `fragments.ts`**:
+
+```tsx
+// expo/src/agent/clientTools/embeds/fragments.ts
+import { MyNewListItem } from "@/components/ListItems/MyNewListItem";
+
+export const availableFragmentComponents = {
+  // ... existing embeds
+
+  MyNewListItem: expose(MyNewListItem, {
+    description: `Display a custom entity with rich formatting`,
+    props: {
+      // Choose approach:
+      MyEntity: fragmentIdentifier(MyNewListItem.fragments.MyEntity),  // Approach 1
+      // OR
+      MyEntity: fullFragmentData(MyNewListItem.fragments.MyEntity),    // Approach 2
+    },
+  }),
+};
+```
+
+3. **Write clear tool descriptions** - The AI uses these to decide when to call the tool
+
+4. **Test cache behavior**:
+   - For identifier embeds: Ensure previous queries populate the cache
+   - For full data embeds: Verify schema validation and cache writes
+
+5. **Run code generation** to update types:
+```bash
+cd expo
+npm run codegen
+```
+
+### Benefits
+
+1. **Rich UI in chat**: Display interactive components instead of plain text
+2. **Component reuse**: Leverage existing UI components without modification
+3. **Type safety**: Full GraphQL-to-JSON-Schema type checking
+4. **Cache integration**: Seamless integration with Apollo Client's normalized cache
+5. **Flexible data sourcing**: Support both cached and fresh data
+6. **Graceful fallback**: Automatic text fallback when data unavailable
+
+### Further Reading
+
+- Vercel AI SDK Tools: https://sdk.vercel.ai/docs/ai-sdk-core/tools-and-tool-calling
+- Apollo Client Cache: https://apollographql.com/docs/react/caching/overview
+- JSON Schema: https://json-schema.org/
