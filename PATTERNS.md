@@ -622,3 +622,299 @@ npm run codegen
 - Vercel AI SDK Tools: https://sdk.vercel.ai/docs/ai-sdk-core/tools-and-tool-calling
 - Apollo Client Cache: https://apollographql.com/docs/react/caching/overview
 - JSON Schema: https://json-schema.org/
+
+---
+
+## GraphQL Tool Cache Integration
+
+This pattern automatically populates the Apollo cache with GraphQL query results from AI tool calls to the Apollo MCP, enabling Fragment Identifier Embeds to work seamlessly without explicit cache management.
+
+### The Problem
+
+When the AI agent calls MCP tools that execute GraphQL queries (e.g., `GetSessions`, `GetEvents`, `GetNearbyPlaces`), the results are sent back to the agent as tool outputs. As a side effect of how the Vercel AI SDK works, these results are not only exposed to the server, but also are sent to the browser.
+However, these results aren't automatically available in the Apollo cache, which means:
+
+1. Fragment Identifier Embeds can't find the data (cache miss)
+2. The AI would need to use Full Fragment Data Embeds instead
+3. Component queries would refetch data unnecessarily
+
+### The Solution
+
+`GraphQLToolChatTransport` extends the Vercel AI SDK's `DefaultChatTransport` to intercept the tool response stream and automatically write GraphQL query results to the Apollo cache.
+
+### How It Works
+
+#### 1. Custom Transport Class
+
+The transport extends `DefaultChatTransport` and intercepts the response stream:
+
+```tsx
+// expo/src/components/Omnibar/GraphQLToolChatTransport.ts
+import { ApolloClient, DocumentNode } from "@apollo/client";
+import { DefaultChatTransport, UIMessageChunk } from "ai";
+
+export class GraphQLToolChatTransport extends DefaultChatTransport<UIMessage> {
+  private client: ApolloClient;
+
+  constructor(
+    client: ApolloClient,
+    options: ConstructorParameters<typeof DefaultChatTransport>[0]
+  ) {
+    super(options);
+    this.client = client;
+  }
+
+  override processResponseStream(
+    stream: ReadableStream<Uint8Array>
+  ): ReadableStream<UIMessageChunk> {
+    const toolCalls: Record<string, { name: string; variables?: OperationVariables }> = {};
+    const { client } = this;
+
+    return super.processResponseStream(stream).pipeThrough(
+      new TransformStream({
+        transform(chunk, controller) {
+          controller.enqueue(chunk); // Pass through all chunks
+
+          switch (chunk.type) {
+            case "tool-input-start":
+              // Track tool call initiation
+              toolCalls[chunk.toolCallId] = { name: chunk.toolName };
+              break;
+
+            case "tool-input-available":
+              // Store tool variables
+              const tool = toolCalls[chunk.toolCallId];
+              if (tool) tool.variables = chunk.input;
+              break;
+
+            case "tool-output-available":
+              // Write GraphQL results to cache
+              const tool = toolCalls[chunk.toolCallId];
+              const queryDetails = KnownQueries[tool.name.toLowerCase()];
+              const data = chunk.output?.structuredContent?.data;
+
+              if (queryDetails && data) {
+                client.writeQuery({
+                  query: queryDetails.query,
+                  data,
+                  variables: {
+                    ...queryDetails.defaultVariables,
+                    ...tool.variables,
+                  },
+                });
+              }
+
+              delete toolCalls[chunk.toolCallId];
+              break;
+          }
+        },
+      })
+    );
+  }
+}
+```
+
+**Key aspects:**
+
+- **Stream passthrough**: All chunks are passed through unchanged to maintain normal chat behavior
+- **Tool tracking**: Tracks tool calls from start to completion
+- **Selective writing**: Only writes results from known GraphQL queries
+- **Variable merging**: Combines default variables with call-specific variables
+
+#### 2. Known Queries Registry
+
+The transport maintains a registry of GraphQL queries that should be written to cache:
+
+```tsx
+// expo/src/components/Omnibar/GraphQLToolChatTransport.ts
+import * as KNOWN from "@/agent/mcp/supergraph-mcp-operations";
+
+const KnownQueries: Record<
+  string,
+  { query: DocumentNode; defaultVariables?: OperationVariables }
+> = Object.fromEntries(
+  Object.entries(KNOWN).map(([key, value]) => [
+    key.toLowerCase(),
+    { query: value },
+  ])
+);
+
+// Add custom tool with default variables
+KnownQueries["getcurrentevent"] = {
+  query: KNOWN.GetEvents,
+  defaultVariables: { ids: [process.env.EXPO_PUBLIC_CURRENT_EVENT] },
+};
+```
+
+**Registry structure:**
+
+- **Key**: Tool name (lowercase) - e.g., `"getsessions"`, `"getevents"`
+- **Value**: Object with `query` (DocumentNode) and optional `defaultVariables`
+
+**Registered queries:**
+
+- `GetEntities` - Fetch mixed entity types by ID
+- `GetEvents` - Fetch conference events
+- `GetSessions` - Fetch conference sessions with filters
+- `GetNearbyPlaces` - Search nearby places via Google Maps
+- `GetPlaceDetails` - Get detailed place information
+- `getCurrentEvent` - Custom tool wrapping GetEvents with current event ID
+
+This list gets updated as new MCP operations are added - GraphQL Codegen reads `.graphql` files in `connector/operations/` and generates typed exports in `supergraph-mcp-operations.ts`.
+
+#### 3. Integration with Chat UI
+
+The transport is instantiated in the Omnibar component:
+
+```tsx
+// expo/src/components/Omnibar/Omnibar.tsx
+import { useApolloClient } from "@apollo/client/react";
+import { useChat } from "@ai-sdk/react";
+import { GraphQLToolChatTransport } from "./GraphQLToolChatTransport";
+
+export function Omnibar({ children }: { children: React.ReactNode }) {
+  const client = useApolloClient();
+
+  const { messages, sendMessage } = useChat({
+    transport: new GraphQLToolChatTransport(client, {
+      fetch: expoFetch,
+      api: generateAPIUrl("/api/chat"),
+      body: (messages) => ({
+        messages,
+        context: {
+          currentTime: new Date().toISOString(),
+          currentEvent: process.env.EXPO_PUBLIC_CURRENT_EVENT!,
+          location: "...",
+        },
+      }),
+    }),
+    onToolCall({ toolCall }) {
+      // Handle client-side tool calls (embeds, bookmarks)
+      const handled =
+        handleShowEmbedToolCall(toolCall, client) ||
+        handleGetBookmarksToolCall(toolCall) ||
+        handleToggleBookmarksToolCall(toolCall, client);
+
+      if (handled) addToolResult(await handled);
+    },
+  });
+
+  // ... chat UI
+}
+```
+
+**Key aspects:**
+
+- Transport receives the Apollo client instance
+- Hooks into the AI SDK's chat system
+- Works alongside client-side tool handlers
+
+#### 4. MCP Operations File Structure
+
+The supergraph MCP operations are generated from `.graphql` files:
+
+```
+connector/operations/
+├── getEvents.graphql       -> GetEvents tool
+├── getSessions.graphql     -> GetSessions tool
+├── getEntities.graphql     -> GetEntities tool
+├── getNearbyPlaces.graphql -> GetNearbyPlaces tool
+└── googleMapsGetPlaceDetails.graphql -> GetPlaceDetails tool
+```
+
+These are:
+1. Exposed as MCP tools by the Apollo MCP Server (running on port 5000)
+2. Made available to the AI agent
+3. Code-generated into TypedDocumentNodes in `supergraph-mcp-operations.ts`
+4. Registered in `KnownQueries` for cache integration
+
+### Complete Flow Example
+
+**User asks**: "Show me sessions about GraphQL"
+
+1. **AI calls MCP tool**: `GetSessions({ eventId: "...", nameLike: "GraphQL" })`
+2. **MCP server executes**: Queries the supergraph and returns results
+3. **Transport intercepts**: Detects `tool-output-available` chunk
+4. **Cache write**: `client.writeQuery()` normalizes and stores session data
+5. **AI calls embed**: `ShowEmbed-ScheduleListItem({ SchedSession: { __typename: "SchedSession", id: "session_123" } })`
+6. **Embed reads cache**: Component uses `useSuspenseFragment` to read from cache
+7. **UI renders**: ScheduleListItem displays with rich formatting
+
+**Without this pattern**, step 5 would fail because the session data wouldn't be in the cache.
+
+### Benefits
+
+1. **Automatic cache population**: No manual cache management needed
+2. **Enables identifier embeds**: Fragment Identifier Embeds work seamlessly
+3. **Reduces payload size**: AI can send minimal identifiers instead of full data
+4. **Normalized cache**: Data is properly normalized via `writeQuery`
+5. **Component reuse**: Other components can read the same cached data
+6. **Optimistic UI**: Cache updates are immediate as tool results stream in
+
+### Adding New Queries
+
+To add support for a new GraphQL query:
+
+1. **Add operation file** in `connector/operations/`:
+   ```graphql
+   # connector/operations/getVenues.graphql
+   query GetVenues($eventId: String!) {
+     event(id: $eventId) {
+       venues {
+         id
+         name
+         address
+       }
+     }
+   }
+   ```
+
+2. **Regenerate types** (automatic with watch mode):
+   ```bash
+   cd expo
+   npm run codegen
+   ```
+
+3. **Optionally add custom entry** with default variables:
+   ```tsx
+   KnownQueries["getcurrentvenues"] = {
+     query: KNOWN.GetVenues,
+     defaultVariables: { eventId: process.env.EXPO_PUBLIC_CURRENT_EVENT },
+   };
+   ```
+
+### Caveats and Considerations
+
+#### Partial Results
+
+If a tool call returns partial data (e.g., only a subset of fields), `writeQuery` will only update those fields in the cache.
+
+**Solution**: Ensure MCP operations fetch all fields needed by components.
+
+#### Error Handling
+
+The transport doesn't currently handle error states from tool calls.
+
+**Future enhancement**: Could write error states to cache or trigger refetch logic.
+
+### Debugging
+
+Enable logging to see cache writes:
+
+```tsx
+// In GraphQLToolChatTransport.ts
+console.log("Writing tool call result to Apollo cache", {
+  tool: tool.name,
+  query: print(queryDetails.query),
+  variables: { ...queryDetails.defaultVariables, ...tool.variables },
+  data,
+});
+```
+
+Use Apollo Client DevTools to inspect cache contents after tool calls.
+
+### Further Reading
+
+- Vercel AI SDK Custom Transports: https://sdk.vercel.ai/docs/ai-sdk-ui/chatbot#custom-transport
+- Apollo Client `writeQuery`: https://apollographql.com/docs/react/caching/cache-interaction/#writequery
+- Transform Streams API: https://developer.mozilla.org/en-US/docs/Web/API/TransformStream
