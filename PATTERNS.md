@@ -918,3 +918,1121 @@ Use Apollo Client DevTools to inspect cache contents after tool calls.
 - Vercel AI SDK Custom Transports: https://sdk.vercel.ai/docs/ai-sdk-ui/chatbot#custom-transport
 - Apollo Client `writeQuery`: https://apollographql.com/docs/react/caching/cache-interaction/#writequery
 - Transform Streams API: https://developer.mozilla.org/en-US/docs/Web/API/TransformStream
+
+---
+
+## Client-Side LocalState Tools
+
+This pattern exposes Apollo Client's LocalState (client-side GraphQL resolvers) as AI tools, enabling the agent to interact with browser-only state like bookmarks, preferences, and other persistent local data.
+
+### The Problem
+
+LocalState resolvers run exclusively in the browser and have access to:
+- AsyncStorage/localStorage for persistence
+- Browser-only APIs
+- Client-side cache state
+
+However, the AI agent runs server-side and:
+- Can't execute LocalState mutations/queries
+- Has no access to browser storage
+- Can't read client-side fields marked with `@client`
+
+**Traditional approach**: Expose LocalState via MCP server operations
+**Problem**: MCP server runs server-side and can't access browser storage
+
+**Solution**: Create client-side AI tools that execute in the browser with full LocalState access.
+
+### The Solution: Client-Side Tools
+
+Define AI tools that run in the browser's `onToolCall` handler instead of on the server, giving them full access to LocalState resolvers and browser APIs.
+
+### Example: Bookmarks System
+
+The bookmarks system demonstrates this pattern by exposing two LocalState operations as client-side tools:
+
+#### 1. Tool Definitions (Server-Side)
+
+Tools are defined with the AI SDK and registered alongside MCP tools:
+
+```tsx
+// expo/src/agent/clientTools/bookmarks.ts
+import { tool } from "ai";
+import { z } from "zod/v4";
+
+export const clientTools = {
+  getBookmarks: tool({
+    description:
+      "Get all bookmarked items (sessions, speakers, places, etc). Returns an array of objects with __typename and id fields.",
+    inputSchema: z.object({
+      typename: z
+        .string()
+        .optional()
+        .describe("Optional filter to only return bookmarks of a specific typename"),
+    }),
+  }),
+
+  toggleBookmarks: tool({
+    description:
+      "Toggle bookmark status for one or more items. Bookmarked state persists across app sessions.",
+    inputSchema: z.object({
+      items: z.array(
+        z.object({
+          typename: z.string().describe("The __typename of the entity"),
+          id: z.string().describe("The id of the entity"),
+          bookmarked: z
+            .boolean()
+            .optional()
+            .describe("Set to true to bookmark, false to unbookmark, or omit to toggle"),
+        })
+      ),
+    }),
+  }),
+};
+```
+
+**Key aspects:**
+
+- Tools defined using Vercel AI SDK's `tool()` helper
+- Zod schemas provide type safety and LLM guidance
+- Descriptions explain when and how to use each tool
+- No implementation - these are "shells" registered with the agent
+
+#### 2. Tool Registration
+
+Client tools are registered alongside MCP tools in the agent:
+
+```tsx
+// expo/src/agent/agent.ts
+import { clientTools } from "@/agent/clientTools/bookmarks";
+import { componentTools } from "@/agent/clientTools/embeds/fragments";
+
+const tools = {
+  ...supergraphMcp.tools,   // Server-side MCP tools
+  ...remoteEventsMcp.tools, // Remote MCP tools
+  ...componentTools,        // Embed tools (client-side)
+  ...clientTools,           // LocalState tools (client-side)
+};
+
+streamText({
+  model: createOpenAI(...)("gpt-4o"),
+  tools,
+  // ...
+});
+```
+
+The AI sees all tools equally but doesn't know which execute server-side vs. client-side.
+
+#### 3. Client-Side Tool Handlers
+
+Handlers execute in the browser when the AI calls these tools:
+
+**GetBookmarks Handler:**
+
+```tsx
+// expo/src/components/Omnibar/GetBookmarksTool.tsx
+import { getBookmarks } from "@/utils/bookmarksStorage";
+
+export function handleGetBookmarksToolCall(
+  toolCall: ToolCall
+): void | Promise<ToolResult> {
+  if (toolCall.toolName !== "getBookmarks") return;
+
+  return (async () => {
+    const { typename } = toolCall.input as { typename?: string };
+
+    const bookmarks = await getBookmarks();
+    const filtered = typename
+      ? bookmarks.filter((bookmark) => bookmark.typename === typename)
+      : bookmarks;
+
+    return {
+      tool: toolCall.toolName,
+      toolCallId: toolCall.toolCallId,
+      output: {
+        bookmarks: filtered.map((bookmark) => ({
+          __typename: bookmark.typename,
+          id: bookmark.id,
+        })),
+        count: filtered.length,
+      },
+    };
+  })();
+}
+```
+
+**ToggleBookmarks Handler:**
+
+```tsx
+// expo/src/components/Omnibar/ToggleBookmarksTool.tsx
+import { ToggleBookmarkDocument } from "@/mutations/ToggleBookmark";
+
+export function handleToggleBookmarksToolCall(
+  toolCall: ToolCall,
+  client: ApolloClient
+): void | Promise<ToolResult> {
+  if (toolCall.toolName !== "toggleBookmarks") return;
+
+  return (async () => {
+    const { items } = toolCall.input as { items: BookmarkItem[] };
+
+    const results = await Promise.all(
+      items.map(async (item) => {
+        const { data } = await client.mutate({
+          mutation: ToggleBookmarkDocument,
+          variables: {
+            id: item.id,
+            typename: item.typename,
+            isBookmarked: item.bookmarked,
+          },
+        });
+        return data?.toggleBookmark;
+      })
+    );
+
+    return {
+      tool: toolCall.toolName,
+      toolCallId: toolCall.toolCallId,
+      output: { results, success: true },
+    };
+  })();
+}
+```
+
+**Key aspects:**
+
+- Handlers check `toolCall.toolName` to determine if they should handle the call
+- Return `undefined` if not their tool (allows chaining multiple handlers)
+- Execute LocalState mutations via `client.mutate()`
+- Have full access to browser APIs (AsyncStorage, localStorage, etc.)
+- Return tool results in the standard format
+
+#### 4. Handler Registration in Chat UI
+
+Handlers are called in the `onToolCall` callback:
+
+```tsx
+// expo/src/components/Omnibar/Omnibar.tsx
+import { handleGetBookmarksToolCall } from "./GetBookmarksTool";
+import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
+
+const { messages, sendMessage, addToolResult } = useChat({
+  transport: new GraphQLToolChatTransport(client, { /* ... */ }),
+
+  async onToolCall({ toolCall }) {
+    if (toolCall.dynamic) return;
+
+    const handled =
+      handleShowEmbedToolCall(toolCall, client) ||
+      handleGetBookmarksToolCall(toolCall) ||
+      handleToggleBookmarksToolCall(toolCall, client);
+
+    if (handled) {
+      addToolResult(await handled);
+      return;
+    }
+  },
+});
+```
+
+**Key aspects:**
+
+- `onToolCall` executes in the browser for every tool call
+- Handlers are tried in sequence using `||` short-circuit
+- First handler that returns a value handles the tool
+- Result is added back to the conversation via `addToolResult()`
+
+### LocalState Implementation
+
+#### Storage Layer
+
+Bookmarks are stored in AsyncStorage (React Native) or localStorage (web):
+
+```tsx
+// expo/src/utils/bookmarksStorage.ts
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Mutex } from "async-mutex";
+
+const BOOKMARKS_KEY = "@graphqlconf:bookmarks";
+const bookmarksMutex = new Mutex();
+
+export async function getBookmarks(): Promise<BookmarkItem[]> {
+  const data = await AsyncStorage.getItem(BOOKMARKS_KEY);
+  const bookmarksMap = data ? JSON.parse(data) : {};
+
+  return Object.keys(bookmarksMap).map((key) => {
+    const [typename, id] = key.split(":");
+    return { id, typename };
+  });
+}
+
+export async function toggleBookmark(
+  id: string,
+  __typename: string,
+  shouldBeBookmarked?: boolean
+): Promise<boolean> {
+  return await bookmarksMutex.runExclusive(async () => {
+    const bookmarksMap = await getBookmarksMap();
+    const key = `${__typename}:${id}`;
+
+    if (shouldBeBookmarked === undefined) {
+      // Toggle current state
+      bookmarksMap[key] = !bookmarksMap[key];
+    } else {
+      // Set explicit state
+      if (shouldBeBookmarked) {
+        bookmarksMap[key] = true;
+      } else {
+        delete bookmarksMap[key];
+      }
+    }
+
+    await saveBookmarksMap(bookmarksMap);
+    return !!bookmarksMap[key];
+  });
+}
+
+export async function isBookmarked(parent: {
+  id: string;
+  __typename: string;
+}): Promise<boolean> {
+  const bookmarksMap = await getBookmarksMap();
+  const key = `${parent.__typename}:${parent.id}`;
+  return key in bookmarksMap;
+}
+```
+
+**Key aspects:**
+
+- Mutex prevents race conditions during concurrent updates
+- Data stored as `{ "typename:id": true }` map for fast lookups
+- Supports toggle, explicit set, and explicit unset operations
+
+#### GraphQL LocalState Integration
+
+LocalState resolvers expose bookmarks via GraphQL:
+
+```tsx
+// expo/src/apollo/bookmarksResolvers.ts
+import type { LocalState } from "@apollo/client/local-state";
+import { getBookmarks, toggleBookmark, isBookmarked } from "@/utils/bookmarksStorage";
+
+export const bookmarksResolvers = {
+  Query: {
+    bookmarks: async (_root: unknown, args: { typename?: string }) => {
+      const allBookmarks = await getBookmarks();
+      if (args.typename) {
+        return allBookmarks.filter((bookmark) => bookmark.typename === args.typename);
+      }
+      return allBookmarks;
+    },
+  },
+
+  Mutation: {
+    toggleBookmark: async (
+      _root: unknown,
+      args: { id: string; typename: string; isBookmarked?: boolean }
+    ) => {
+      const newState = await toggleBookmark(args.id, args.typename, args.isBookmarked);
+      return { __typename: args.typename, id: args.id, isBookmarked: newState };
+    },
+  },
+
+  SchedSession: {
+    isBookmarked,
+  },
+
+  SchedSpeaker: {
+    isBookmarked,
+  },
+
+  Place: {
+    isBookmarked,
+  },
+} satisfies LocalState.Resolvers;
+```
+
+**Key aspects:**
+
+- `Query.bookmarks` - Returns all bookmarked entities
+- `Mutation.toggleBookmark` - Toggles bookmark state
+- Field resolvers on entity types - Resolves `isBookmarked @client` field
+
+#### Client Configuration
+
+LocalState is configured in Apollo Client:
+
+```tsx
+// expo/src/apollo/client.ts
+import { LocalState } from "@apollo/client/local-state";
+import { bookmarksResolvers } from "@/apollo/bookmarksResolvers";
+
+const client = new ApolloClient({
+  cache: new InMemoryCache({ /* ... */ }),
+  link: new HttpLink({ uri }),
+  localState: new LocalState({
+    resolvers: bookmarksResolvers,
+  }),
+});
+```
+
+#### Mutation Definition
+
+The `toggleBookmark` mutation is defined with `@client`:
+
+```tsx
+// expo/src/mutations/ToggleBookmark.ts
+import { gql } from "@apollo/client";
+
+if (false) {
+  gql`
+    mutation ToggleBookmark(
+      $id: String!
+      $typename: String!
+      $isBookmarked: Boolean
+    ) {
+      toggleBookmark(id: $id, typename: $typename, isBookmarked: $isBookmarked)
+        @client {
+        __typename
+        id
+        isBookmarked
+      }
+    }
+  `;
+}
+```
+
+The `@client` directive tells Apollo to resolve this mutation locally instead of sending to the server.
+
+### Complete Flow Example
+
+**User says**: "Bookmark this session for me"
+
+1. **AI calls tool**: `toggleBookmarks({ items: [{ typename: "SchedSession", id: "session_123", bookmarked: true }] })`
+2. **Server streams**: Tool call chunks flow to browser via Vercel AI SDK
+3. **Handler executes**: `handleToggleBookmarksToolCall` detects the tool call
+4. **Mutation runs**: Executes `client.mutate({ mutation: ToggleBookmarkDocument })` with `@client` directive
+5. **LocalState resolves**: `bookmarksResolvers.Mutation.toggleBookmark` runs in browser
+6. **Storage updates**: Writes to AsyncStorage via `toggleBookmark()`
+7. **Cache updates**: Apollo cache updates `isBookmarked` field on entity
+8. **Tool result**: Handler returns success to agent
+9. **AI confirms**: "I've bookmarked that session for you"
+
+### Benefits
+
+1. **Browser API access**: Tools can use localStorage, cookies, device APIs
+2. **Persistent state**: Data persists across app sessions
+3. **GraphQL integration**: Works seamlessly with Apollo Client queries/mutations
+4. **Type safety**: Full TypeScript types from mutation → handler → storage
+5. **Cache reactivity**: Changes trigger Apollo cache updates and UI re-renders
+6. **Universal pattern**: Works for any client-side state (preferences, drafts, etc.)
+
+### Creating New LocalState Tools
+
+To add a new client-side tool:
+
+#### 1. Define Storage Layer
+
+```tsx
+// expo/src/utils/myFeatureStorage.ts
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export async function getMyData(): Promise<MyData> {
+  const data = await AsyncStorage.getItem("@app:mydata");
+  return data ? JSON.parse(data) : defaultValue;
+}
+
+export async function setMyData(value: MyData): Promise<void> {
+  await AsyncStorage.setItem("@app:mydata", JSON.stringify(value));
+}
+```
+
+#### 2. Create LocalState Resolvers
+
+```tsx
+// expo/src/apollo/myFeatureResolvers.ts
+import type { LocalState } from "@apollo/client/local-state";
+import { getMyData, setMyData } from "@/utils/myFeatureStorage";
+
+export const myFeatureResolvers = {
+  Query: {
+    myData: async () => getMyData(),
+  },
+
+  Mutation: {
+    updateMyData: async (_root: unknown, args: { value: MyData }) => {
+      await setMyData(args.value);
+      return { success: true, value: args.value };
+    },
+  },
+} satisfies LocalState.Resolvers;
+```
+
+#### 3. Register Resolvers in Apollo Client
+
+```tsx
+// expo/src/apollo/client.ts
+import { myFeatureResolvers } from "@/apollo/myFeatureResolvers";
+
+const client = new ApolloClient({
+  // ...
+  localState: new LocalState({
+    resolvers: {
+      ...bookmarksResolvers,
+      ...myFeatureResolvers,
+    },
+  }),
+});
+```
+
+#### 4. Define Mutation with @client
+
+```tsx
+// expo/src/mutations/UpdateMyData.ts
+import { gql } from "@apollo/client";
+
+if (false) {
+  gql`
+    mutation UpdateMyData($value: MyDataInput!) {
+      updateMyData(value: $value) @client {
+        success
+        value
+      }
+    }
+  `;
+}
+```
+
+#### 5. Create AI Tool Definition
+
+```tsx
+// expo/src/agent/clientTools/myFeature.ts
+import { tool } from "ai";
+import { z } from "zod/v4";
+
+export const myFeatureTool = {
+  updateMyData: tool({
+    description: "Update user's custom data",
+    inputSchema: z.object({
+      value: z.object({
+        // Define your data shape
+      }),
+    }),
+  }),
+};
+```
+
+#### 6. Create Tool Handler
+
+```tsx
+// expo/src/components/Omnibar/MyFeatureTool.tsx
+import { UpdateMyDataDocument } from "@/mutations/UpdateMyData";
+
+export function handleMyFeatureToolCall(
+  toolCall: ToolCall,
+  client: ApolloClient
+): void | Promise<ToolResult> {
+  if (toolCall.toolName !== "updateMyData") return;
+
+  return (async () => {
+    const { value } = toolCall.input;
+
+    const { data } = await client.mutate({
+      mutation: UpdateMyDataDocument,
+      variables: { value },
+    });
+
+    return {
+      tool: toolCall.toolName,
+      toolCallId: toolCall.toolCallId,
+      output: { success: data?.updateMyData.success },
+    };
+  })();
+}
+```
+
+#### 7. Register Handler in Omnibar
+
+```tsx
+// expo/src/components/Omnibar/Omnibar.tsx
+const handled =
+  handleShowEmbedToolCall(toolCall, client) ||
+  handleGetBookmarksToolCall(toolCall) ||
+  handleToggleBookmarksToolCall(toolCall, client) ||
+  handleMyFeatureToolCall(toolCall, client);
+```
+
+### Use Cases
+
+This pattern is ideal for:
+
+- **Bookmarks/Favorites**: Persistent user selections
+- **User Preferences**: Theme, language, notification settings
+- **Draft Content**: Unsaved forms, in-progress edits
+- **Local Analytics**: Usage tracking without server
+- **Offline State**: Queue actions for later sync
+- **Session State**: Shopping cart, filters, view preferences
+
+### Caveats
+
+#### Server-Side Rendering
+
+LocalState resolvers don't run server-side. If using SSR:
+- Provide default values for client fields
+- Hydrate state after client mounts
+
+#### Data Synchronization
+
+If data should sync to server:
+- Implement background sync logic
+- Use optimistic updates for better UX
+- Handle conflicts appropriately
+
+#### Type Safety
+
+The `@client` directive bypasses schema validation:
+- Document expected shapes in resolvers
+- Use TypeScript for runtime safety
+- Consider GraphQL Code Generator for type generation
+
+### Further Reading
+
+- Apollo Client LocalState: https://apollographql.com/docs/react/local-state/local-state-management/
+- Vercel AI SDK onToolCall: https://sdk.vercel.ai/docs/ai-sdk-ui/chatbot#ontoolcall
+- AsyncStorage (React Native): https://react-native-async-storage.github.io/async-storage/
+
+---
+
+## Entities Pattern (Federated Node Interface)
+
+The Entities pattern provides a unified way to fetch heterogeneous entities by their `{ __typename, id }` identifiers, similar to Relay's Node interface. This enables efficient querying of mixed entity types (e.g., bookmarks) from multiple subgraphs including Apollo Connectors.
+
+### The Problem
+
+Many use cases require fetching mixed entity types in a single query:
+- **Bookmarks**: User may bookmark sessions, speakers, and places
+- **Search results**: Searches may return different entity types
+- **AI queries**: Agent needs to fetch entities by ID without knowing how to "reach" them in terms of a normal query
+
+**Ideal solution**: Query like Relay's Node interface:
+```graphql
+query {
+  entities(identifiers: [
+    { typename: "SchedSession", id: "session_123" },
+    { typename: "Place", id: "place_456" }
+  ]) {
+    ... on SchedSession { name start_time }
+    ... on Place { displayName { text } }
+  }
+}
+```
+
+**Challenges with Apollo Connectors**:
+1. Connectors don't support interface definitions directly
+2. Connectors always require network requests (can't just "mirror" input to output)
+3. Need to coordinate entities across multiple subgraphs (conference data, Google Maps, etc.)
+
+### The Solution: Hybrid Approach
+
+Use a **hand-written subgraph** that defines the Entity interface and mirrors identifiers, letting Apollo Federation resolve the actual data from connector subgraphs.
+
+### Architecture
+
+#### 1. Hand-Written Entities Subgraph
+
+A minimal federation subgraph runs in the Expo API route:
+
+```tsx
+// expo/src/app/api/graphql+api.ts
+import { ApolloServer } from "@apollo/server";
+import { buildSubgraphSchema } from "@apollo/subgraph";
+import { gql } from "@apollo/client";
+
+const typeDefs = gql`
+  extend schema
+    @link(
+      url: "https://specs.apollo.dev/federation/v2.10"
+      import: ["@key", "@external"]
+    )
+
+  type Query {
+    entities(identifiers: [EntityIdentifier!]!): [Entity!]!
+  }
+
+  input EntityIdentifier {
+    typename: String!
+    id: String!
+  }
+
+  interface Entity {
+    id: String!
+  }
+
+  # Extend types from other subgraphs to implement Entity
+  extend type SchedSession implements Entity @key(fields: "id") {
+    id: String! @external
+  }
+
+  extend type SchedSpeaker implements Entity @key(fields: "id") {
+    id: String! @external
+  }
+
+  extend type SchedEvent implements Entity @key(fields: "id") {
+    id: String! @external
+  }
+
+  extend type SchedVenue implements Entity @key(fields: "id") {
+    id: String! @external
+  }
+
+  extend type Place implements Entity @key(fields: "id") {
+    id: String! @external
+  }
+`;
+
+const resolvers = {
+  Query: {
+    entities: (
+      _: unknown,
+      { identifiers }: { identifiers: { typename: string; id: string }[] }
+    ) => {
+      // Simply mirror identifiers back with __typename
+      return identifiers.map(({ typename, id }) => ({
+        __typename: typename,
+        id,
+      }));
+    },
+  },
+
+  Entity: {
+    __resolveType(obj: { __typename: string }) {
+      return obj.__typename;
+    },
+  },
+};
+
+const schema = buildSubgraphSchema({ typeDefs, resolvers });
+const server = new ApolloServer({ schema });
+
+export async function POST(request: Request) {
+  // Handle GraphQL requests...
+}
+```
+
+**Key aspects:**
+
+- **Interface definition**: `Entity` interface with `id: String!`
+- **Entity implementations**: All entity types extend to implement Entity
+- **`@key(fields: "id")`**: Marks types as federation entities
+- **`@external`**: Declares fields owned by other subgraphs
+- **Mirror resolver**: Returns `{ __typename, id }` - federation does the rest
+
+#### 2. Connector Subgraphs with Entity Support
+
+Connector subgraphs define entity types with `@key` directives:
+
+**Conferences subgraph** (`connector/conferences.graphqls`):
+
+```graphql
+type SchedSession
+  @key(fields: "id")
+  @connect(
+    source: "conf"
+    http: { GET: "sessions", queryParams: "id: $batch.id" }
+    selection: """
+    id
+    name
+    description
+    start_time
+    # ... more fields
+    """
+  ) {
+  id: String!
+  name: String!
+  description: String!
+  # ...
+}
+
+type SchedSpeaker
+  @key(fields: "id")
+  @connect(
+    source: "conf"
+    http: { GET: "speakers", queryParams: "id: $batch.id" }
+    selection: """
+    id
+    name
+    company
+    # ... more fields
+    """
+  ) {
+  id: String!
+  name: String!
+  company: String!
+  # ...
+}
+```
+
+**Places subgraph** (`connector/places.graphqls`):
+
+```graphql
+type Query {
+  place(id: String!): Place
+    @connect(
+      source: "places"
+      http: { GET: "places/{$args.id}" }
+      selection: """
+      ${
+        id
+        displayName { text }
+        location { latitude longitude }
+        # ... more fields
+      }
+      """
+      entity: true  # Marks this as an entity resolver
+    )
+}
+
+type Place @key(fields: "id") {
+  id: String!
+  displayName: LocalizedText!
+  location: LatLng!
+  # ...
+}
+```
+
+**Key aspects:**
+
+- **`@key(fields: "id")`**: Enables federation entity resolution
+- **Batch resolution**: `$batch.id` allows batching entity requests
+- **`entity: true`**: On query fields, marks as entity resolver
+- **Connector resolution**: Federation calls these automatically when resolving entities
+
+#### 3. Workaround: Noop Endpoints
+
+In some cases, it might also be useful to create a `event` top-level query field instead of going through `entities` - those will do a network request to a `noop` endpoint, but ignore the result and just return the mirrored identifier for federation to resolve.
+
+```graphql
+type Query {
+  event(id: String!): SchedEvent
+    @connect(source: "base", http: { GET: "noop" }, selection: "id: $args.id")
+
+  session(id: String!): SchedSession
+    @connect(source: "base", http: { GET: "noop" }, selection: "id: $args.id")
+
+  speaker(id: String!): SchedSpeaker
+    @connect(source: "base", http: { GET: "noop" }, selection: "id: $args.id")
+}
+```
+
+#### 4. MCP Operation
+
+The entities query is exposed to the AI agent as an MCP tool:
+
+```graphql
+# connector/operations/getEntities.graphql
+# Retrieves details for a list of entities, identified by their IDs and typenames.
+query GetEntities($identifiers: [EntityIdentifier!]!) {
+  entities(identifiers: $identifiers) {
+    ... on SchedEvent {
+      __typename
+      id
+      name
+      year
+      start_date
+      end_date
+      city
+    }
+
+    ... on SchedSession {
+      __typename
+      id
+      name
+      start_time_ts
+    }
+
+    ... on SchedSpeaker {
+      __typename
+      id
+      name
+      company
+    }
+
+    ... on SchedVenue {
+      __typename
+      id
+      venueName: name
+    }
+
+    ... on Place {
+      __typename
+      id
+      displayName { text }
+      location { latitude longitude }
+      primaryTypeDisplayName { text }
+    }
+  }
+}
+```
+
+**Key aspects:**
+
+- Uses inline fragments for each entity type
+- Selects appropriate fields for each type
+- AI agent can call this to fetch any entity by ID
+- Cache Integration pattern writes results to Apollo cache
+
+### Usage Example: Bookmarks Screen
+
+The BookmarksScreen demonstrates the full pattern with the `@export` directive, using local state as a variable passed to the GraphQL server:
+
+```tsx
+// expo/src/screens/Bookmarks/BookmarksScreen.tsx
+import { gql } from "@apollo/client";
+
+if (false) {
+  gql`
+    query BookmarksScreenQuery($identifiers: [EntityIdentifier!]!) {
+      # Fetch bookmarks from LocalState and export to variable
+      bookmarks @client @export(as: "identifiers") {
+        id
+        typename
+      }
+
+      # Use exported variable to fetch full entity data
+      entities(identifiers: $identifiers) {
+        id
+        ... on SchedSession {
+          ...ScheduleListItem_SchedSession
+        }
+        ... on SchedSpeaker {
+          ...SpeakerListItem_SchedSpeaker
+        }
+        ... on Place {
+          ...PlaceListItem_Place
+        }
+      }
+    }
+  `;
+}
+
+export function BookmarksScreen({ queryRef }) {
+  const { data } = useReadQuery(queryRef);
+
+  return (
+    <ScrollView>
+      {data.entities.map((entity) => {
+        if (entity.__typename === "SchedSession") {
+          return <ScheduleListItem key={entity.id} SchedSession={entity} />;
+        }
+        if (entity.__typename === "SchedSpeaker") {
+          return <SpeakerListItem key={entity.id} SchedSpeaker={entity} />;
+        }
+        if (entity.__typename === "Place") {
+          return <PlaceListItem key={entity.id} Place={entity} />;
+        }
+        return null;
+      })}
+    </ScrollView>
+  );
+}
+```
+
+**Query execution flow:**
+
+1. **LocalState resolution**: `bookmarks @client` fetches from AsyncStorage
+2. **`@export` directive**: Apollo exports bookmarks as `$identifiers` variable
+3. **Entities query**: Uses `$identifiers` to fetch full data
+4. **Federation routing**: Router sends requests to appropriate subgraphs
+5. **Entity resolution**: Each subgraph resolves its entities via `@key`
+6. **UI rendering**: Component renders mixed list with type-specific components
+
+### Complete Flow Example
+
+**User bookmarks**: Session "session_123", Speaker "speaker_456", Place "place_789"
+
+1. **Query execution**:
+   ```graphql
+   query {
+     bookmarks @client @export(as: "identifiers") {
+       id
+       typename
+     }
+     entities(identifiers: $identifiers) {
+       ... on SchedSession { name }
+       ... on SchedSpeaker { name }
+       ... on Place { displayName { text } }
+     }
+   }
+   ```
+
+2. **LocalState resolves bookmarks**:
+   ```json
+   {
+     "bookmarks": [
+       { "id": "session_123", "typename": "SchedSession" },
+       { "id": "speaker_456", "typename": "SchedSpeaker" },
+       { "id": "place_789", "typename": "Place" }
+     ]
+   }
+   ```
+
+3. **Apollo exports to variable**:
+   ```json
+   $identifiers = [
+     { "typename": "SchedSession", "id": "session_123" },
+     { "typename": "SchedSpeaker", "id": "speaker_456" },
+     { "typename": "Place", "id": "place_789" }
+   ]
+   ```
+
+4. **Entities subgraph mirrors**:
+   ```json
+   [
+     { "__typename": "SchedSession", "id": "session_123" },
+     { "__typename": "SchedSpeaker", "id": "speaker_456" },
+     { "__typename": "Place", "id": "place_789" }
+   ]
+   ```
+
+5. **Federation resolves entities**:
+   - Router sees `SchedSession` needs "name" → routes to conferences subgraph
+   - Router sees `SchedSpeaker` needs "name" → routes to conferences subgraph
+   - Router sees `Place` needs "displayName" → routes to places subgraph
+
+6. **Connector subgraphs fetch**:
+   - Conferences: Batches `GET /sessions?id=session_123&id=speaker_456` (via `$batch.id`)
+   - Places: Calls `GET /places/place_789`
+
+7. **Final result**:
+   ```json
+   {
+     "entities": [
+       { "__typename": "SchedSession", "id": "session_123", "name": "GraphQL Best Practices" },
+       { "__typename": "SchedSpeaker", "id": "speaker_456", "name": "Jane Doe" },
+       { "__typename": "Place", "id": "place_789", "displayName": { "text": "Coffee Shop" } }
+     ]
+   }
+   ```
+
+### Benefits
+
+1. **Unified interface**: Single query for mixed entity types
+2. **Federation routing**: Automatic routing to correct subgraphs
+3. **Batching**: Connectors batch entity requests efficiently
+4. **Type safety**: TypeScript types for each entity type
+5. **AI integration**: Agent can fetch any entity by ID
+6. **Bookmarks support**: Perfect for heterogeneous bookmark lists
+7. **Cache efficiency**: Normalized cache works across queries
+
+### Adding New Entity Types
+
+To add a new entity type to the pattern:
+
+#### 1. Add to Entities Subgraph
+
+```tsx
+// expo/src/app/api/graphql+api.ts
+const typeDefs = gql`
+  # ... existing schema
+
+  extend type MyNewEntity implements Entity @key(fields: "id") {
+    id: String! @external
+  }
+`;
+```
+
+#### 2. Define in Connector Subgraph
+
+```graphql
+# connector/mySubgraph.graphqls
+type MyNewEntity
+  @key(fields: "id")
+  @connect(
+    source: "mySource"
+    http: { GET: "myentities", queryParams: "id: $batch.id" }
+    selection: """
+    id
+    name
+    description
+    """
+  ) {
+  id: String!
+  name: String!
+  description: String!
+}
+```
+
+#### 3. Add to GetEntities Operation
+
+```graphql
+# connector/operations/getEntities.graphql
+query GetEntities($identifiers: [EntityIdentifier!]!) {
+  entities(identifiers: $identifiers) {
+    # ... existing fragments
+
+    ... on MyNewEntity {
+      __typename
+      id
+      name
+      description
+    }
+  }
+}
+```
+
+#### 4. Create List Item Component
+
+```tsx
+// expo/src/components/ListItems/MyNewEntityListItem.tsx
+export function MyNewEntityListItem({ MyNewEntity }) {
+  const { data } = useSuspenseFragment({
+    fragment: MyNewEntityListItem.fragments.MyNewEntity,
+    from: MyNewEntity,
+  });
+
+  return <View><Text>{data.name}</Text></View>;
+}
+```
+
+#### 5. Update Usage Points
+
+Add rendering logic in screens that display entities:
+
+```tsx
+if (entity.__typename === "MyNewEntity") {
+  return <MyNewEntityListItem key={entity.id} MyNewEntity={entity} />;
+}
+```
+
+### Caveats and Considerations
+
+#### Connector Limitations
+
+- Connectors **must** make network requests (can't skip API calls)
+- The `noop` endpoint workaround adds an extra round trip
+
+#### Schema Coordination
+
+- Entity subgraph must be updated when new types are added
+- Keep `GetEntities` operation in sync with available types
+- Document which types implement the Entity interface
+
+#### Alternative: Direct Query Fields
+
+For single-type lookups, direct field queries can used where available:
+```graphql
+query {
+  session(id: "123") { name }
+}
+```
+
+Use `entities` when:
+- Fetching mixed types (bookmarks, search results)
+- Fetching more than one entity, without a known "parent" element that can be queried
+- Need to batch diverse entity requests
+
+### Further Reading
+
+- Apollo Federation Entity Resolution: https://apollographql.com/docs/federation/entities/
+- Relay Node Interface: https://relay.dev/graphql/objectidentification.htm
+- Apollo Connectors Entity Support: https://apollographql.com/docs/graphos/schema-design/connectors/
+- Apollo `@export` Directive: https://apollographql.com/docs/apollo-server/schema/directives/#export
