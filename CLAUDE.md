@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the GraphQLConf mobile application repository containing an Expo/React Native app with Apollo GraphQL integration and an Apollo Router-based backend with MCP server support.
 
+**For detailed GraphQL integration patterns (fragment colocation, type safety, data masking), see [PATTERNS.md](./PATTERNS.md).**
+
 ## Important Directories to Focus On
 
 - `expo/` - Main Expo React Native application
@@ -87,6 +89,7 @@ The Model Context Protocol (MCP) server exposes GraphQL operations as tools for 
 - **Transport**: HTTP Streamable transport on port 5000
 
 **Available MCP Operations:**
+
 - `getEvents.graphql` - Fetch conference events
 - `getSessions.graphql` - Fetch conference sessions
 - `getEntities.graphql` - Fetch mixed entity types by ID and typename
@@ -142,6 +145,7 @@ Located in the `expo/` directory.
 - `PlaceListItem.tsx` - Displays Place with fragment
 
 **Shared Components**:
+
 - `BookmarkIcon.tsx` - Reusable bookmark toggle with mutation logic
 - `PlacesMap/` - Map component with markers (web and native implementations)
 - `Omnibar/` - AI chat interface
@@ -184,28 +188,32 @@ The agent provides intelligent assistance using multiple tool sources and OpenAI
 #### Tool Sources
 
 **1. Client Tools** (`clientTools/bookmarks.ts`)
-  - `getBookmarks` - Retrieve all bookmarked items with optional typename filtering
-  - `toggleBookmarks` - Add/remove bookmarks for entities
+
+- `getBookmarks` - Retrieve all bookmarked items with optional typename filtering
+- `toggleBookmarks` - Add/remove bookmarks for entities
 
 **2. Embed Tools** (`clientTools/embeds/fragments.ts`)
-  - Exposes React components as MCP tools for displaying rich content
-  - `ShowEmbed-ScheduleListItem` - Display conference sessions
-  - `ShowEmbed-SpeakerListItem` - Display speakers
-  - `ShowEmbed-PlaceListItem` - Display places
-  - `ShowEmbed-PlacesMap` - Display places on a map
-  - Uses `fragmentSchemaGenerator.ts` to generate JSON schemas from GraphQL fragments
+
+- Exposes React components as MCP tools for displaying rich content
+- `ShowEmbed-ScheduleListItem` - Display conference sessions
+- `ShowEmbed-SpeakerListItem` - Display speakers
+- `ShowEmbed-PlaceListItem` - Display places
+- `ShowEmbed-PlacesMap` - Display places on a map
+- Uses `fragmentSchemaGenerator.ts` to generate JSON schemas from GraphQL fragments
 
 **3. Supergraph MCP Tools** (`mcp/supergraphMcp.ts`)
-  - Connects to local MCP server at `http://127.0.0.1:5000/mcp`
-  - Exposes all operations from `connector/operations/` directory
-  - Adds custom `getCurrentEvent` tool that wraps `GetEvents` with current event ID
-  - Uses Streamable HTTP transport
+
+- Connects to local MCP server at `http://127.0.0.1:5000/mcp`
+- Exposes all operations from `connector/operations/` directory
+- Adds custom `getCurrentEvent` tool that wraps `GetEvents` with current event ID
+- Uses Streamable HTTP transport
 
 **4. Remote Events MCP** (`mcp/buildersMcp.ts`)
-  - Optional connection to `https://events.apollo.dev/mcp`
-  - Requires OAuth authentication
-  - Provides access to remote event data
-  - Gracefully degrades if authentication fails or server unavailable
+
+- Optional connection to `https://events.apollo.dev/mcp`
+- Requires OAuth authentication
+- Provides access to remote event data
+- Gracefully degrades if authentication fails or server unavailable
 
 #### OAuth Support (`utils/oauth/`)
 
@@ -225,9 +233,9 @@ Context injected into every conversation:
 
 ```typescript
 interface AgentContext {
-  currentTime: string;      // ISO timestamp
-  currentEvent: string;     // Event ID from EXPO_PUBLIC_CURRENT_EVENT
-  location: string;         // User location info or default message
+  currentTime: string; // ISO timestamp
+  currentEvent: string; // Event ID from EXPO_PUBLIC_CURRENT_EVENT
+  location: string; // User location info or default message
 }
 ```
 
@@ -248,6 +256,7 @@ Use the pre-configured VSCode launch configurations:
 3. This will automatically start Expo first, then Rover, then Codegen watch
 
 Or run individual services:
+
 - "Start Expo Dev Server"
 - "Start Rover (MCP Server)"
 - "Watch GraphQL Codegen"
@@ -280,7 +289,7 @@ Or run individual services:
    cd expo
    npm run codegen
    ```
-   
+
 ### Key Notes
 
 - Expo must be running on port 8081 before Rover starts
