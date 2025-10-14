@@ -4,6 +4,12 @@
     "@apollo/graphql-standard-schema": {
       "signature": "d70fbd015348c485c664e8e71e647339",
       "file": true
+    },
+    "graphql": {
+      "version": "16.11.0-364f17f",
+      "signature": "d2aed2c9e7e4b66333ea19c20c6aeb0e",
+      "file": true,
+      "replaced": "^16.11.0"
     }
   }
 }
