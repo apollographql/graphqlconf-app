@@ -1,3 +1,4 @@
+# Retrieves details for a list of entities, identified by their IDs and typenames. Supports multiple entity types and will return different result shapes for different types.
 query GetEntities($identifiers: [EntityIdentifier!]!) {
   entities(identifiers: $identifiers) {
     ... on SchedEvent {
@@ -34,13 +35,16 @@ query GetEntities($identifiers: [EntityIdentifier!]!) {
       __typename
       id
       displayName {
+        __typename
         text
       }
       location {
+        __typename
         latitude
         longitude
       }
       primaryTypeDisplayName {
+        __typename
         text
       }
     }

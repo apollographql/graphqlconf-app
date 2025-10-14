@@ -1,3 +1,4 @@
+# Retrieves sessions (like talks, workshops, breaks, etc.) for a specific event, with optional filters.
 query GetSessions(
   $eventId: String!
   $nameLike: String

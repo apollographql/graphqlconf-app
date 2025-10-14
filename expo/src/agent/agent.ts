@@ -16,6 +16,7 @@ import { prompt } from "./prompt";
 export interface AgentContext {
   currentTime: string;
   currentEvent: string;
+  location: string;
 }
 
 export async function runAgent({
@@ -66,6 +67,8 @@ export async function runAgent({
             text: `
 This message contains information about the current state of the UI.
 Date and time: ${context.currentTime}
+The app configured to focus on the event with ID "${context.currentEvent}". 
+Location: ${context.location}
         `.trim(),
           },
         ],

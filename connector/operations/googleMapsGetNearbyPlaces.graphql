@@ -1,3 +1,7 @@
+# Search for nearby places using Google Maps.
+#
+# Important note: if the user asks for locations, keep in mind that in the Netherlands, "coffee shop" refers to a place where cannabis can be purchased and consumed, not a regular cafe or coffeehouse.
+# If the user asks for coffee within the Netherlands, do not search for "coffee_shop".
 query getNearbyPlaces(
   $types: [NearbyPlaceType!]! = [restaurant, cafe]
   $latitude: Float!
@@ -15,24 +19,30 @@ query getNearbyPlaces(
     __typename
     id
     displayName {
+      __typename
       text
       languageCode
     }
     primaryTypeDisplayName {
+      __typename
       text
       languageCode
     }
     formattedAddress
     location {
+      __typename
       latitude
       longitude
     }
     viewport {
+      __typename
       low {
+        __typename
         latitude
         longitude
       }
       high {
+        __typename
         latitude
         longitude
       }

@@ -1,5 +1,6 @@
-query GetEvents($year: String) {
-  events(year: $year) {
+# Get a list of events (conferences, meetups etc.), optionally filtered by year or ids.
+query GetEvents($year: String, $ids: [String!]) {
+  events(year: $year, ids: $ids) {
     __typename
     id
     name
@@ -8,6 +9,7 @@ query GetEvents($year: String) {
     end_date
     city
     location {
+      __typename
       latitude
       longitude
     }

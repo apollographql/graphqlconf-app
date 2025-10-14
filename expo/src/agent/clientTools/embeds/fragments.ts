@@ -63,14 +63,15 @@ Will display event name, venue name, time (start and end) as well as event speak
   }),
   SpeakerListItem: expose(SpeakerListItem, {
     description: `Display a speaker item, e.g. a conference speaker or any other item with \`__typename\` of \`SchedSpeaker\`.
-Will display speaker name, position, company and avatar (if available).`,
+Will display speaker name, position and company.`,
     props: {
       SchedSpeaker: fragmentIdentifier(SpeakerListItem.fragments.SchedSpeaker),
     },
   }),
   PlaceListItem: expose(PlaceListItem, {
     description: `Display a place item, e.g. a venue, restaurant, cafe or any other item with \`__typename\` of \`Place\`.
-Will display place name, address and optionally an image (if available).`,
+Will display place name and address.
+This tool should be used to display places when displaying a list of mixed data types.`,
     props: {
       Place: fragmentIdentifier(PlaceListItem.fragments.Place),
     },
@@ -78,7 +79,8 @@ Will display place name, address and optionally an image (if available).`,
   PlacesMap: expose(PlacesMap, {
     description: `Display a map with markers for one or more locations.
 Will show markers for all locations and automatically center/zoom to fit all markers.
-Use this to visualize places on a map, such as nearby restaurants, venues, or conference locations.`,
+Use this to visualize places on a map, such as nearby restaurants, venues, or conference locations.
+This tool should be prioritized when displaying only places, as it provides a better overview than a list.`,
     props: {
       Places: {
         type: "array",

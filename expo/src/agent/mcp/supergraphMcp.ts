@@ -14,9 +14,13 @@ export async function getTools() {
       ...tools,
       getCurrentEvent: tool({
         ...tools.GetEvents,
+        description: `Get details about the current event.`,
         inputSchema: z.object({}),
         execute: (_, options) =>
-          tools.GetEvents.execute({ year: "2025" }, options),
+          tools.GetEvents.execute(
+            { ids: [process.env.EXPO_PUBLIC_CURRENT_EVENT] },
+            options
+          ),
       }),
     },
     close: () => supergraphMcpClient.close(),

@@ -48,6 +48,8 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
           context: {
             currentTime: now.toISOString(),
             currentEvent: process.env.EXPO_PUBLIC_CURRENT_EVENT!,
+            location:
+              "The user has not shared their location. Unless they specify, assume that they are at the conference venue.",
           } satisfies AgentContext,
         };
       },
@@ -55,7 +57,6 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
     onError: (error) => console.error(error, "ERROR"),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     async onToolCall({ toolCall }) {
-      console.log("Tool call:", toolCall);
       if (toolCall.dynamic) {
         return;
       }
@@ -68,9 +69,6 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
         addToolResult(await handled);
         return;
       }
-    },
-    async onData(data) {
-      console.log(data);
     },
   });
 
@@ -96,8 +94,12 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
               {messages.map((message) => (
                 <Message key={message.id} message={message} />
               ))}
-              {status === "streaming" ||
-                (status === "submitted" && <TypingIndicator />)}
+              <View style={{ flexDirection: "row" }}>
+                <ThemedText type="muted">{status} </ThemedText>
+                {(status === "streaming" || status === "submitted") && (
+                  <TypingIndicator />
+                )}
+              </View>
             </View>
           </Animated.ScrollView>
         )}

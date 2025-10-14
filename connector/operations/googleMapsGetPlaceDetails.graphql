@@ -1,22 +1,28 @@
+# Get detailed information about a place using its ID from Google Maps.
 query getPlaceDetails($id: String!) {
   place(id: $id) {
     __typename
     id
     types
     displayName {
+      __typename
       text
       languageCode
     }
     location {
+      __typename
       latitude
       longitude
     }
     viewport {
+      __typename
       low {
+        __typename
         latitude
         longitude
       }
       high {
+        __typename
         latitude
         longitude
       }
@@ -24,6 +30,7 @@ query getPlaceDetails($id: String!) {
     formattedAddress
     businessStatus
     googleMapsLinks {
+      __typename
       directionsUri
       placeUri
       writeAReviewUri
