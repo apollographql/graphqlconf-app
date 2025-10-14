@@ -56,7 +56,7 @@ export function handleShowEmbedToolCall(
   const props = toolCall.input as Record<string, any>;
   const { Component } = details;
   if (!hasFragmentDefinitions(Component)) return;
-  return client.cache.batch({
+  const result = client.cache.batch({
     update(cache): ToolResult {
       for (const [key, fragment] of Object.entries(Component.fragments)) {
         const firstDef = firstFragment(fragment);
@@ -119,6 +119,10 @@ export function handleShowEmbedToolCall(
       };
     },
   });
+  if (result) {
+    console.log("ShowEmbed tool call result:", result);
+  }
+  return result;
 }
 
 export function ShowEmbedPart({

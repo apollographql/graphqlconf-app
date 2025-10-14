@@ -14,6 +14,7 @@ if (false) {
       id
       displayName {
         text
+        languageCode
       }
       location {
         latitude
@@ -21,6 +22,7 @@ if (false) {
       }
       primaryTypeDisplayName {
         text
+        languageCode
       }
     }
   `;

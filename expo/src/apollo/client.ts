@@ -47,11 +47,38 @@ const _client = new ApolloClient({
   cache: new InMemoryCache({
     fragments: fragmentRegistry,
     typePolicies: {
+      // Types with custom key fields
       File: {
         keyFields: ["path"],
       },
       SocialUrl: {
         keyFields: ["service", "url"],
+      },
+      LocalizedText: {
+        keyFields: ["text", "languageCode"],
+      },
+      AddressComponent: {
+        keyFields: ["longText", "shortText", "types", "languageCode"],
+      },
+      PlusCode: {
+        keyFields: ["globalCode"],
+      },
+      Attribution: {
+        keyFields: ["provider", "providerUri"],
+      },
+      AuthorAttribution: {
+        keyFields: ["uri"],
+      },
+
+      // Embedded types that don't need normalization
+      LatLng: {
+        keyFields: false,
+      },
+      Viewport: {
+        keyFields: false,
+      },
+      GoogleMapsLinks: {
+        keyFields: false,
       },
     },
   }),

@@ -32,9 +32,11 @@ if (false) {
       isBookmarked @client
       displayName {
         text
+        languageCode
       }
       primaryTypeDisplayName {
         text
+        languageCode
       }
       formattedAddress
       shortFormattedAddress

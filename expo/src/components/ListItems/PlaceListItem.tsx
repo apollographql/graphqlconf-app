@@ -16,6 +16,7 @@ if (false) {
       id
       displayName {
         text
+        languageCode
       }
       formattedAddress
       isBookmarked @client

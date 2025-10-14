@@ -37,6 +37,7 @@ query GetEntities($identifiers: [EntityIdentifier!]!) {
       displayName {
         __typename
         text
+        languageCode
       }
       location {
         __typename
@@ -46,6 +47,7 @@ query GetEntities($identifiers: [EntityIdentifier!]!) {
       primaryTypeDisplayName {
         __typename
         text
+        languageCode
       }
     }
   }
