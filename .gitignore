@@ -44,6 +44,10 @@ node_modules/
 docs.json
 **/.project
 .vscode/**
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 **/bin
 .sqldelight
 

@@ -1,0 +1,66 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Start Rover (MCP Server)",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "Start Rover (MCP Server)"
+    },
+    {
+      "name": "Start Expo Dev Server",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "Start Expo Dev Server"
+    },
+    {
+      "name": "Run GraphQL Codegen (Once)",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "Run GraphQL Codegen"
+    },
+    {
+      "name": "Watch GraphQL Codegen",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "Watch GraphQL Codegen"
+    },
+    {
+      "name": "Start MCP Inspector",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "Start MCP Inspector"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Start All Dev Servers",
+      "configurations": [
+        "Start Expo Dev Server",
+        "Start Rover (MCP Server)",
+        "Watch GraphQL Codegen"
+      ],
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "1_dev",
+        "order": 1
+      }
+    },
+    {
+      "name": "Start All + MCP Inspector",
+      "configurations": [
+        "Start Expo Dev Server",
+        "Start Rover (MCP Server)",
+        "Watch GraphQL Codegen",
+        "Start MCP Inspector"
+      ],
+      "stopAll": true,
+      "presentation": {
+        "hidden": false,
+        "group": "1_dev",
+        "order": 2
+      }
+    }
+  ]
+}
