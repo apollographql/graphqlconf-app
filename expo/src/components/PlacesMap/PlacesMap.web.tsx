@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   APIProvider,
@@ -13,7 +13,7 @@ import {
   getPlaceMarkerData,
   PlaceMarkerInfoFragmentDoc,
 } from "./PlaceMarkerInfo";
-import { useApolloClient } from "@apollo/client/react";
+import { useFragment } from "@apollo/client/react";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 
 export type { PlacesMapProps };
@@ -26,21 +26,21 @@ export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
   const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number | null>(
     null
   );
-  const client = useApolloClient();
-
-  if (locations.length === 0) {
-    return null;
-  }
+  const places = useFragment({
+    fragment: PlacesMap.fragments.Places,
+    fragmentName: "PlaceMarkerInfo",
+    from: locations,
+  });
 
   // Extract marker data from fragments
-  const markerData = locations.map((incoming) => {
-    const place = client.readFragment({
-      fragment: PlacesMap.fragments.Places,
-      fragmentName: "PlaceMarkerInfo",
-      id: client.cache.identify(incoming),
-    })!;
-    return getPlaceMarkerData(place);
-  });
+  const markerData = useMemo(() => {
+    if (!places.every((place) => place.dataState === "complete")) return [];
+    return places.map((place) => getPlaceMarkerData(place.data));
+  }, [places]);
+
+  if (markerData.length === 0) {
+    return null;
+  }
 
   // Calculate the center and bounds to show all markers
   const latitudes = markerData.map((loc) => loc.latitude);

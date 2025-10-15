@@ -4,9 +4,10 @@ import {
   PlaceMarkerInfoFragmentDoc,
   getPlaceMarkerData,
 } from "./PlaceMarkerInfo";
-import { useApolloClient } from "@apollo/client/react";
+import { useFragment } from "@apollo/client/react";
 import { FragmentType } from "@apollo/client";
 import { useRouter } from "expo-router";
+import { useMemo } from "react";
 
 // check export shape consistency between web and native versions of this file
 declare let native: typeof import("./PlacesMap");
@@ -26,22 +27,23 @@ PlacesMap.fragments = {
 } as const;
 
 export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
-  const client = useApolloClient();
   const router = useRouter();
 
-  if (locations.length === 0) {
-    return null;
-  }
+  const places = useFragment({
+    fragment: PlacesMap.fragments.Places,
+    fragmentName: "PlaceMarkerInfo",
+    from: locations,
+  });
 
   // Extract marker data from fragments
-  const markerData = locations.map((incoming) => {
-    const place = client.readFragment({
-      fragment: PlacesMap.fragments.Places,
-      fragmentName: "PlaceMarkerInfo",
-      id: client.cache.identify(incoming),
-    })!;
-    return getPlaceMarkerData(place);
-  });
+  const markerData = useMemo(() => {
+    if (!places.every((place) => place.dataState === "complete")) return [];
+    return places.map((place) => getPlaceMarkerData(place.data));
+  }, [places]);
+
+  if (markerData.length === 0) {
+    return null;
+  }
 
   // Calculate the center and region to show all markers
   const latitudes = markerData.map((loc) => loc.latitude);
