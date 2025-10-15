@@ -56,6 +56,7 @@ if (false) {
         widthPx
         heightPx
         authorAttributions {
+          uri
           displayName
         }
       }
@@ -180,10 +181,7 @@ export function PlaceDetailContent({
             {place.location.latitude.toFixed(6)},{" "}
             {place.location.longitude.toFixed(6)}
           </ThemedText>
-          <Pressable
-            onPress={openInGoogleMaps}
-            style={styles.mapContainer}
-          >
+          <Pressable onPress={openInGoogleMaps} style={styles.mapContainer}>
             <SinglePlaceMap
               latitude={place.location.latitude}
               longitude={place.location.longitude}
