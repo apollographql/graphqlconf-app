@@ -94,8 +94,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
               {messages.map((message) => (
                 <Message key={message.id} message={message} />
               ))}
-              <View style={{ flexDirection: "row" }}>
-                <ThemedText type="muted">{status} </ThemedText>
+              <View style={{ flexDirection: "row", height: 24 }}>
                 {(status === "streaming" || status === "submitted") && (
                   <TypingIndicator />
                 )}
@@ -108,7 +107,13 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
             ref={inputRef}
             style={[styles.input, styles[theme].input]}
             textAlign="center"
-            placeholder="Ask, e.g. 'What is the topic of the next talk?' or 'Can you find me a cafe nearby?'"
+            placeholder={
+              status === "streaming" || status === "submitted"
+                ? "Responding"
+                : messages.length === 0
+                  ? "Ask, e.g. 'What is the topic of the next talk?' or 'Can you find me a cafe nearby?'"
+                  : ""
+            }
             submitBehavior="blurAndSubmit"
             editable={status === "ready"}
             onSubmitEditing={(e) => {

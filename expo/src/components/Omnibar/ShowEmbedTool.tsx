@@ -11,8 +11,11 @@ import {
 import { Suspense } from "react";
 import { ThemedView } from "../themed-view";
 import { ThemedText } from "../themed-text";
-import { ApolloClient, DocumentNode } from "@apollo/client";
+import { ApolloClient, DocumentNode, gql } from "@apollo/client";
 import { firstFragment } from "@/utils/firstFragment";
+import { mapEntries } from "@/utils/mapEntries";
+import { fullFragmentData } from "@/utils/fullFragmentData";
+import { Kind, visit } from "graphql";
 
 type ShowEmbedToolUIInvocation<TOOL extends UITool | Tool> = {
   type: `tool-ShowEmbed-${string}`;
@@ -36,6 +39,14 @@ function hasFragmentDefinitions(
   return "fragments" in Component;
 }
 
+const bareGetIdentifiersQuery = gql`
+  query FetchMissing($identifiers: [EntityIdentifier!]!) {
+    entities(identifiers: $identifiers) {
+      __insert_here__: __typename
+    }
+  }
+`;
+
 /**
  * @returns true if the tool call was handled, false otherwise
  */
@@ -58,11 +69,11 @@ export function handleShowEmbedToolCall(
   if (!hasFragmentDefinitions(Component)) return;
   const result = client.cache.batch({
     update(cache): ToolResult {
+      const missing: Record<string, { __typename: string; id: string }[]> = {};
       for (const [key, fragment] of Object.entries(Component.fragments)) {
         const firstDef = firstFragment(fragment);
         const targetTypeName = firstDef.typeCondition.name.value;
         const fragmentName = firstDef.name.value;
-
         const propValue = props[key];
         const propResult = [];
         for (const item of Array.isArray(propValue) ? propValue : [propValue]) {
@@ -76,6 +87,10 @@ export function handleShowEmbedToolCall(
               fragmentName,
             });
             if (!fragmentData) {
+              if (details.fetchIfMissing) {
+                (missing[key] ??= []).push(item);
+                continue;
+              }
               return {
                 tool: toolCall.toolName,
                 toolCallId: toolCall.toolCallId,
@@ -112,10 +127,91 @@ export function handleShowEmbedToolCall(
           : propResult[0];
       }
 
+      if (Object.keys(missing).length > 0) {
+        const shapes = mapEntries(missing, "", (_, key) => {
+          const fragment = Component.fragments[key];
+          return fullFragmentData(fragment, client);
+        });
+        const query = visit(bareGetIdentifiersQuery, {
+          SelectionSet(node) {
+            if (
+              node.selections.length === 1 &&
+              node.selections[0].kind === "Field" &&
+              node.selections[0].alias?.value === "__insert_here__"
+            ) {
+              console.log("Inserting selections for", { missing });
+              return {
+                ...node,
+                selections: Object.keys(missing).map((key) => {
+                  const fragment = Component.fragments[key];
+                  const firstDef = firstFragment(fragment);
+                  return {
+                    kind: Kind.FRAGMENT_SPREAD,
+                    name: {
+                      kind: Kind.NAME,
+                      value: firstDef.name.value,
+                    },
+                  };
+                }),
+              };
+            }
+          },
+        });
+        void client
+          .query({
+            query,
+            variables: {
+              identifiers: Object.values(missing)
+                .flat()
+                .map(({ __typename, ...key }) => ({
+                  typename: __typename,
+                  ...key,
+                })),
+            },
+          })
+          .catch(console.error);
+        return {
+          tool: toolCall.toolName,
+          toolCallId: toolCall.toolCallId,
+          output: {
+            state: "recoverable",
+            missing,
+            shapes,
+            ...(Object.keys(output).length === 0
+              ? {
+                  message: `
+The requested items could not be found in the cache and will be fetched on the client - those can be found in the \`missing\` property.
+See the \`shapes\` property that described the structure of the data those missing items will have and what will be displayed to the user.
+Double-check that the typenames and ids from \`missing\` are correct with data that you have available.
+If they are, assume that they will be displayed to the user before your next response arrives and formulate it accordingly.
+If any IDs are incorrect, assume that these items will not be displayed and the action might result in a partial or full error.
+In that case, apologize to the user and describe the items with text instead.
+`.trim(),
+                }
+              : {
+                  message: `
+The data in the \`data\` property has been displayed to the user.
+Some items could not be found in the cache and will be fetched on the client - those can be found in the \`missing\` property.
+See the \`shapes\` property that described the structure of the data those missing items will have and what will be displayed to the user.
+Double-check that the typenames and ids from \`missing\` are correct with data that you have available.
+If they are, assume that they will be displayed to the user before your next response arrives and formulate it accordingly.
+If any IDs are incorrect, assume that these items will not be displayed and the action might result in a partial or full error.
+In that case, apologize to the user and describe the items with text instead.
+`.trim(),
+                  data: output,
+                }),
+          },
+        };
+      }
+
       return {
         tool: toolCall.toolName,
         toolCallId: toolCall.toolCallId,
-        output: ["This data has been displayed to the user:", output],
+        output: {
+          state: "success",
+          message: "This data has been displayed to the user",
+          data: output,
+        },
       };
     },
   });

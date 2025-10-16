@@ -250,13 +250,13 @@ When the AI calls an embed tool, the system either:
 
 Then renders the component with a fragment identifier (`{ __typename, id }`), allowing the component to read its required data via `useSuspenseFragment`.
 
-### Two Embed Approaches
+### Three Embed Approaches
 
-#### Approach 1: Fragment Identifier Embeds
+#### Approach 1: Fragment Identifier Embeds (Cache-Only)
 
-**Use case**: Display entities assumed to be already in the cache from previous queries.
+**Use case**: Display entities known to be in the cache from previous queries.
 
-**Example**: `ScheduleListItem`, `SpeakerListItem`, `PlaceListItem`
+**Example**: `SpeakerListItem`, `PlaceListItem`
 
 ```tsx
 // expo/src/agent/clientTools/embeds/fragments.ts
@@ -264,10 +264,10 @@ Then renders the component with a fragment identifier (`{ __typename, id }`), al
 declare function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition
 
 export const availableFragmentComponents = {
-  ScheduleListItem: expose(ScheduleListItem, {
-    description: `Display a schedule item, e.g. a conference talk`,
+  SpeakerListItem: expose(SpeakerListItem, {
+    description: `Display a speaker item, e.g. a conference speaker`,
     props: {
-      SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
+      SchedSpeaker: fragmentIdentifier(SpeakerListItem.fragments.SchedSpeaker),
     },
   }),
   // ...
@@ -313,6 +313,116 @@ export const availableFragmentComponents = {
 - **Assumes data exists**: Relies on previous queries populating the cache
 - **Fast**: No data writing, direct cache read
 - **Error handling**: Returns error if data not found, prompting AI to use text fallback
+
+#### Approach 1b: Fragment Identifier Embeds with Auto-Fetch
+
+**Use case**: Display entities that might or might not be in cache, with automatic fallback to fetching.
+
+**Example**: `ScheduleListItem`
+
+```tsx
+// expo/src/agent/clientTools/embeds/fragments.ts
+export const availableFragmentComponents = {
+  ScheduleListItem: expose(ScheduleListItem, {
+    description: `Display a schedule item, e.g. a conference talk`,
+    props: {
+      SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
+    },
+    fetchIfMissing: true,  // Enable automatic fetching
+  }),
+  // ...
+};
+```
+
+**Tool schema generated for the AI**:
+Same as Approach 1 - only `__typename` and `id`:
+```json
+{
+  "type": "object",
+  "properties": {
+    "SchedSession": {
+      "type": "object",
+      "properties": {
+        "__typename": { "type": "string", "const": "SchedSession" },
+        "id": { "type": "string" }
+      },
+      "required": ["__typename", "id"]
+    }
+  }
+}
+```
+
+**AI calls the tool with**:
+```json
+{
+  "SchedSession": {
+    "__typename": "SchedSession",
+    "id": "12345"
+  }
+}
+```
+
+**Execution flow**:
+1. AI calls `ShowEmbed-ScheduleListItem` with `{ __typename, id }`
+2. `handleShowEmbedToolCall` detects identifier-only input (only 2 keys)
+3. Attempts to read fragment data from cache using `cache.readFragment()`
+4. If data exists: Returns success, component renders with cached data
+5. If data missing AND `fetchIfMissing: true`:
+   - Executes GraphQL query to fetch the entity from the server
+   - Writes fetched data to cache using `cache.writeQuery()`
+   - Returns success, component renders with freshly fetched data
+6. If data missing AND no fetch configured: Returns error
+
+**Implementation in `handleShowEmbedToolCall`**:
+
+```tsx
+if (identifierOnly) {
+  // Try to read from cache
+  const fragmentData = cache.readFragment({
+    id: cache.identify(item),
+    fragment,
+    fragmentName,
+  });
+
+  if (!fragmentData) {
+    // Cache miss - check if we should fetch
+    if (embed.fetchIfMissing) {
+      // Execute query to fetch entity by ID
+      void client.query({
+        query: GetEntityQuery,  // Generated query for this entity type
+        variables: { typename: item.__typename, id: item.id },
+      }).catch();
+
+      // Data now in cache, component can render
+      return {
+        state: "recoverable",
+        message: "Data was missing from cache, but will be fetched and the component will be displayed. It will have this shape: <shape>",
+      }
+    } else {
+      return {
+        state: "output-error",
+        errorText: "Could not render component due to missing data.",
+      };
+    }
+  }
+}
+```
+
+**Key characteristics**:
+- **Minimal payload**: Only `__typename` and `id` sent to tool
+- **Cache-first strategy**: Checks cache before fetching
+- **Automatic fallback**: Fetches from server if cache misses
+- **Reliability**: Always succeeds if entity exists on server
+- **Performance**: Fast when cached, graceful degradation when not
+- **Transparent to AI**: AI doesn't need to know about cache state
+
+**Trade-offs**:
+- **Pro**: Combines minimal payload with reliability
+- **Pro**: Works regardless of cache state
+- **Pro**: No AI error handling needed
+- **Con**: Additional network request on cache miss
+- **Con**: Requires entity query to be available for the type
+- **Con**: Slightly more complex implementation
 
 #### Approach 2: Full Fragment Data Embeds
 
@@ -557,17 +667,25 @@ rather than listing it out yourself.
 
 ### When to Use Each Approach
 
-#### Use Fragment Identifier Embeds When:
-- Displaying results from a previous query (e.g., search results, bookmarks)
-- The AI fetched data using an MCP tool that populated the cache
-- You want minimal tool payload size
-- Cache state is predictable
+#### Use Approach 1 (Fragment Identifier - Cache-Only) When:
+- Displaying results immediately after an MCP query (e.g., search results just fetched)
+- You want maximum performance with minimal network requests
+- Cache state is guaranteed (data was just fetched by a previous tool call)
+- You want to detect and report missing data to the AI for error handling
 
-#### Use Full Fragment Data Embeds When:
-- Displaying data from external APIs (e.g., Google Maps places)
-- Cache state is uncertain or the data wasn't fetched via GraphQL
-- The AI needs to transform or aggregate data before display
-- You want self-contained tool calls that don't depend on cache state
+#### Use Approach 1b (Fragment Identifier with Auto-Fetch) When:
+- Displaying entities that might or might not be cached
+- You want minimal tool payload but need reliability
+- Cache state is uncertain but entities are fetchable by ID
+- You want transparent cache-first behavior without AI intervention
+- **Recommended default** for most entity display scenarios
+
+#### Use Approach 2 (Full Fragment Data) When:
+- Displaying data from external non-GraphQL sources
+- The AI is transforming, aggregating, or computing data client-side
+- Data isn't fetchable via entity queries (no `@key` on the type)
+- Tool payload size isn't a concern
+- You want complete control over what data is cached
 
 ### Creating New Embed Tools
 
@@ -588,9 +706,16 @@ export const availableFragmentComponents = {
     description: `Display a custom entity with rich formatting`,
     props: {
       // Choose approach:
-      MyEntity: fragmentIdentifier(MyNewListItem.fragments.MyEntity),  // Approach 1
-      // OR
-      MyEntity: fullFragmentData(MyNewListItem.fragments.MyEntity),    // Approach 2
+
+      // Approach 1: Cache-only (errors if not cached)
+      MyEntity: fragmentIdentifier(MyNewListItem.fragments.MyEntity),
+
+      // Approach 1b: Auto-fetch (recommended default)
+      MyEntity: fragmentIdentifier(MyNewListItem.fragments.MyEntity),
+      fetchIfMissing: true,
+
+      // Approach 2: Full data payload
+      MyEntity: fullFragmentData(MyNewListItem.fragments.MyEntity),
     },
   }),
 };
@@ -598,11 +723,17 @@ export const availableFragmentComponents = {
 
 3. **Write clear tool descriptions** - The AI uses these to decide when to call the tool
 
-4. **Test cache behavior**:
-   - For identifier embeds: Ensure previous queries populate the cache
+4. **Configure `fetchIfMissing` (for Approach 1b)**:
+   - Set `fetchIfMissing: true` to enable automatic fetching on cache miss
+   - Requires the entity type to have a query operation (e.g., `GetEntities`)
+   - Works best with federated entities that support `@key` directive
+
+5. **Test cache behavior**:
+   - For cache-only embeds: Ensure previous queries populate the cache
+   - For auto-fetch embeds: Test both cached and uncached scenarios
    - For full data embeds: Verify schema validation and cache writes
 
-5. **Run code generation** to update types:
+6. **Run code generation** to update types:
 ```bash
 cd expo
 npm run codegen

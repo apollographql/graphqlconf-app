@@ -2,12 +2,13 @@ import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { PlacesMap } from "@/components/PlacesMap/PlacesMap";
 import { DocumentNode } from "@apollo/client";
 import { jsonSchema, tool } from "ai";
-import { getFragmentJSONSchema } from "./fragmentSchemaGenerator";
 import type { JSONSchema7Definition } from "json-schema";
 import { firstFragment } from "@/utils/firstFragment";
 import { client } from "@/apollo/client";
 import { SpeakerListItem } from "@/components/ListItems/SpeakerListItem";
 import { PlaceListItem } from "@/components/ListItems/PlaceListItem";
+import { mapEntries } from "@/utils/mapEntries";
+import { fullFragmentData } from "@/utils/fullFragmentData";
 
 function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition {
   const fragment = firstFragment(fragmentDoc);
@@ -24,26 +25,22 @@ function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition {
   };
 }
 
-function fullFragmentData(fragmentDoc: DocumentNode) {
-  const fragment = firstFragment(
-    client.documentTransform.transformDocument(fragmentDoc)
-  );
-  return getFragmentJSONSchema(fragmentDoc, fragment.name.value);
-}
-
 function expose<Props extends Record<string, JSONSchema7Definition>>(
   Component: React.FunctionComponent<Record<keyof Props, any>>,
   {
     props,
     description,
+    fetchIfMissing,
   }: {
     description: string;
     props: Props;
+    fetchIfMissing?: boolean;
   }
 ) {
   return {
     Component,
     description,
+    fetchIfMissing,
     schema: jsonSchema({
       type: "object",
       properties: props,
@@ -60,6 +57,7 @@ Will display event name, venue name, time (start and end) as well as event speak
     props: {
       SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
     },
+    fetchIfMissing: true,
   }),
   SpeakerListItem: expose(SpeakerListItem, {
     description: `Display a speaker item, e.g. a conference speaker or any other item with \`__typename\` of \`SchedSpeaker\`.
@@ -84,7 +82,7 @@ This tool should be prioritized when displaying only places, as it provides a be
     props: {
       Places: {
         type: "array",
-        items: fullFragmentData(PlacesMap.fragments.Places),
+        items: fullFragmentData(PlacesMap.fragments.Places, client),
         description: "Array of locations to show on the map",
       },
       height: {
@@ -126,16 +124,3 @@ export const componentTools = mapEntries(
       inputSchema: v.schema,
     })
 );
-
-function mapEntries<In, Out, Keys extends string, Prefix extends string>(
-  obj: Record<Keys, In>,
-  prefix: Prefix,
-  fn: (v: In, k: Keys) => Out
-) {
-  return Object.fromEntries(
-    Object.entries(obj).map(([k, v]) => [
-      `${prefix}${k}`,
-      fn(v as In, k as Keys),
-    ])
-  ) as Record<`${Prefix}${Keys}`, Out>;
-}
