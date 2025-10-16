@@ -1,5 +1,6 @@
 import type { UIMessage } from "ai";
-import { AgentContext, runAgent } from "@/agent/vercelSdk/agent";
+import { runAgent } from "@/agent/vercelSdk/agent";
+import { AgentContext } from "@/agent/AgentContext";
 
 export async function POST(request: Request) {
   const {

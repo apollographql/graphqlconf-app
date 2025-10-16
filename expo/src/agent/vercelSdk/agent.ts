@@ -12,12 +12,8 @@ import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
 import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
 import { clientTools } from "@/agent/clientTools/bookmarks";
 import { prompt } from "../prompt";
-
-export interface AgentContext {
-  currentTime: string;
-  currentEvent: string;
-  location: string;
-}
+import { routes } from "../clientTools/routes";
+import { AgentContext } from "@/agent/AgentContext";
 
 export async function runAgent({
   messages,
@@ -37,9 +33,8 @@ export async function runAgent({
     ...remoteEventsMcp.tools,
     ...fragmentComponentEmbeds,
     ...clientTools,
+    ...routes,
   };
-
-  console.log("Available tools:", Object.keys(tools));
 
   return streamText({
     model: createOpenAI({
@@ -69,12 +64,15 @@ This message contains information about the current state of the UI.
 Date and time: ${context.currentTime}
 The app configured to focus on the event with ID "${context.currentEvent}". 
 Location: ${context.location}
+Current route: ${context.route}
+Current route arguments: ${JSON.stringify(context.routeParams || {})}
         `.trim(),
           },
         ],
       },
       ...messages,
     ]),
+    experimental_context: context,
     tools,
     stopWhen: stepCountIs(10),
     onStepFinish: async (step) => {

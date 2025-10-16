@@ -8,7 +8,7 @@ import { client } from "@/apollo/client";
 import { SpeakerListItem } from "@/components/ListItems/SpeakerListItem";
 import { PlaceListItem } from "@/components/ListItems/PlaceListItem";
 import { mapEntries } from "@/utils/mapEntries";
-import { fullFragmentData } from "@/utils/fullFragmentData";
+import { generateFragmentJsonSchema } from "@/utils/generateJsonSchema";
 
 function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition {
   const fragment = firstFragment(fragmentDoc);
@@ -82,7 +82,7 @@ This tool should be prioritized when displaying only places, as it provides a be
     props: {
       Places: {
         type: "array",
-        items: fullFragmentData(PlacesMap.fragments.Places, client),
+        items: generateFragmentJsonSchema(PlacesMap.fragments.Places, client),
         description: "Array of locations to show on the map",
       },
       height: {

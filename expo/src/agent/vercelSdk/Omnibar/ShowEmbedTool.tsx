@@ -14,7 +14,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ApolloClient, DocumentNode, gql } from "@apollo/client";
 import { firstFragment } from "@/utils/firstFragment";
 import { mapEntries } from "@/utils/mapEntries";
-import { fullFragmentData } from "@/utils/fullFragmentData";
+import { generateFragmentJsonSchema } from "@/utils/generateJsonSchema";
 import { Kind, visit } from "graphql";
 
 type ShowEmbedToolUIInvocation<TOOL extends UITool | Tool> = {
@@ -130,7 +130,7 @@ export function handleShowEmbedToolCall(
       if (Object.keys(missing).length > 0) {
         const shapes = mapEntries(missing, "", (_, key) => {
           const fragment = Component.fragments[key];
-          return fullFragmentData(fragment, client);
+          return generateFragmentJsonSchema(fragment, client);
         });
         const query = visit(bareGetIdentifiersQuery, {
           SelectionSet(node) {

@@ -1,5 +1,6 @@
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { experimental_createMCPClient, jsonSchema, tool } from "ai";
+import { AgentContext } from "@/agent/AgentContext";
 
 export async function getTools() {
   const supergraphMcpClient = await experimental_createMCPClient({
@@ -21,7 +22,11 @@ export async function getTools() {
         }),
         execute: (_, options) =>
           tools.GetEvents.execute(
-            { ids: [process.env.EXPO_PUBLIC_CURRENT_EVENT] },
+            {
+              ids: [
+                (options.experimental_context as AgentContext).currentEvent,
+              ],
+            },
             options
           ),
       }),

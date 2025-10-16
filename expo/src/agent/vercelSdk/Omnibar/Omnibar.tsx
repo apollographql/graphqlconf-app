@@ -7,7 +7,7 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 import { useChat } from "@ai-sdk/react";
 import { lastAssistantMessageIsCompleteWithToolCalls, UIMessage } from "ai";
 import { fetch as expoFetch } from "expo/fetch";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { generateAPIUrl } from "@/generateApiUrl";
 import { ThemedText } from "@/components/themed-text";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -16,16 +16,38 @@ import { Message } from "./Message";
 import { handleShowEmbedToolCall } from "./ShowEmbedTool";
 import { handleGetBookmarksToolCall } from "./GetBookmarksTool";
 import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
-import { AgentContext } from "@/agent/vercelSdk/agent";
+import { AgentContext } from "@/agent/AgentContext";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { GraphQLToolChatTransport } from "./GraphQLToolChatTransport";
+import {
+  useLocalSearchParams,
+  useRouter,
+  useSegments,
+} from "expo-router/build/hooks";
+import { handleNavigateToRouteToolCall } from "./NavigateToRouteTool";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   const theme = useColorScheme() ?? "light";
   const textColor = useThemeColor({}, "text");
   const [showChat, setShowChat] = useState(false);
   const client = useApolloClient();
+  const route = useSegments().join("/");
+  const routeParams = useLocalSearchParams();
+  const router = useRouter();
+
+  const routeContext = useRef<AgentContext>(null);
+  useEffect(() => {
+    const now = new Date();
+    routeContext.current = {
+      currentTime: now.toISOString(),
+      currentEvent: process.env.EXPO_PUBLIC_CURRENT_EVENT!,
+      location:
+        "The user has not shared their location. Unless they specify, assume that they are at the conference venue.",
+      route,
+      routeParams,
+    };
+  });
 
   const inputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<Animated.ScrollView>(null);
@@ -42,15 +64,9 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
       fetch: expoFetch as unknown as typeof globalThis.fetch,
       api: generateAPIUrl("/api/chat"),
       body: (messages: UIMessage[]) => {
-        const now = new Date();
         return {
           messages,
-          context: {
-            currentTime: now.toISOString(),
-            currentEvent: process.env.EXPO_PUBLIC_CURRENT_EVENT!,
-            location:
-              "The user has not shared their location. Unless they specify, assume that they are at the conference venue.",
-          } satisfies AgentContext,
+          context: routeContext.current,
         };
       },
     }),
@@ -63,7 +79,8 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
       const handled =
         handleShowEmbedToolCall(toolCall, client) ||
         handleGetBookmarksToolCall(toolCall) ||
-        handleToggleBookmarksToolCall(toolCall, client);
+        handleToggleBookmarksToolCall(toolCall, client) ||
+        handleNavigateToRouteToolCall(toolCall, router);
 
       if (handled) {
         addToolResult(await handled);
