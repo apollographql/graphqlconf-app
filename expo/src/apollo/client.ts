@@ -9,6 +9,7 @@ import {
 import { HKT } from "@apollo/client/utilities";
 import { LocalState } from "@apollo/client/local-state";
 import { bookmarksResolvers } from "@/apollo/bookmarksResolvers";
+import { aiFrameworkResolvers } from "@/apollo/aiFrameworkResolvers";
 
 type AdjustedFragmentType<TData> =
   TData extends DocumentTypeDecoration<infer RealTData, any>
@@ -86,7 +87,16 @@ const _client = new ApolloClient({
     uri,
   }),
   localState: new LocalState({
-    resolvers: bookmarksResolvers,
+    resolvers: {
+      Query: {
+        ...bookmarksResolvers.Query,
+        ...aiFrameworkResolvers.Query,
+      },
+      Mutation: {
+        ...bookmarksResolvers.Mutation,
+        ...aiFrameworkResolvers.Mutation,
+      },
+    },
   }),
   dataMasking: true,
 });

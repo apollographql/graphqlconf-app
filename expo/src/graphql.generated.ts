@@ -91,7 +91,13 @@ export type LocationRestrictionInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  chooseAiFramework: Scalars['String']['output'];
   toggleBookmark: BookmarkEntity;
+};
+
+
+export type MutationChooseAiFrameworkArgs = {
+  framework: Scalars['String']['input'];
 };
 
 
@@ -210,6 +216,7 @@ export type PlusCode = {
 
 export type Query = {
   __typename?: 'Query';
+  aiFramework: Scalars['String']['output'];
   bookmarks: Array<Bookmark>;
   entities: Array<Entity>;
   event?: Maybe<SchedEvent>;

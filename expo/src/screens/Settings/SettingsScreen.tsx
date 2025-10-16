@@ -9,16 +9,39 @@ import {
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { generateAPIUrl } from "@/generateApiUrl";
+import { gql } from "@apollo/client";
+import { QueryRef, useReadQuery } from "@apollo/client/react";
+import { SettingsScreenDocument } from "./SettingsScreen.generated";
+import { AiFrameworkSection } from "./components/AiFrameworkSection";
+import { ResultOf, VariablesOf } from "@graphql-typed-document-node/core";
+
+if (false) {
+  // eslint-disable-next-line no-unused-expressions
+  gql`
+    query SettingsScreen {
+      ...AiFrameworkSection_Query
+    }
+  `;
+}
+
+SettingsScreen.Query = SettingsScreenDocument;
 
 interface SettingsScreenProps {
   successMessage?: boolean;
   errorMessage?: string;
+  queryRef: QueryRef<
+    ResultOf<typeof SettingsScreen.Query>,
+    VariablesOf<typeof SettingsScreen.Query>
+  >;
 }
 
 export function SettingsScreen({
   successMessage,
   errorMessage,
+  queryRef,
 }: SettingsScreenProps) {
+  const { data } = useReadQuery(queryRef);
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -96,6 +119,8 @@ export function SettingsScreen({
           </ThemedText>
         </ThemedView>
       )}
+
+      <AiFrameworkSection parent={data} />
 
       <ThemedText type="subtitle" style={styles.sectionHeading}>
         External MCP Servers

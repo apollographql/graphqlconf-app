@@ -37,6 +37,7 @@ gql`
 
   extend type Query {
     bookmarks(typename: String): [Bookmark!]!
+    aiFramework: String!
   }
 
   type Mutation {
@@ -45,5 +46,6 @@ gql`
       typename: String!
       isBookmarked: Boolean
     ): BookmarkEntity!
+    chooseAiFramework(framework: String!): String!
   }
 `;
