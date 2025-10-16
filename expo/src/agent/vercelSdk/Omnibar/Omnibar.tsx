@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
-import { ThemedView } from "../themed-view";
+import { ThemedView } from "@/components/themed-view";
 import { useColorScheme } from "@/hooks/use-color-scheme.web";
 import { Colors } from "@/constants/theme";
 import Animated, { LinearTransition } from "react-native-reanimated";
@@ -9,15 +9,15 @@ import { lastAssistantMessageIsCompleteWithToolCalls, UIMessage } from "ai";
 import { fetch as expoFetch } from "expo/fetch";
 import { useRef, useState } from "react";
 import { generateAPIUrl } from "@/generateApiUrl";
-import { ThemedText } from "../themed-text";
-import { IconSymbol } from "../ui/icon-symbol";
+import { ThemedText } from "@/components/themed-text";
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useApolloClient } from "@apollo/client/react";
 import { Message } from "./Message";
 import { handleShowEmbedToolCall } from "./ShowEmbedTool";
 import { handleGetBookmarksToolCall } from "./GetBookmarksTool";
 import { handleToggleBookmarksToolCall } from "./ToggleBookmarksTool";
-import { AgentContext } from "@/agent/agent";
-import { TypingIndicator } from "./TypingIndicator";
+import { AgentContext } from "@/agent/vercelSdk/agent";
+import { TypingIndicator } from "@/components/TypingIndicator";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { GraphQLToolChatTransport } from "./GraphQLToolChatTransport";
 

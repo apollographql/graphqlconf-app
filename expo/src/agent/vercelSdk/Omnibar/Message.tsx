@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
-import { ThemedView } from "../themed-view";
+import { ThemedView } from "@/components/themed-view";
 import { UIDataTypes, UIMessage, UIMessagePart, UITools } from "ai";
-import { ThemedText } from "../themed-text";
+import { ThemedText } from "@/components/themed-text";
 import { isShowEmbedToolUIPart, ShowEmbedPart } from "./ShowEmbedTool";
 
 export function Message({

@@ -9,8 +9,8 @@ import {
   UIToolInvocation,
 } from "ai";
 import { Suspense } from "react";
-import { ThemedView } from "../themed-view";
-import { ThemedText } from "../themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/themed-text";
 import { ApolloClient, DocumentNode, gql } from "@apollo/client";
 import { firstFragment } from "@/utils/firstFragment";
 import { mapEntries } from "@/utils/mapEntries";
