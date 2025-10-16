@@ -6,9 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BookmarksScreen } from "@/screens/Bookmarks/BookmarksScreen";
 
 export default function BookmarksRoute() {
-  const [queryRef] = useBackgroundQuery(BookmarksScreen.Query, {
-    variables: {},
-  });
+  const [queryRef] = useBackgroundQuery(BookmarksScreen.Query);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

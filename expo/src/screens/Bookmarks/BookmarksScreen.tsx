@@ -4,7 +4,11 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { BookmarksScreenQueryDocument } from "./BookmarksScreen.generated";
-import { ResultOf } from "@graphql-typed-document-node/core";
+import {
+  ResultOf,
+  TypedDocumentNode,
+  VariablesOf,
+} from "@graphql-typed-document-node/core";
 import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { SpeakerListItem } from "@/components/ListItems/SpeakerListItem";
 import { PlaceListItem } from "@/components/ListItems/PlaceListItem";
@@ -33,7 +37,11 @@ if (false) {
   `;
 }
 
-BookmarksScreen.Query = BookmarksScreenQueryDocument;
+BookmarksScreen.Query = BookmarksScreenQueryDocument as TypedDocumentNode<
+  ResultOf<typeof BookmarksScreenQueryDocument>,
+  // work around an incompatibility between AC local state and codegen - it doesn't omit `@export` variables
+  Omit<VariablesOf<typeof BookmarksScreenQueryDocument>, "identifiers">
+>;
 
 export function BookmarksScreen({
   queryRef,

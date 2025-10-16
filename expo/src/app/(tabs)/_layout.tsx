@@ -17,6 +17,7 @@ if (false) {
     query TabLayout {
       __typename
       ...Omnibar_Query @unmask #for some reason the @unmask is necessary here or we end up with a white screen when changing AI providers
+      ...Omnibar_Query # once we @unmask a fragment, it's not available in \`_FragmentTypes\` anymore, so we have to repeat it here. Maybe it should still be present there? This is quite hacky.
     }
   `;
 }

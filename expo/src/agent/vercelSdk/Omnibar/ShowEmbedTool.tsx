@@ -1,4 +1,4 @@
-import { availableFragmentComponents } from "@/agent/clientTools/embeds/fragments";
+import { availableFragmentComponents } from "@/agent/clientTools/fragmentComponentEmbeds";
 import {
   AbstractChat,
   ChatOnToolCallCallback,

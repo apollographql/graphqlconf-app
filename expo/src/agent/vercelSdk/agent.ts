@@ -7,7 +7,7 @@ import {
   smoothStream,
   StreamTextResult,
 } from "ai";
-import { componentTools } from "@/agent/clientTools/embeds/fragments";
+import { fragmentComponentEmbeds } from "@/agent/clientTools/fragmentComponentEmbeds";
 import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
 import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
 import { clientTools } from "@/agent/clientTools/bookmarks";
@@ -35,7 +35,7 @@ export async function runAgent({
   const tools = {
     ...supergraphMcp.tools,
     ...remoteEventsMcp.tools,
-    ...componentTools,
+    ...fragmentComponentEmbeds,
     ...clientTools,
   };
 

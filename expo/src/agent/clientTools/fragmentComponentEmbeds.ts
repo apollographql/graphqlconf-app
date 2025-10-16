@@ -94,28 +94,8 @@ This tool should be prioritized when displaying only places, as it provides a be
   }),
 };
 
-// // exposing all components via a single tool seems to make tool discovery harder
-// export const singleTool = {
-//   DisplayChatEmbed: tool({
-//     name: "DisplayChatEmbed",
-//     description: "Embed a Component in the Chat",
-//     inputSchema: z.object({
-//       embed: z.union(
-//         Object.values(availableFragmentComponents).map((v) =>
-//           z
-//             .object({
-//               component: z.literal(v.Component.name),
-//               props: v.schema,
-//             })
-//             .describe(v.description)
-//         )
-//       ),
-//     }),
-//     outputSchema: z.object({}),
-//     execute: () => ({}),
-//   }),
-// };
-export const componentTools = mapEntries(
+// exposing all components via a single tool seems to make tool discovery harder, so we create one tool per component
+export const fragmentComponentEmbeds = mapEntries(
   availableFragmentComponents,
   "ShowEmbed-",
   (v) =>
