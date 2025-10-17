@@ -14,7 +14,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^2.1.0-beta.11",
     "@ai-sdk/react": "^2.1.0-beta.19",
-    "@apollo/client": "https://pkg.pr.new/apollographql/apollo-client/@apollo/client@6dbaf61",
+    "@apollo/client": "https://pkg.pr.new/apollographql/apollo-client/@apollo/client@1bb3371",
     "@apollo/graphql-standard-schema": "file:.yalc/@apollo/graphql-standard-schema",
     "@apollo/server": "^5.0.0",
     "@apollo/subgraph": "^2.11.2",

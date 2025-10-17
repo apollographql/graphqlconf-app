@@ -33,10 +33,13 @@ export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
   });
 
   // Extract marker data from fragments
-  const markerData = useMemo(() => {
-    if (!places.every((place) => place.dataState === "complete")) return [];
-    return places.map((place) => getPlaceMarkerData(place.data));
-  }, [places]);
+  const markerData = useMemo(
+    () =>
+      places.dataState === "complete"
+        ? places.data.map(getPlaceMarkerData)
+        : [],
+    [places]
+  );
 
   if (markerData.length === 0) {
     return null;
