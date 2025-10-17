@@ -1,12 +1,13 @@
 import { client } from "@/apollo/client";
+import { removeDirectivesFromDocument } from "@apollo/client/utilities/internal";
 import { BookmarksScreen } from "@/screens/Bookmarks/BookmarksScreen";
 import { HomeScreen } from "@/screens/Home/HomeScreen";
 import PlaceDetailScreen from "@/screens/PlaceDetail/PlaceDetailScreen";
 import { ScheduleScreen } from "@/screens/Schedule/ScheduleScreen";
 import SessionDetailScreen from "@/screens/SessionDetail/SessionDetailScreen";
 import { generateQueryJsonSchema } from "@/utils/generateJsonSchema";
-import { tool } from "ai";
-import { AgentContext } from "../AgentContext";
+import { Schema, tool, ToolExecuteFunction } from "ai";
+import { AgentContext, AgentInternalContext } from "../AgentContext";
 import type { JSONSchema7Definition } from "json-schema";
 import {
   ExternalPathString,
@@ -14,6 +15,11 @@ import {
   RelativePathString,
 } from "expo-router";
 import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
+import { DocumentNode, print } from "graphql";
+import {
+  TypedDocumentNode,
+  VariablesOf,
+} from "@graphql-typed-document-node/core";
 
 export type ValidRoute = Exclude<
   HrefInputParams["pathname"],
@@ -21,58 +27,138 @@ export type ValidRoute = Exclude<
 >;
 
 const availableRoutes = {
-  "(tabs)": {
+  "/(tabs)": routeDescription({
     name: "Home",
     description: "The home page of the app",
     inputSchema: null,
+    // buildVariablesSchema is not implemented in graphql-standard-schema yet, so we manually define the input schemas for routes that require parameters
     query: HomeScreen.Query,
-  },
-  "(tabs)/schedule": {
+    variables: schema<VariablesOf<typeof HomeScreen.Query>>({
+      type: "object",
+      properties: {
+        eventId: { type: "string" },
+      },
+      required: ["eventId"],
+      additionalProperties: false,
+    }),
+  }),
+  "/(tabs)/schedule": routeDescription({
     name: "Schedule",
     description: "The schedule page showing the list of sessions",
     inputSchema: null,
     query: ScheduleScreen.Query,
-  },
-  "(tabs)/bookmarks": {
+    variables: schema<VariablesOf<typeof ScheduleScreen.Query>>({
+      type: "object",
+      properties: {
+        eventId: { type: "string" },
+      },
+      required: ["eventId"],
+      additionalProperties: false,
+    }),
+  }),
+  "/(tabs)/bookmarks": routeDescription({
     name: "Bookmarks",
     description: "The bookmarks page showing the list of bookmarked sessions",
     inputSchema: null,
     query: BookmarksScreen.Query,
-  },
-  "(tabs)/settings": {
+    variables: schema<VariablesOf<typeof BookmarksScreen.Query>>({
+      type: "object",
+      properties: {
+        identifiers: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              typename: { type: "string" },
+            },
+            required: ["id", "typename"],
+            additionalProperties: false,
+          },
+        },
+      },
+      required: [],
+      additionalProperties: false,
+    }),
+  }),
+  "/(tabs)/settings": routeDescription({
     name: "Settings",
     description: "The settings page of the app",
     inputSchema: null,
     query: null,
-  },
-  "/session/[id]": {
+    variables: null,
+  }),
+  "/session/[id]": routeDescription({
     name: "Session Details",
     description:
       "The details page for a specific session, identified by its ID",
-    inputSchema: {
+    inputSchema: schema<{ id: string }>({
       type: "object",
       properties: {
         id: { type: "string" },
       },
       required: ["id"],
       additionalProperties: false,
-    },
+    }),
     query: SessionDetailScreen.Query,
-  },
-  "/place/[id]": {
+    variables: schema<VariablesOf<typeof SessionDetailScreen.Query>>({
+      type: "object",
+      properties: {
+        sessionId: { type: "string" },
+      },
+      required: ["sessionId"],
+      additionalProperties: false,
+    }),
+  }),
+  "/place/[id]": routeDescription({
     name: "Place Details",
     description: "The details page for a specific place, identified by its ID",
-    inputSchema: {
+    inputSchema: schema<{ id: string }>({
       type: "object",
       properties: {
         id: { type: "string" },
       },
       required: ["id"],
       additionalProperties: false,
-    },
+    }),
     query: PlaceDetailScreen.Query,
-  },
-} as const satisfies Record<ValidRoute, unknown>;
+    variables: schema<VariablesOf<typeof PlaceDetailScreen.Query>>({
+      type: "object",
+      properties: {
+        placeId: { type: "string" },
+      },
+      required: ["placeId"],
+      additionalProperties: false,
+    }),
+  }),
+} satisfies Partial<Record<ValidRoute, unknown>>;
+
+function schema<T>(
+  schema: JSONSchema7Definition
+): Schema<T> & JSONSchema7Definition {
+  return schema as Schema<T> & JSONSchema7Definition;
+}
+function routeDescription<
+  RouteParams = never,
+  TData = never,
+  TVariables = never,
+>(desc: RouteDescription<RouteParams, TData, TVariables>) {
+  return desc;
+}
+interface RouteDescription<
+  RouteParams = never,
+  TData = never,
+  TVariables = never,
+> {
+  name: string;
+  description: string;
+  inputSchema: [RouteParams] extends [never] ? null : Schema<RouteParams>;
+  query: [TData] extends [never] ? null : TypedDocumentNode<TData, TVariables>;
+  // This is not really fully what I want right now. Maybe a function `RouteParams => TVariables` would be better?
+  variables: [TData] extends [never]
+    ? null
+    : Schema<TVariables> & JSONSchema7Definition;
+}
 
 const getRouteInformation = tool({
   //   name: "getRouteInformation",
@@ -142,11 +228,14 @@ const getRouteData = tool({
             type: "object",
             properties: {
               pathname: { type: "string", const: key },
-              params: (route.inputSchema as JSONSchema7Definition | null) ?? {
-                type: "object",
-              },
+              params:
+                route.variables ??
+                schema<{}>({
+                  type: "object",
+                }),
             },
             required: ["pathname", "params"],
+            additionalProperties: false,
           })
         ),
       },
@@ -154,6 +243,29 @@ const getRouteData = tool({
     required: ["routeDescription"],
     additionalProperties: false,
   }),
+  execute: async ({ routeDescription }, options) => {
+    const experimental_context =
+      options.experimental_context as AgentInternalContext;
+    const { pathname } = routeDescription;
+    const routeInfo = availableRoutes[pathname as keyof typeof availableRoutes];
+    if (!routeInfo) {
+      throw new Error(
+        `Route "${pathname}" not found. Available routes are: ${Object.keys(
+          availableRoutes
+        ).join(", ")}`
+      );
+    }
+    const query = routeInfo.query;
+    if (!query) {
+      return {};
+    }
+    return experimental_context.executeQuery(
+      print(
+        removeDirectivesFromDocument([{ name: "client", remove: true }], query)!
+      ),
+      routeDescription.params
+    );
+  },
 });
 
 const navigateToRoute = tool({

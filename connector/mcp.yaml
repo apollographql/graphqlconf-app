@@ -13,7 +13,7 @@ overrides:
   mutation_mode: all
 introspection:
   execute:
-    enabled: false
+    enabled: true
   introspect:
     enabled: false
   search:

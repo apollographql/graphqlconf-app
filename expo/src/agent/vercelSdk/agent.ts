@@ -9,14 +9,15 @@ import {
   InvalidToolInputError,
   generateObject,
 } from "ai";
-import { FlexibleSchema, safeValidateTypes } from "@ai-sdk/provider-utils";
+import { ToolCallOptions } from "@ai-sdk/provider-utils";
 import { fragmentComponentEmbeds } from "@/agent/clientTools/fragmentComponentEmbeds";
 import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
 import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
 import { clientTools } from "@/agent/clientTools/bookmarks";
 import { prompt } from "../prompt";
 import { routes } from "../clientTools/routes";
-import { AgentContext } from "@/agent/AgentContext";
+import { AgentContext, AgentInternalContext } from "@/agent/AgentContext";
+import { randomUUID } from "node:crypto";
 
 const model = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -36,8 +37,12 @@ export async function runAgent({
     getSupergraphMcpTools(),
     getBuildersMcpTools(request),
   ]);
+  const {
+    tools: { execute, ...supergraphMcpTools },
+  } = supergraphMcp;
+
   const tools = {
-    ...supergraphMcp.tools,
+    ...supergraphMcpTools,
     ...remoteEventsMcp.tools,
     ...fragmentComponentEmbeds,
     ...clientTools,
@@ -77,7 +82,22 @@ Current route arguments: ${JSON.stringify(context.routeParams || {})}
       },
       ...messages,
     ]),
-    experimental_context: context,
+    experimental_context: {
+      ...context,
+      async executeQuery(query, variables) {
+        const executionResult = execute.execute({ query, variables }, {
+          messages: [],
+          toolCallId: randomUUID(),
+          abortSignal: request.signal,
+          experimental_context: context,
+        } satisfies ToolCallOptions);
+        if (isAsyncIterable(executionResult)) {
+          throw new Error("Unexpected streaming response.");
+        }
+        const result = await executionResult;
+        return result.structuredContent;
+      },
+    } satisfies AgentInternalContext,
     tools,
     stopWhen: stepCountIs(10),
     onStepFinish: async (step) => {
@@ -123,4 +143,8 @@ Current route arguments: ${JSON.stringify(context.routeParams || {})}
       remoteEventsMcp.close();
     },
   });
+}
+
+function isAsyncIterable<T = any>(obj: any): obj is AsyncIterable<T> {
+  return obj != null && typeof obj[Symbol.asyncIterator] === "function";
 }

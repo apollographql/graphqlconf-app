@@ -31,7 +31,7 @@ export async function getTools() {
             options
           ),
       }),
-    },
+    } as typeof tools,
     close: () => supergraphMcpClient.close(),
   };
 }

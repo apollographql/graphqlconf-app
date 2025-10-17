@@ -149,8 +149,8 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".",
-          "endsPattern": "Server running"
+          "beginsPattern": "xxxx-never-xxxx",
+          "endsPattern": "MCP Inspector is up and running at"
         }
       },
       "presentation": {
