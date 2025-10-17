@@ -5,17 +5,15 @@ import PlaceDetailScreen from "@/screens/PlaceDetail/PlaceDetailScreen";
 import { ScheduleScreen } from "@/screens/Schedule/ScheduleScreen";
 import SessionDetailScreen from "@/screens/SessionDetail/SessionDetailScreen";
 import { generateQueryJsonSchema } from "@/utils/generateJsonSchema";
-import { jsonSchema, tool } from "ai";
+import { tool } from "ai";
 import { AgentContext } from "../AgentContext";
 import type { JSONSchema7Definition } from "json-schema";
 import {
   ExternalPathString,
   HrefInputParams,
   RelativePathString,
-  Route,
-  RouteInputParams,
-  Router,
 } from "expo-router";
+import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
 
 export type ValidRoute = Exclude<
   HrefInputParams["pathname"],
@@ -79,7 +77,7 @@ const availableRoutes = {
 const getRouteInformation = tool({
   //   name: "getRouteInformation",
   description: `Get information about a specific route in the app.`,
-  inputSchema: jsonSchema<{ route: string }>({
+  inputSchema: validatingJSONSchema<{ route: string }>({
     type: "object",
     properties: {
       route: {
@@ -115,7 +113,7 @@ const getRouteInformation = tool({
 const getCurrentRouteInformation = tool({
   name: "getCurrentRouteInformation",
   description: `Get information about the current route the user is on, including the expected params and the shape of the data returned by the route's query.`,
-  inputSchema: jsonSchema({
+  inputSchema: validatingJSONSchema({
     type: "object",
     properties: {},
   }),
@@ -133,17 +131,17 @@ const getCurrentRouteInformation = tool({
 const getRouteData = tool({
   name: "getRouteData",
   description: `Get the data for a specific route in the app, given the route and its parameters. The data returned matches the shape of the data returned by the route's query. Keep in mind that this might be a lot of data, so use it only when necessary.`,
-  inputSchema: jsonSchema<{
+  inputSchema: validatingJSONSchema<{
     routeDescription: HrefInputParams;
   }>({
     type: "object",
     properties: {
       routeDescription: {
-        oneOf: Object.values(availableRoutes).map<JSONSchema7Definition>(
-          (route) => ({
+        oneOf: Object.entries(availableRoutes).map<JSONSchema7Definition>(
+          ([key, route]) => ({
             type: "object",
             properties: {
-              pathname: { type: "string", const: route.name },
+              pathname: { type: "string", const: key },
               params: (route.inputSchema as JSONSchema7Definition | null) ?? {
                 type: "object",
               },

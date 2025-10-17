@@ -2,10 +2,6 @@
     "explorer.fileNesting.patterns": {
         "*.tsx": "$(capture).generated.ts"
     },
-    "files.exclude": {
-        "**/*.generated.ts": false,
-        "**/node_modules": true
-    },
     "search.exclude": {
         "**/node_modules": true,
         "**/*.generated.ts": false

@@ -1,10 +1,11 @@
-import { jsonSchema, tool } from "ai";
+import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
+import { tool } from "ai";
 
 export const clientTools = {
   getBookmarks: tool({
     description:
       "Get all bookmarked items (sessions, speakers, places, etc). Returns an array of objects with __typename and id fields that can be used with GetEntities to fetch more details.",
-    inputSchema: jsonSchema({
+    inputSchema: validatingJSONSchema({
       type: "object",
       properties: {
         typename: {
@@ -19,7 +20,7 @@ export const clientTools = {
   toggleBookmarks: tool({
     description:
       "Toggle bookmark status for one or more items. Can bookmark, unbookmark, or toggle items. The bookmarked state persists across app sessions.",
-    inputSchema: jsonSchema({
+    inputSchema: validatingJSONSchema({
       type: "object",
       properties: {
         items: {

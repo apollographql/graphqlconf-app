@@ -1,6 +1,7 @@
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { experimental_createMCPClient, jsonSchema, tool } from "ai";
+import { experimental_createMCPClient, tool } from "ai";
 import { AgentContext } from "@/agent/AgentContext";
+import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
 
 export async function getTools() {
   const supergraphMcpClient = await experimental_createMCPClient({
@@ -15,7 +16,7 @@ export async function getTools() {
       getCurrentEvent: tool({
         ...tools.GetEvents,
         description: `Get details about the current event.`,
-        inputSchema: jsonSchema({
+        inputSchema: validatingJSONSchema({
           type: "object",
           properties: {},
           additionalProperties: false,

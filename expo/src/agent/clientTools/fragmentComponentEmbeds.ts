@@ -1,7 +1,7 @@
 import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { PlacesMap } from "@/components/PlacesMap/PlacesMap";
 import { DocumentNode } from "@apollo/client";
-import { jsonSchema, tool } from "ai";
+import { tool } from "ai";
 import type { JSONSchema7Definition } from "json-schema";
 import { firstFragment } from "@/utils/firstFragment";
 import { client } from "@/apollo/client";
@@ -9,6 +9,7 @@ import { SpeakerListItem } from "@/components/ListItems/SpeakerListItem";
 import { PlaceListItem } from "@/components/ListItems/PlaceListItem";
 import { mapEntries } from "@/utils/mapEntries";
 import { generateFragmentJsonSchema } from "@/utils/generateJsonSchema";
+import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
 
 function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition {
   const fragment = firstFragment(fragmentDoc);
@@ -41,7 +42,7 @@ function expose<Props extends Record<string, JSONSchema7Definition>>(
     Component,
     description,
     fetchIfMissing,
-    schema: jsonSchema({
+    schema: validatingJSONSchema({
       type: "object",
       properties: props,
       required: Object.keys(props),
