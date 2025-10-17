@@ -77,7 +77,6 @@ export function handleShowEmbedToolCall(
         const propValue = props[key];
         const propResult = [];
         for (const item of Array.isArray(propValue) ? propValue : [propValue]) {
-          console.log({ targetTypeName, fragmentName, item });
           const identifierOnly =
             item.__typename && Object.keys(item).length === 2;
           if (identifierOnly) {
