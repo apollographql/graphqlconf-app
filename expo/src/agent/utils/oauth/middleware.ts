@@ -44,11 +44,35 @@ export default async function middleware(
       refreshToken
     );
 
-    const result = await oauth.processRefreshTokenResponse(
-      authServer,
-      client,
-      tokenResponse
-    );
+    let result;
+    try {
+      result = await oauth.processRefreshTokenResponse(
+        authServer,
+        client,
+        tokenResponse
+      );
+    } catch (error) {
+      if (error instanceof oauth.ResponseBodyError) {
+        // Refresh token is invalid or expired - clear cookies and forward to the same URL
+        const clearCookie = getCookieOptions(request, 0);
+        const headers = new Headers();
+        const url = new URL(request.url);
+        headers.set("Location", url.toString());
+        headers.append(
+          "Set-Cookie",
+          `${context.cookiePrefix}_access_token=; ${clearCookie}`
+        );
+        headers.append(
+          "Set-Cookie",
+          `${context.cookiePrefix}_refresh_token=; ${clearCookie}`
+        );
+        return new Response(null, {
+          status: 302,
+          headers,
+        });
+      }
+      throw error;
+    }
 
     const newAccessToken = result.access_token;
     const newRefreshToken = result.refresh_token;
@@ -74,12 +98,12 @@ export default async function middleware(
     headers.set("Location", url.toString());
     headers.append(
       "Set-Cookie",
-      `mcp_access_token=${newAccessToken}; ${accessCookieOptions}`
+      `${context.cookiePrefix}_access_token=${newAccessToken}; ${accessCookieOptions}`
     );
     if (newRefreshToken) {
       headers.append(
         "Set-Cookie",
-        `mcp_refresh_token=${newRefreshToken}; ${refreshCookieOptions}`
+        `${context.cookiePrefix}_refresh_token=${newRefreshToken}; ${refreshCookieOptions}`
       );
     }
 
