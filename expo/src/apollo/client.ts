@@ -88,6 +88,7 @@ const _client = new ApolloClient({
   }),
   localState: new LocalState({
     resolvers: {
+      ...bookmarksResolvers,
       Query: {
         ...bookmarksResolvers.Query,
         ...aiFrameworkResolvers.Query,
