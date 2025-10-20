@@ -9,7 +9,7 @@ import {
   InvalidToolInputError,
   generateObject,
 } from "ai";
-import { ToolCallOptions } from "@ai-sdk/provider-utils";
+import { tool, ToolCallOptions } from "@ai-sdk/provider-utils";
 import { fragmentComponentEmbeds } from "@/agent/clientTools/fragmentComponentEmbeds";
 import { getTools as getBuildersMcpTools } from "@/agent/mcp/buildersMcp";
 import { getTools as getSupergraphMcpTools } from "@/agent/mcp/supergraphMcp";
@@ -18,6 +18,7 @@ import { prompt } from "../prompt";
 import { routes } from "../clientTools/routes";
 import { AgentContext, AgentInternalContext } from "@/agent/AgentContext";
 import { randomUUID } from "node:crypto";
+import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
 
 const model = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -47,7 +48,25 @@ export async function runAgent({
     ...fragmentComponentEmbeds,
     ...clientTools,
     ...routes,
+    replaceChatHistory: tool({
+      inputSchema: validatingJSONSchema<{
+        goodbyeMessage: string;
+        closeChat: boolean;
+      }>({
+        type: "object",
+        properties: {
+          goodbyeMessage: { type: "string" },
+          closeChat: { type: "boolean" },
+        },
+        required: ["goodbyeMessage", "closeChat"],
+        additionalProperties: false,
+      }),
+    }),
   };
+
+  const safeTools = Object.keys(tools).filter(
+    (key): key is keyof typeof tools => key !== "replaceChatHistory"
+  );
 
   return streamText({
     model,
@@ -99,17 +118,86 @@ Current route arguments: ${JSON.stringify(context.routeParams || {})}
       },
     } satisfies AgentInternalContext,
     tools,
-    stopWhen: stepCountIs(10),
-    onStepFinish: async (step) => {
-      // console.dir(
-      //   {
-      //     toolCalls: step.toolCalls?.length || 0,
-      //     toolResults: step.toolResults?.length || 0,
-      //     hasText: !!step.text,
-      //     fullResults: step.toolResults.map((r) => r.output),
-      //   },
-      //   { depth: 7 }
-      // );
+    activeTools: safeTools,
+    stopWhen: [
+      stepCountIs(10),
+      (info) => {
+        return (
+          info.steps
+            .at(-1)
+            ?.toolCalls.some((tc) => tc.toolName === "replaceChatHistory") ||
+          false
+        );
+      },
+    ],
+    async prepareStep(info) {
+      const lastMessage = info.messages.at(-1);
+      const navigationStep =
+        lastMessage?.role === "tool" &&
+        lastMessage.content.find(
+          (part) =>
+            part.type === "tool-result" &&
+            part.toolName === "navigateToRoute" &&
+            (part.output.value as any)?.success
+        );
+      if (!navigationStep) {
+        return { ...info, activeTools: safeTools };
+      }
+
+      // Ask the model if the task is complete
+      const { object: taskStatus } = await generateObject({
+        model,
+        schema: validatingJSONSchema<{
+          isComplete: boolean;
+          reasoning: string;
+        }>({
+          type: "object",
+          properties: {
+            isComplete: {
+              type: "boolean",
+              description:
+                "Whether the user's original request has been fully satisfied by navigating to this route",
+            },
+            // unused output to force the model to make a more thoughtful decision
+            reasoning: {
+              type: "string",
+              description:
+                "Brief explanation of why the task is or isn't complete",
+            },
+          },
+          required: ["isComplete", "reasoning"],
+          additionalProperties: false,
+        }),
+        prompt: `You just navigated the user successfully to another route.
+
+Based on the conversation history and the user's original request, has the task been fully completed by this navigation?
+
+Consider:
+- Did the user ask to be navigated somewhere, and we've done that?
+- Or did they ask for information that still needs to be provided?
+- If they just wanted to go to a specific page/section, the task is likely complete.
+- If they asked a question that requires showing data, the task might not be complete yet.
+
+Conversation context:
+${messages.map((m) => `${m.role}: ${m.parts.map((p) => (p.type === "text" ? p.text : `[${p.type}]`)).join(" ")}`).join("\n")}`,
+      });
+
+      if (!taskStatus.isComplete) {
+        return { ...info, activeTools: safeTools };
+      }
+
+      return {
+        messages: [
+          ...info.messages,
+          {
+            role: "system",
+            content: `The user's request has been fulfilled by navigating to the appropriate route. Now, end the conversation politely.
+Reasoning: ${taskStatus.reasoning}
+Call the \`replaceChatHistory\` tool with a goodbye message and a flag indicating whether the chat should be closed.`,
+          },
+        ],
+        toolChoice: { type: "tool", toolName: "replaceChatHistory" as const },
+      };
     },
     experimental_transform: smoothStream({
       delayInMs: 20,

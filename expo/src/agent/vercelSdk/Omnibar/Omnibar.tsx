@@ -76,6 +76,35 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
       if (toolCall.dynamic) {
         return;
       }
+
+      if (toolCall.toolName === "replaceChatHistory") {
+        const input = toolCall.input as {
+          goodbyeMessage: string;
+          closeChat: boolean;
+        };
+        stop().then(() => {
+          setMessages([
+            {
+              id: toolCall.toolCallId,
+              role: "assistant",
+              parts: [
+                {
+                  type: "text",
+                  text: input.goodbyeMessage,
+                },
+              ],
+            } satisfies UIMessage,
+          ]);
+          if (input.closeChat) {
+            setTimeout(() => {
+              setShowChat(false);
+            }, 1000);
+          }
+        });
+
+        return;
+      }
+
       const handled =
         handleShowEmbedToolCall(toolCall, client) ||
         handleGetBookmarksToolCall(toolCall) ||

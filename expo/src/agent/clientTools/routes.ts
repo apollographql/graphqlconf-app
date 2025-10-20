@@ -279,7 +279,13 @@ const getRouteData = tool({
 
 const navigateToRoute = tool({
   name: "navigateToRoute",
-  description: `Navigate to a specific route in the app, given the route and its parameters. This will change the current route in the app to the specified route. Use this tool sparingly, and only when you are certain that the user wants to navigate within the app. If you're not sure, ask them for permission.`,
+  description: `
+Navigate to a specific route in the app, given the route and its parameters.
+This will change the current route in the app to the specified route.
+Use this tool sparingly, and only when you are certain that the user wants to navigate within the app. If you're not sure, ask them for permission.
+Note that after using this tool, if the tool call returns 'success: true', you can assume that the navigation succeeded.
+Even though the context now might state that the user is on the target route, do not assume that the user was already on that route before the navigation.
+`,
   inputSchema: getRouteData.inputSchema,
 });
 
