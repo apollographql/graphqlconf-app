@@ -218,25 +218,34 @@ const getRouteData = tool({
   name: "getRouteData",
   description: `Get the data for a specific route in the app, given the route and its parameters. The data returned matches the shape of the data returned by the route's query. Keep in mind that this might be a lot of data, so use it only when necessary.`,
   inputSchema: validatingJSONSchema<{
-    routeDescription: HrefInputParams;
+    routeDescription: {
+      pathname: HrefInputParams["pathname"];
+      queryVariables?: Record<string, unknown>;
+    };
   }>({
     type: "object",
     properties: {
       routeDescription: {
         oneOf: Object.entries(availableRoutes).map<JSONSchema7Definition>(
-          ([key, route]) => ({
-            type: "object",
-            properties: {
-              pathname: { type: "string", const: key },
-              params:
-                route.variables ??
-                schema<{}>({
+          ([key, route]) =>
+            route.variables
+              ? ({
                   type: "object",
-                }),
-            },
-            required: ["pathname", "params"],
-            additionalProperties: false,
-          })
+                  properties: {
+                    pathname: { type: "string", const: key },
+                    queryVariables: route.variables,
+                  },
+                  required: ["pathname", "queryVariables"],
+                  additionalProperties: false,
+                } satisfies JSONSchema7Definition as JSONSchema7Definition)
+              : ({
+                  type: "object",
+                  properties: {
+                    pathname: { type: "string", const: key },
+                  },
+                  required: ["pathname"],
+                  additionalProperties: false,
+                } satisfies JSONSchema7Definition)
         ),
       },
     },
@@ -263,7 +272,7 @@ const getRouteData = tool({
       print(
         removeDirectivesFromDocument([{ name: "client", remove: true }], query)!
       ),
-      routeDescription.params
+      routeDescription.queryVariables
     );
   },
 });
