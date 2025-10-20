@@ -141,7 +141,7 @@ Current route arguments: ${JSON.stringify(context.routeParams || {})}
             (part.output.value as any)?.success
         );
       if (!navigationStep) {
-        return { ...info, activeTools: safeTools };
+        return info;
       }
 
       // Ask the model if the task is complete
@@ -183,7 +183,7 @@ ${messages.map((m) => `${m.role}: ${m.parts.map((p) => (p.type === "text" ? p.te
       });
 
       if (!taskStatus.isComplete) {
-        return { ...info, activeTools: safeTools };
+        return info;
       }
 
       return {
