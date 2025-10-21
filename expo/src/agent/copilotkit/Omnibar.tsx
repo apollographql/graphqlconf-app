@@ -70,7 +70,8 @@ The user has provided you with the following context:
       messages={messages.map((message) => {
         switch (message.role) {
           case "assistant":
-            return (
+            const content = message.generativeUI?.() || message.content;
+            return !content ? null : (
               <Message role={message.role} key={message.id}>
                 <ThemedText>
                   {message.generativeUI?.() || message.content}

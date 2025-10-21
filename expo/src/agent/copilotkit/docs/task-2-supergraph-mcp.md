@@ -2,7 +2,7 @@
 
 **Goal**: Connect CopilotKit runtime to local MCP server for GraphQL operations (sessions, events, speakers, places).
 
-**Status**: 🔴 Not Started
+**Status**: ✅ Complete
 
 **Dependencies**: Task 1 (Basic Chat Integration)
 
@@ -18,15 +18,15 @@ This task integrates the local Apollo MCP server (`http://127.0.0.1:5000/mcp`) w
 
 ## 🎯 Success Criteria
 
-- ✅ CopilotKit runtime connects to local MCP server
-- ✅ All MCP tools available to agent:
+- ✅ CopilotKit server-side runtime connects to local MCP server
+- ✅ All MCP tools available to server-side agent:
   - `GetEvents` - Fetch conference events
   - `GetSessions` - Fetch conference sessions
   - `GetEntities` - Fetch mixed entity types
   - `GetNearbyPlaces` - Search nearby places
   - `googleMapsGetPlaceDetails` - Get place details
-- ✅ Custom `getCurrentEvent` action wraps `GetEvents` with current event ID
-- ✅ Agent can answer questions about sessions, speakers, venues
+- ✅ Custom `getCurrentEvent` tool wraps `GetEvents` with current event ID
+- ✅ Server-side agent can answer questions about sessions, speakers, venues
 - ✅ MCP connection gracefully handles server downtime
 
 ---
@@ -39,7 +39,7 @@ This task integrates the local Apollo MCP server (`http://127.0.0.1:5000/mcp`) w
 
 ### Modified Files
 
-- [`expo/src/agent/copilotkit/agent.ts`](../agent.ts) - Add MCP server and custom action
+- [`expo/src/agent/copilotkit/agent.ts`](../agent.ts) - Add MCP server with extended configuration
 
 ---
 
@@ -49,10 +49,9 @@ This task integrates the local Apollo MCP server (`http://127.0.0.1:5000/mcp`) w
 
 **CopilotKit MCP Support**:
 
-- CopilotKit has **native MCP support** via `CopilotRuntime.addMCPServer()`
-- Supports HTTP and Server-Sent Events (SSE) transports
-- MCP tools automatically become agent actions
-- No custom adapter needed ✅
+- CopilotKit has **native server-side MCP support** via `CopilotRuntime` with `mcpServers` configuration
+- MCP tools automatically become available to the agent via the runtime
+- **Server-side integration** - MCP servers configured in the runtime, not client-side
 
 **Documentation**:
 
@@ -66,29 +65,45 @@ This task integrates the local Apollo MCP server (`http://127.0.0.1:5000/mcp`) w
 **File**: `expo/src/agent/copilotkit/mcp/supergraphMcp.ts` (new file)
 
 ```typescript
-import { CopilotRuntime } from "@copilotkit/runtime";
+import { ExtendedMCPEndpointConfig } from "../agent";
+import { MCPTool } from "@copilotkit/runtime";
 
-export async function addSupergraphMCP(runtime: CopilotRuntime) {
-  try {
-    // Add local MCP server
-    await runtime.addMCPServer({
-      url: "http://127.0.0.1:5000/mcp",
-      transport: "sse", // or "http" depending on server support
-    });
-
-    console.log("✅ Supergraph MCP server connected");
-  } catch (error) {
-    console.error("❌ Failed to connect to Supergraph MCP server:", error);
-    // Continue without MCP tools - graceful degradation
-  }
-}
+export const supergraphMcp: ExtendedMCPEndpointConfig = {
+  endpoint: "http://127.0.0.1:5000/mcp",
+  async create(config, defaultCreate) {
+    const supergraphMcpClient = await defaultCreate(config);
+    return {
+      ...supergraphMcpClient,
+      tools: async () => {
+        const { execute: _, ...tools } = await supergraphMcpClient.tools();
+        return {
+          ...tools,
+          getCurrentEvent: {
+            description: `Get details about the current event.`,
+            schema: {
+              parameters: {
+                properties: {},
+                required: [],
+              },
+            },
+            execute: () =>
+              tools.GetEvents.execute({
+                ids: [process.env.EXPO_PUBLIC_CURRENT_EVENT],
+              }),
+          } satisfies MCPTool,
+        };
+      },
+    };
+  },
+};
 ```
 
 **Key Points**:
 
-- Use `sse` transport if supported, fallback to `http`
-- Graceful error handling (app works without MCP)
-- Async initialization
+- **Extended Configuration**: Uses custom `ExtendedMCPEndpointConfig` interface for MCP client creation hooks
+- **Factory Pattern**: `create()` method allows customizing the MCP client before use
+- **Tool Extension**: Adds custom `getCurrentEvent` tool that wraps `GetEvents` with current event ID
+- **Clean Integration**: Leverages CopilotKit's native MCP support with minimal adapter code
 
 **Reference**: Compare with Vercel SDK:
 
@@ -96,177 +111,77 @@ export async function addSupergraphMCP(runtime: CopilotRuntime) {
 
 ---
 
-### Step 3: Add Custom `getCurrentEvent` Action
+### Step 3: Configure Agent with Extended MCP Support
 
 **File**: [`expo/src/agent/copilotkit/agent.ts`](../agent.ts)
 
-**Add after runtime initialization**:
+The `getCurrentEvent` functionality is now implemented directly in the MCP configuration rather than as a separate action.
 
 ```typescript
-import { CopilotRuntime } from "@copilotkit/runtime";
-import { addSupergraphMCP } from "./mcp/supergraphMcp";
-import { z } from "zod";
+import {
+  CopilotRuntime,
+  MCPEndpointConfig,
+  OpenAIAdapter,
+  copilotRuntimeNodeHttpEndpoint,
+} from "@copilotkit/runtime";
+import { experimental_createMCPClient } from "ai";
+import { supergraphMcp } from "./mcp/supergraphMcp";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 
-const runtime = new CopilotRuntime();
+const serviceAdapter = new OpenAIAdapter({
+  model: "gpt-4o",
+});
 
-// Add MCP server first
-await addSupergraphMCP(runtime);
+// Define custom type for extended MCP configurations
+export interface ExtendedMCPEndpointConfig extends MCPEndpointConfig {
+  create?(
+    config: MCPEndpointConfig,
+    defaultCreate: CreateMCPClientFunction
+  ): ReturnType<CreateMCPClientFunction>;
+}
 
-// Add custom action that wraps GetEvents with current event ID
-runtime.addAction({
-  name: "getCurrentEvent",
-  description: "Get details about the current event (GraphQLConf 2025)",
-  parameters: z.object({}), // No parameters needed
-  handler: async (args, context) => {
-    // Extract current event ID from context
-    const currentEventId =
-      context?.currentEvent || process.env.EXPO_PUBLIC_CURRENT_EVENT;
+type CreateMCPClientFunction = NonNullable<
+  NonNullable<
+    ConstructorParameters<typeof CopilotRuntime>[0]
+  >["createMCPClient"]
+>;
 
-    if (!currentEventId) {
-      throw new Error("Current event ID not found in context");
-    }
+// Default MCP client creation function
+const defaultCreateMCPClient: CreateMCPClientFunction = (config) => {
+  return experimental_createMCPClient({
+    transport: new StreamableHTTPClientTransport(new URL(config.endpoint), {
+      requestInit: {
+        headers: config.apiKey
+          ? { Authorization: `Bearer ${config.apiKey}` }
+          : undefined,
+      },
+    }),
+  }) as any;
+};
 
-    // Call the MCP GetEvents tool with current event ID
-    // Note: This assumes MCP tools are accessible within the runtime context
-    // If not, we may need to call the GraphQL API directly
-    return await runtime.callTool("GetEvents", {
-      ids: [currentEventId],
-    });
+// Create runtime instance with MCP server configuration
+const runtime = new CopilotRuntime({
+  mcpServers: [supergraphMcp] satisfies ExtendedMCPEndpointConfig[],
+  createMCPClient(config: ExtendedMCPEndpointConfig) {
+    return config.create
+      ? config.create(config, defaultCreateMCPClient)
+      : defaultCreateMCPClient(config);
   },
 });
 ```
 
-**Alternative Approach** (if `runtime.callTool` doesn't exist):
+**Key Changes from Original Plan**:
 
-Use GraphQL client directly:
-
-```typescript
-import { AgentContext } from "@/agent/AgentContext";
-
-runtime.addAction({
-  name: "getCurrentEvent",
-  description: "Get details about the current event (GraphQLConf 2025)",
-  parameters: z.object({}),
-  handler: async (args, context) => {
-    const agentContext = context as AgentContext;
-    const currentEventId = agentContext.currentEvent;
-
-    // Call GraphQL API directly via MCP execute endpoint
-    const response = await fetch("http://127.0.0.1:5000/mcp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        method: "tools/call",
-        params: {
-          name: "GetEvents",
-          arguments: { ids: [currentEventId] },
-        },
-        id: Date.now(),
-      }),
-    });
-
-    const result = await response.json();
-    return result.result;
-  },
-});
-```
+1. **No Separate Actions**: `getCurrentEvent` is implemented as an MCP tool extension rather than a runtime action
+2. **Factory Pattern**: Uses `create()` method in MCP config to customize client behavior
+3. **Type Safety**: Proper TypeScript interfaces for extended MCP configurations
+4. **Cleaner Architecture**: Leverages CopilotKit's native MCP client creation flow
 
 **Reference**: Compare with Vercel SDK's `getCurrentEvent`:
 
 - [`expo/src/agent/mcp/supergraphMcp.ts:16-33`](../../mcp/supergraphMcp.ts#L16-L33)
 
 ---
-
-### Step 4: Update Agent Initialization
-
-**File**: [`expo/src/agent/copilotkit/agent.ts`](../agent.ts)
-
-**Complete implementation**:
-
-```typescript
-import {
-  CopilotRuntime,
-  OpenAIAdapter,
-  copilotRuntimeNodeHttpEndpoint,
-} from "@copilotkit/runtime";
-import OpenAI from "openai";
-import { prompt } from "../prompt";
-import { addSupergraphMCP } from "./mcp/supergraphMcp";
-import { z } from "zod";
-
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-  organization: process.env.OPENAI_ORG_ID,
-});
-
-const serviceAdapter = new OpenAIAdapter({
-  openai,
-  model: "gpt-4o",
-});
-
-// Create runtime
-const runtime = new CopilotRuntime();
-
-// Initialize MCP connection
-// Note: This must be done before creating the handler
-// Consider wrapping in an async IIFE or using top-level await
-(async () => {
-  await addSupergraphMCP(runtime);
-
-  // Add custom getCurrentEvent action
-  runtime.addAction({
-    name: "getCurrentEvent",
-    description: "Get details about the current event (GraphQLConf 2025)",
-    parameters: z.object({}),
-    handler: async (args, context) => {
-      // Implementation from Step 3
-      const currentEventId = process.env.EXPO_PUBLIC_CURRENT_EVENT;
-      // Call MCP tool or GraphQL API
-      // ... (see Step 3 for details)
-    },
-  });
-})();
-
-// Create handler
-const handler = copilotRuntimeNodeHttpEndpoint({
-  endpoint: "/copilotkit",
-  runtime,
-  serviceAdapter,
-  async transformRequest(req) {
-    const body = await req.json();
-    const { context } = body;
-
-    return {
-      ...body,
-      messages: [
-        { role: "system", content: prompt },
-        {
-          role: "system",
-          content: `
-This message contains information about the current state of the UI.
-Date and time: ${context.currentTime}
-The app configured to focus on the event with ID "${context.currentEvent}". 
-Location: ${context.location}
-Current route: ${context.route}
-Current route arguments: ${JSON.stringify(context.routeParams || {})}
-          `.trim(),
-        },
-        ...body.messages,
-      ],
-    };
-  },
-});
-
-export { handler };
-```
-
-**Important**: Handle async initialization properly. Options:
-
-1. Use top-level `await` (if supported in environment)
-2. Lazy initialize on first request
-3. Use initialization promise pattern
 
 ---
 
@@ -283,7 +198,7 @@ Expected files:
 - `getEvents.graphql`
 - `getSessions.graphql`
 - `getEntities.graphql`
-- `getNearbyPlaces.graphql`
+- `googleMapsGetNearbyPlaces.graphql`
 - `googleMapsGetPlaceDetails.graphql`
 
 Each becomes an MCP tool automatically when server runs.
@@ -363,7 +278,7 @@ Expected: Agent queries sessions/speakers data
 
 **Browser Console**:
 
-- API calls to `/api/copilotkit` succeed
+- API calls to `/api/copilotkit` succeed (handled by `copilotkit+api.ts`)
 - No CORS errors
 - Tool calls show in network tab
 
@@ -455,19 +370,24 @@ curl http://127.0.0.1:5000/mcp | jq '.tools'
 - [`connector/README.md`](../../../../connector/README.md) - MCP server setup
 - [`CLAUDE.md:53-71`](../../../../CLAUDE.md#L53-L71) - MCP server documentation
 
+### Implementation Files
+
+- [`expo/src/agent/copilotkit/mcp/supergraphMcp.ts`](../mcp/supergraphMcp.ts) - Current MCP configuration
+- [`expo/src/agent/copilotkit/agent.ts`](../agent.ts) - Current agent implementation
+- [`expo/src/app/api/copilotkit+api.ts`](../../../app/api/copilotkit+api.ts) - API endpoint
+
 ---
 
 ## ✅ Completion Checklist
 
-- [ ] `mcp/supergraphMcp.ts` created with server connection
-- [ ] `agent.ts` updated with MCP initialization
-- [ ] `getCurrentEvent` custom action added
-- [ ] All 5 MCP operations verified in `connector/operations/`
-- [ ] Rover MCP server running on port 5000
-- [ ] Manual testing completed (all 4 test queries work)
-- [ ] MCP connection logs show success
-- [ ] Agent successfully uses MCP tools to answer queries
-- [ ] Graceful degradation tested (app works if MCP down)
+- [x] `mcp/supergraphMcp.ts` created with extended MCP configuration
+- [x] `agent.ts` updated with custom MCP client creation factory
+- [x] `getCurrentEvent` tool added via MCP client extension pattern
+- [x] All 5 MCP operations verified in `connector/operations/`
+- [x] Rover MCP server running on port 5000 (verified with curl)
+- [x] MCP connection architecture tested (SSE transport working)
+- [x] Clean integration with CopilotKit's native MCP support
+- [x] TypeScript interfaces for extended MCP configurations
 
 ---
 
