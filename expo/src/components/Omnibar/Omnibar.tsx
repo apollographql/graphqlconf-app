@@ -10,6 +10,12 @@ const VercelOmnibar = lazy(() =>
   }))
 );
 
+const CopilotKitOmnibar = lazy(() =>
+  import("@/agent/copilotkit/Omnibar").then((mod) => ({
+    default: mod.Omnibar,
+  }))
+);
+
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
@@ -43,6 +49,8 @@ export function Omnibar({
   switch (data.aiFramework) {
     case "vercel":
       return <VercelOmnibar>{children}</VercelOmnibar>;
+    case "copilotkit":
+      return <CopilotKitOmnibar>{children}</CopilotKitOmnibar>;
     default:
       return children;
   }

@@ -79,6 +79,7 @@ export function AiFrameworkSection({
           >
             <Picker.Item label="None" value="none" />
             <Picker.Item label="Vercel AI SDK" value="vercel" />
+            <Picker.Item label="CopilotKit" value="copilotkit" />
           </Picker>
         </ThemedView>
       </ThemedView>

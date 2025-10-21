@@ -21,5 +21,7 @@ function FakeDate(...args: Parameters<typeof Date>) {
 FakeDate.now = () => targetDate;
 FakeDate.parse = g[realDate].parse;
 FakeDate.UTC = g[realDate].UTC;
-// @ts-ignore
-globalThis.Date = FakeDate;
+if (typeof window !== "undefined") {
+  // @ts-ignore
+  globalThis.Date = FakeDate;
+}

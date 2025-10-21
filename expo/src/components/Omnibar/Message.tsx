@@ -6,7 +6,7 @@ export function Message({
   role,
   children,
 }: {
-  role: "assistant" | "user" | "system";
+  role: "assistant" | "user" | (string & {}); // | "system" | "developer"| "tool"
   children: React.ReactNode;
 }) {
   return (
