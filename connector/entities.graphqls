@@ -1,0 +1,38 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.10"
+    import: ["@key", "@external"]
+  )
+
+type Query {
+  entities(identifiers: [EntityIdentifier!]!): [Entity!]!
+}
+
+input EntityIdentifier {
+  typename: String!
+  id: String!
+}
+
+interface Entity {
+  id: String!
+}
+
+extend type SchedSession implements Entity @key(fields: "id") {
+  id: String! @external
+}
+
+extend type SchedSpeaker implements Entity @key(fields: "id") {
+  id: String! @external
+}
+
+extend type SchedEvent implements Entity @key(fields: "id") {
+  id: String! @external
+}
+
+extend type SchedVenue implements Entity @key(fields: "id") {
+  id: String! @external
+}
+
+extend type Place implements Entity @key(fields: "id") {
+  id: String! @external
+}

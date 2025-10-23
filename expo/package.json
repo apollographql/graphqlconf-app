@@ -26,7 +26,7 @@
     "@copilotkit/react-ui": "^1.10.6",
     "@copilotkit/runtime": "^1.10.6",
     "@copilotkit/sdk-js": "^1.10.6",
-    "@copilotkit/shared": "file:.yalc/@copilotkit/shared",
+    "@copilotkit/shared": "^1.10.6",
     "@dotenvx/dotenvx": "^1.51.0",
     "@expo/vector-icons": "^15.0.2",
     "@graphql-typed-document-node/core": "^3.2.0",
