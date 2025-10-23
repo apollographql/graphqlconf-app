@@ -5,6 +5,7 @@ import { OmnibarFrame } from "@/components/Omnibar/OmnibarFrame";
 import { Message } from "@/components/Omnibar/Message";
 import { ThemedText } from "@/components/themed-text";
 import { useAppContext, makeSystemMessage } from "./useAppContext";
+import { useEmbeds } from "./useEmbeds";
 
 export function Omnibar({ children }: { children: React.ReactNode }) {
   return (
@@ -19,6 +20,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
 
 function OmnibarContent({ children }: { children: React.ReactNode }) {
   useAppContext();
+  useEmbeds();
 
   const omnibarFrame = useRef<OmnibarFrame.Handle>(null);
 

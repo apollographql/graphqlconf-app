@@ -116,6 +116,7 @@ export function Omnibar({ children }: { children: React.ReactNode }) {
           ))}
         </Message>
       ))}
+      error={error}
       handle={omnibarFrame}
       onSendMessage={(message) => sendMessage({ text: message })}
       onReset={() =>

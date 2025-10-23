@@ -51,6 +51,20 @@ function expose<Props extends Record<string, JSONSchema7Definition>>(
   };
 }
 
+type EmbedDefinition = ReturnType<typeof expose>;
+
+export type FragmentComponentDefinition = ReturnType<typeof expose> & {
+  Component: {
+    fragments: Record<string, DocumentNode>;
+  };
+};
+
+export function hasFragmentDefinitions(
+  embed: EmbedDefinition
+): embed is FragmentComponentDefinition {
+  return "fragments" in embed.Component;
+}
+
 export const availableFragmentComponents = {
   ScheduleListItem: expose(ScheduleListItem, {
     description: `Display a schedule item, e.g. a conference talk or any other item with \`__typename\` of \`SchedSession\`.
@@ -93,7 +107,7 @@ This tool should be prioritized when displaying only places, as it provides a be
       },
     },
   }),
-};
+} satisfies Record<string, EmbedDefinition>;
 
 // exposing all components via a single tool seems to make tool discovery harder, so we create one tool per component
 export const fragmentComponentEmbeds = mapEntries(
