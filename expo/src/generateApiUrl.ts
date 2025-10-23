@@ -9,7 +9,7 @@ export const generateAPIUrl = (relativePath: string) => {
     return origin.concat(path);
   }
 
-  if (!process.env.EXPO_PUBLIC_API_BASE_URL) {
+  if (process.env.EXPO_PUBLIC_API_BASE_URL === undefined) {
     throw new Error(
       "EXPO_PUBLIC_API_BASE_URL environment variable is not defined"
     );
