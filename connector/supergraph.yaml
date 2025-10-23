@@ -8,7 +8,7 @@ subgraphs:
     schema:
       file: places.graphqls
   entities:
-    routing_url: http://localhost:8081/api/graphql
+    routing_url: ${env.EXPO_HOST}/api/graphql
     schema:
-      subgraph_url: http://localhost:8081/api/graphql
-federation_version: =2.12.0-preview.7
+      subgraph_url: ${env.EXPO_HOST}/api/graphql
+federation_version: =2.12.0-preview.8
