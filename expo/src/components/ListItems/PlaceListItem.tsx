@@ -38,7 +38,7 @@ export function PlaceListItem({
 }) {
   const { data } = useSuspenseFragment({
     fragment: PlaceListItem.fragments.place,
-    fragmentName: "PlaceListItem_Place",
+    fragmentName: "PlaceListItem_place",
     from: place,
   });
 
