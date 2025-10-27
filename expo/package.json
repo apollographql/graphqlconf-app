@@ -9,8 +9,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "codegen": "graphql-codegen",
-    "postbuild": "mkdir -p 'dist/server/_expo/functions/api/conf/[resource]/public'; touch 'dist/server/_expo/functions/api/conf/[resource]/public/'{style.css,error.html}",
-    "build": "dotenvx run -v -fk ~/.dotenvx.keys --convention=nextjs -- expo export -p web; npm run postbuild",
+    "postbuild": "mkdir -p 'dist/server/_expo/functions/api/conf/[resource]/public' && touch 'dist/server/_expo/functions/api/conf/[resource]/public/'{style.css,error.html}",
+    "build": "dotenvx run -v -fk ~/.dotenvx.keys --convention=nextjs -- expo export -p web && npm run postbuild",
     "serve": "dotenvx run -v -fk ~/.dotenvx.keys --convention=nextjs -- expo serve"
   },
   "dependencies": {
