@@ -8,7 +8,7 @@ if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     query HomeScreen($eventId: String!) {
-      ...HomeScreenContent_Query
+      ...HomeScreenContent_event
     }
   `;
 }
@@ -27,7 +27,7 @@ export function HomeScreen({
 }) {
   return (
     <HomeScreenContent
-      parent={"ROOT_QUERY" as any}
+      event={"ROOT_QUERY" as any}
       queryRef={queryRef}
       variables={variables}
     />

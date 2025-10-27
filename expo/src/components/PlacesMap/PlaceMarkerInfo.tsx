@@ -1,16 +1,16 @@
 import { FragmentType, gql } from "@apollo/client";
-import { PlaceMarkerInfoFragmentDoc } from "./PlaceMarkerInfo.generated";
+import { PlaceMarkerInfo_PlaceFragmentDoc } from "./PlaceMarkerInfo.generated";
 import { View, StyleSheet } from "react-native";
 import { ThemedText } from "../themed-text";
 import { useFragment } from "@apollo/client/react";
 import { Link } from "expo-router";
 
-export { PlaceMarkerInfoFragmentDoc };
+export { PlaceMarkerInfo_PlaceFragmentDoc };
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment PlaceMarkerInfo on Place {
+    fragment PlaceMarkerInfo_place on Place {
       id
       displayName {
         text
@@ -29,31 +29,31 @@ if (false) {
 }
 
 export interface PlaceMarkerInfoProps {
-  Place: FragmentType<typeof PlaceMarkerInfoFragmentDoc>;
+  place: FragmentType<typeof PlaceMarkerInfo_PlaceFragmentDoc>;
   showLink?: boolean;
 }
 
 PlaceMarkerInfo.fragments = {
-  Place: PlaceMarkerInfoFragmentDoc,
+  place: PlaceMarkerInfo_PlaceFragmentDoc,
 } as const;
 
-export function PlaceMarkerInfo({ Place, showLink }: PlaceMarkerInfoProps) {
-  const { data: place } = useFragment({
-    fragment: PlaceMarkerInfo.fragments.Place,
+export function PlaceMarkerInfo({ place, showLink }: PlaceMarkerInfoProps) {
+  const { data } = useFragment({
+    fragment: PlaceMarkerInfo.fragments.place,
     fragmentName: "PlaceMarkerInfo",
-    from: Place,
+    from: place,
   });
 
   return (
     <View>
-      <ThemedText style={styles.title}>{place.displayName?.text}</ThemedText>
-      {place.primaryTypeDisplayName?.text && (
+      <ThemedText style={styles.title}>{data.displayName?.text}</ThemedText>
+      {data.primaryTypeDisplayName?.text && (
         <ThemedText style={styles.description}>
-          {place.primaryTypeDisplayName.text}
+          {data.primaryTypeDisplayName.text}
         </ThemedText>
       )}
       {showLink && (
-        <Link href={`/place/${place.id}`} asChild>
+        <Link href={`/place/${data.id}`} asChild>
           <ThemedText style={styles.link}>View Details →</ThemedText>
         </Link>
       )}

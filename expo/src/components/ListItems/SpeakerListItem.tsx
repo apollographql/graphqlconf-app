@@ -4,13 +4,13 @@ import { useSuspenseFragment } from "@apollo/client/react";
 import { Pressable, StyleSheet } from "react-native";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
-import { SpeakerListItem_SchedSpeakerFragmentDoc } from "./SpeakerListItem.generated";
+import { SpeakerListItem_SpeakerFragmentDoc } from "./SpeakerListItem.generated";
 import { BookmarkIcon } from "@/components/BookmarkIcon";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment SpeakerListItem_SchedSpeaker on SchedSpeaker {
+    fragment SpeakerListItem_speaker on SchedSpeaker {
       __typename
       id
       name
@@ -23,21 +23,21 @@ if (false) {
 }
 
 SpeakerListItem.fragments = {
-  SchedSpeaker: SpeakerListItem_SchedSpeakerFragmentDoc,
+  speaker: SpeakerListItem_SpeakerFragmentDoc,
 } as const;
-fragmentRegistry.register(SpeakerListItem.fragments.SchedSpeaker);
+fragmentRegistry.register(SpeakerListItem.fragments.speaker);
 
 export function SpeakerListItem({
-  SchedSpeaker,
+  speaker,
 }: {
-  SchedSpeaker:
-    | FragmentType<typeof SpeakerListItem.fragments.SchedSpeaker>
-    | FromParent<typeof SpeakerListItem.fragments.SchedSpeaker>;
+  speaker:
+    | FragmentType<typeof SpeakerListItem.fragments.speaker>
+    | FromParent<typeof SpeakerListItem.fragments.speaker>;
 }) {
   const { data } = useSuspenseFragment({
-    fragment: SpeakerListItem.fragments.SchedSpeaker,
-    fragmentName: "SpeakerListItem_SchedSpeaker",
-    from: SchedSpeaker,
+    fragment: SpeakerListItem.fragments.speaker,
+    fragmentName: "SpeakerListItem_speaker",
+    from: speaker,
   });
 
   return (

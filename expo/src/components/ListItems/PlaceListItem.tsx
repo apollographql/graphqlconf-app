@@ -11,7 +11,7 @@ import { BookmarkIcon } from "@/components/BookmarkIcon";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment PlaceListItem_Place on Place {
+    fragment PlaceListItem_place on Place {
       __typename
       id
       displayName {
@@ -25,21 +25,21 @@ if (false) {
 }
 
 PlaceListItem.fragments = {
-  Place: PlaceListItem_PlaceFragmentDoc,
+  place: PlaceListItem_PlaceFragmentDoc,
 } as const;
-fragmentRegistry.register(PlaceListItem.fragments.Place);
+fragmentRegistry.register(PlaceListItem.fragments.place);
 
 export function PlaceListItem({
-  Place,
+  place,
 }: {
-  Place:
-    | FragmentType<typeof PlaceListItem.fragments.Place>
-    | FromParent<typeof PlaceListItem.fragments.Place>;
+  place:
+    | FragmentType<typeof PlaceListItem.fragments.place>
+    | FromParent<typeof PlaceListItem.fragments.place>;
 }) {
   const { data } = useSuspenseFragment({
-    fragment: PlaceListItem.fragments.Place,
+    fragment: PlaceListItem.fragments.place,
     fragmentName: "PlaceListItem_Place",
-    from: Place,
+    from: place,
   });
 
   return (

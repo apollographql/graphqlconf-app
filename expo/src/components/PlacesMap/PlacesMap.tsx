@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import RNMapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import {
-  PlaceMarkerInfoFragmentDoc,
+  PlaceMarkerInfo_PlaceFragmentDoc,
   getPlaceMarkerData,
 } from "./PlaceMarkerInfo";
 import { useFragment } from "@apollo/client/react";
@@ -17,31 +17,29 @@ if (false) {
   web = native;
 }
 
-export interface PlacesMapProps {
-  Places: FragmentType<typeof PlaceMarkerInfoFragmentDoc>[];
+export type PlacesMapProps = {
+  places: FragmentType<typeof PlaceMarkerInfo_PlaceFragmentDoc>[];
   height?: number;
-}
+};
 
 PlacesMap.fragments = {
-  Places: PlaceMarkerInfoFragmentDoc,
+  places: PlaceMarkerInfo_PlaceFragmentDoc,
 } as const;
 
-export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
+export function PlacesMap({ places, height = 300 }: PlacesMapProps) {
   const router = useRouter();
 
-  const places = useFragment({
-    fragment: PlacesMap.fragments.Places,
+  const data = useFragment({
+    fragment: PlacesMap.fragments.places,
     fragmentName: "PlaceMarkerInfo",
-    from: locations,
+    from: places,
   });
 
   // Extract marker data from fragments
   const markerData = useMemo(
     () =>
-      places.dataState === "complete"
-        ? places.data.map(getPlaceMarkerData)
-        : [],
-    [places]
+      data.dataState === "complete" ? data.data.map(getPlaceMarkerData) : [],
+    [data]
   );
 
   if (markerData.length === 0) {

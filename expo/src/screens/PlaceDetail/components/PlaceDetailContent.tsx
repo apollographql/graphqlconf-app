@@ -26,7 +26,7 @@ import { SinglePlaceMap } from "@/components/SinglePlaceMap/SinglePlaceMap";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment PlaceDetailContent_Place on Place {
+    fragment PlaceDetailContent_place on Place {
       __typename
       id
       isBookmarked @client
@@ -66,17 +66,17 @@ if (false) {
 }
 
 PlaceDetailContent.fragments = {
-  Place: PlaceDetailContent_PlaceFragmentDoc,
+  place: PlaceDetailContent_PlaceFragmentDoc,
 } as const;
-fragmentRegistry.register(PlaceDetailContent.fragments.Place);
+fragmentRegistry.register(PlaceDetailContent.fragments.place);
 
 export function PlaceDetailContent({
-  Place,
+  place: place,
   queryRef,
 }: {
-  Place:
-    | FragmentType<typeof PlaceDetailContent.fragments.Place>
-    | FromParent<typeof PlaceDetailContent.fragments.Place>;
+  place:
+    | FragmentType<typeof PlaceDetailContent.fragments.place>
+    | FromParent<typeof PlaceDetailContent.fragments.place>;
   queryRef: QueryRef;
 }) {
   const { refetch } = useQueryRefHandlers(queryRef);
@@ -87,10 +87,10 @@ export function PlaceDetailContent({
     });
   };
 
-  const { data: place } = useSuspenseFragment({
-    fragment: PlaceDetailContent.fragments.Place,
-    fragmentName: "PlaceDetailContent_Place",
-    from: Place,
+  const { data } = useSuspenseFragment({
+    fragment: PlaceDetailContent.fragments.place,
+    fragmentName: "PlaceDetailContent_place",
+    from: place,
   });
 
   const [toggleBookmark] = useMutation(ToggleBookmarkDocument);
@@ -98,26 +98,26 @@ export function PlaceDetailContent({
   const handleToggleBookmark = () => {
     toggleBookmark({
       variables: {
-        id: place.id,
-        typename: place.__typename,
+        id: data.id,
+        typename: data.__typename,
       },
     });
   };
 
   const openInGoogleMaps = () => {
-    if (place.googleMapsUri) {
-      Linking.openURL(place.googleMapsUri);
+    if (data.googleMapsUri) {
+      Linking.openURL(data.googleMapsUri);
     }
   };
 
   const openDirections = () => {
-    if (place.googleMapsLinks?.directionsUri) {
-      Linking.openURL(place.googleMapsLinks.directionsUri);
+    if (data.googleMapsLinks?.directionsUri) {
+      Linking.openURL(data.googleMapsLinks.directionsUri);
     }
   };
 
   // Get the first photo if available
-  const firstPhoto = place.photos?.[0];
+  const firstPhoto = data.photos?.[0];
   const photoUrl = firstPhoto
     ? `https://places.googleapis.com/v1/${firstPhoto.id}/media?maxHeightPx=400&maxWidthPx=800&key=${process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}`
     : null;
@@ -141,27 +141,27 @@ export function PlaceDetailContent({
         <ThemedView style={styles.titleRow}>
           <ThemedView style={styles.titleContainer}>
             <ThemedText type="title" style={styles.title}>
-              {place.displayName.text}
+              {data.displayName.text}
             </ThemedText>
-            {place.primaryTypeDisplayName?.text && (
+            {data.primaryTypeDisplayName?.text && (
               <ThemedText style={styles.subtitle}>
-                {place.primaryTypeDisplayName.text}
+                {data.primaryTypeDisplayName.text}
               </ThemedText>
             )}
           </ThemedView>
           <Pressable onPress={handleToggleBookmark} hitSlop={8}>
             <Ionicons
-              name={place.isBookmarked ? "bookmark" : "bookmark-outline"}
+              name={data.isBookmarked ? "bookmark" : "bookmark-outline"}
               size={32}
               color="#007AFF"
             />
           </Pressable>
         </ThemedView>
 
-        {place.businessStatus && (
+        {data.businessStatus && (
           <ThemedView style={styles.section}>
             <ThemedText style={styles.businessStatus}>
-              {place.businessStatus}
+              {data.businessStatus}
             </ThemedText>
           </ThemedView>
         )}
@@ -170,7 +170,7 @@ export function PlaceDetailContent({
           <ThemedText type="defaultSemiBold" style={styles.label}>
             Address
           </ThemedText>
-          <ThemedText>{place.formattedAddress}</ThemedText>
+          <ThemedText>{data.formattedAddress}</ThemedText>
         </ThemedView>
 
         <ThemedView style={styles.section}>
@@ -178,14 +178,14 @@ export function PlaceDetailContent({
             Location
           </ThemedText>
           <ThemedText style={styles.coordinates}>
-            {place.location.latitude.toFixed(6)},{" "}
-            {place.location.longitude.toFixed(6)}
+            {data.location.latitude.toFixed(6)},{" "}
+            {data.location.longitude.toFixed(6)}
           </ThemedText>
           <Pressable onPress={openInGoogleMaps} style={styles.mapContainer}>
             <SinglePlaceMap
-              latitude={place.location.latitude}
-              longitude={place.location.longitude}
-              title={place.displayName.text}
+              latitude={data.location.latitude}
+              longitude={data.location.longitude}
+              title={data.displayName.text}
               height={200}
             />
           </Pressable>
@@ -203,10 +203,10 @@ export function PlaceDetailContent({
           </Pressable>
         </ThemedView>
 
-        {place.photos && place.photos.length > 1 && (
+        {data.photos && data.photos.length > 1 && (
           <ThemedView style={styles.section}>
             <ThemedText type="defaultSemiBold" style={styles.label}>
-              Photos ({place.photos.length})
+              Photos ({data.photos.length})
             </ThemedText>
             <ThemedText style={styles.photoAttribution}>
               Photos by Google Maps contributors

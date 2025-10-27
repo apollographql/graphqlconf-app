@@ -24,13 +24,13 @@ if (false) {
       entities(identifiers: $identifiers) {
         id
         ... on SchedSession {
-          ...ScheduleListItem_SchedSession
+          ...ScheduleListItem_session
         }
         ... on SchedSpeaker {
-          ...SpeakerListItem_SchedSpeaker
+          ...SpeakerListItem_speaker
         }
         ... on Place {
-          ...PlaceListItem_Place
+          ...PlaceListItem_place
         }
       }
     }
@@ -71,15 +71,15 @@ export function BookmarksScreen({
         if (!entity) return null;
 
         if (entity.__typename === "SchedSession") {
-          return <ScheduleListItem key={entity.id} SchedSession={entity} />;
+          return <ScheduleListItem key={entity.id} session={entity} />;
         }
 
         if (entity.__typename === "SchedSpeaker") {
-          return <SpeakerListItem key={entity.id} SchedSpeaker={entity} />;
+          return <SpeakerListItem key={entity.id} speaker={entity} />;
         }
 
         if (entity.__typename === "Place") {
-          return <PlaceListItem key={entity.id} Place={entity} />;
+          return <PlaceListItem key={entity.id} place={entity} />;
         }
 
         return null;

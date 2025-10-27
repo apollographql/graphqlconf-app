@@ -8,7 +8,7 @@ if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     query ScheduleScreen($eventId: String!) {
-      ...ScheduleList_Query
+      ...ScheduleList_event
     }
   `;
 }
@@ -27,7 +27,7 @@ export function ScheduleScreen({
 }) {
   return (
     <ScheduleList
-      parent={"ROOT_QUERY" as any}
+      event={"ROOT_QUERY" as any}
       queryRef={queryRef}
       variables={variables}
     />

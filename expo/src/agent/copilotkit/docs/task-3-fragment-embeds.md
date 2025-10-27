@@ -76,7 +76,7 @@ This task converts fragment-based React components into AI-callable tools, allow
 ```typescript
 ScheduleListItem.fragments = {
   SchedSession: gql`
-    fragment ScheduleListItem_SchedSession on SchedSession {
+    fragment ScheduleListItem_session on SchedSession {
       id
       name
       startTime

@@ -19,7 +19,7 @@ if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     query SettingsScreen {
-      ...AiFrameworkSection_Query
+      ...AiFrameworkSection_frameworks
     }
   `;
 }
@@ -120,7 +120,7 @@ export function SettingsScreen({
         </ThemedView>
       )}
 
-      <AiFrameworkSection parent={data} />
+      <AiFrameworkSection frameworks={data} />
 
       <ThemedText type="subtitle" style={styles.sectionHeading}>
         External MCP Servers

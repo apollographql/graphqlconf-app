@@ -27,7 +27,7 @@ function fragmentIdentifier(fragmentDoc: DocumentNode): JSONSchema7Definition {
 }
 
 function expose<Props extends Record<string, JSONSchema7Definition>>(
-  Component: React.FunctionComponent<Record<keyof Props, any>>,
+  Component: React.FunctionComponent<Record<keyof NoInfer<Props>, any>>,
   {
     props,
     description,
@@ -70,7 +70,7 @@ export const availableFragmentComponents = {
     description: `Display a schedule item, e.g. a conference talk or any other item with \`__typename\` of \`SchedSession\`.
 Will display event name, venue name, time (start and end) as well as event speakers (if available).`,
     props: {
-      SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
+      session: fragmentIdentifier(ScheduleListItem.fragments.session),
     },
     fetchIfMissing: true,
   }),
@@ -78,7 +78,7 @@ Will display event name, venue name, time (start and end) as well as event speak
     description: `Display a speaker item, e.g. a conference speaker or any other item with \`__typename\` of \`SchedSpeaker\`.
 Will display speaker name, position and company.`,
     props: {
-      SchedSpeaker: fragmentIdentifier(SpeakerListItem.fragments.SchedSpeaker),
+      speaker: fragmentIdentifier(SpeakerListItem.fragments.speaker),
     },
   }),
   PlaceListItem: expose(PlaceListItem, {
@@ -86,7 +86,7 @@ Will display speaker name, position and company.`,
 Will display place name and address.
 This tool should be used to display places when displaying a list of mixed data types.`,
     props: {
-      Place: fragmentIdentifier(PlaceListItem.fragments.Place),
+      place: fragmentIdentifier(PlaceListItem.fragments.place),
     },
   }),
   PlacesMap: expose(PlacesMap, {
@@ -95,9 +95,9 @@ Will show markers for all locations and automatically center/zoom to fit all mar
 Use this to visualize places on a map, such as nearby restaurants, venues, or conference locations.
 This tool should be prioritized when displaying only places, as it provides a better overview than a list.`,
     props: {
-      Places: {
+      places: {
         type: "array",
-        items: generateFragmentJsonSchema(PlacesMap.fragments.Places, client),
+        items: generateFragmentJsonSchema(PlacesMap.fragments.places, client),
         description: "Array of locations to show on the map",
       },
       height: {

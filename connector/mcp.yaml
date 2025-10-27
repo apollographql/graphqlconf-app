@@ -2,6 +2,7 @@ endpoint: https://localhost:4000
 
 transport:
   type: streamable_http
+  port: 5000
 operations:
   source: local
   paths:

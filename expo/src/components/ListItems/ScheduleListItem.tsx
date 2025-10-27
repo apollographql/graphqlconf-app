@@ -5,13 +5,13 @@ import { Pressable, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
-import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleListItem.generated";
+import { ScheduleListItem_SessionFragmentDoc } from "./ScheduleListItem.generated";
 import { BookmarkIcon } from "@/components/BookmarkIcon";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment ScheduleListItem_SchedSession on SchedSession {
+    fragment ScheduleListItem_session on SchedSession {
       __typename
       id
       name
@@ -34,21 +34,21 @@ if (false) {
 }
 
 ScheduleListItem.fragments = {
-  SchedSession: ScheduleListItem_SchedSessionFragmentDoc,
+  session: ScheduleListItem_SessionFragmentDoc,
 } as const;
-fragmentRegistry.register(ScheduleListItem.fragments.SchedSession);
+fragmentRegistry.register(ScheduleListItem.fragments.session);
 
 export function ScheduleListItem({
-  SchedSession,
+  session,
 }: {
-  SchedSession:
-    | FragmentType<typeof ScheduleListItem.fragments.SchedSession>
-    | FromParent<typeof ScheduleListItem.fragments.SchedSession>;
+  session:
+    | FragmentType<typeof ScheduleListItem.fragments.session>
+    | FromParent<typeof ScheduleListItem.fragments.session>;
 }) {
   const { data } = useSuspenseFragment({
-    fragment: ScheduleListItem.fragments.SchedSession,
-    fragmentName: "ScheduleListItem_SchedSession",
-    from: SchedSession,
+    fragment: ScheduleListItem.fragments.session,
+    fragmentName: "ScheduleListItem_session",
+    from: session,
   });
 
   return (

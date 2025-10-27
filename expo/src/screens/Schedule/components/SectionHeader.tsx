@@ -1,7 +1,7 @@
 import { FragmentType, gql } from "@apollo/client";
 import { ThemedText } from "@/components/themed-text";
 
-import { SectionHeader_SchedEventFragmentDoc } from "./SectionHeader.generated";
+import { SectionHeader_EventFragmentDoc } from "./SectionHeader.generated";
 import { fragmentRegistry } from "@/apollo/client";
 import { useMemo } from "react";
 import { useSuspenseFragment } from "@apollo/client/react";
@@ -9,27 +9,27 @@ import { StyleSheet } from "react-native";
 import { ThemedView } from "@/components/themed-view";
 // eslint-disable-next-line no-unused-expressions
 gql`
-  fragment SectionHeader_SchedEvent on SchedSession {
+  fragment SectionHeader_event on SchedSession {
     id
     start_time
     start_time_ts
   }
 `;
 SectionHeader.fragments = {
-  SchedEvent: SectionHeader_SchedEventFragmentDoc,
+  event: SectionHeader_EventFragmentDoc,
 } as const;
-fragmentRegistry.register(SectionHeader.fragments.SchedEvent);
+fragmentRegistry.register(SectionHeader.fragments.event);
 
 export function SectionHeader({
   event,
   firstEventOfDay,
 }: {
-  event: FragmentType<typeof SectionHeader.fragments.SchedEvent>;
+  event: FragmentType<typeof SectionHeader.fragments.event>;
   firstEventOfDay: boolean;
 }) {
   const { data } = useSuspenseFragment({
-    fragment: SectionHeader.fragments.SchedEvent,
-    fragmentName: "SectionHeader_SchedEvent",
+    fragment: SectionHeader.fragments.event,
+    fragmentName: "SectionHeader_event",
     from: event,
   });
   const weekday = useMemo(

@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
-import { Omnibar_QueryFragmentDoc } from "./Omnibar.generated";
+import { Omnibar_FrameworksFragmentDoc } from "./Omnibar.generated";
 
 const VercelOmnibar = lazy(() =>
   import("@/agent/vercelSdk/Omnibar/Omnibar").then((mod) => ({
@@ -19,31 +19,31 @@ const CopilotKitOmnibar = lazy(() =>
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment Omnibar_Query on Query {
+    fragment Omnibar_frameworks on Query {
       aiFramework @client
     }
   `;
 }
 
 Omnibar.fragments = {
-  Query: Omnibar_QueryFragmentDoc,
+  frameworks: Omnibar_FrameworksFragmentDoc,
 } as const;
 
-fragmentRegistry.register(Omnibar.fragments.Query);
+fragmentRegistry.register(Omnibar.fragments.frameworks);
 
 export function Omnibar({
   children,
-  parent,
+  frameworks,
 }: {
   children: React.ReactNode;
-  parent:
-    | FragmentType<typeof Omnibar.fragments.Query>
-    | FromParent<typeof Omnibar.fragments.Query>;
+  frameworks:
+    | FragmentType<typeof Omnibar.fragments.frameworks>
+    | FromParent<typeof Omnibar.fragments.frameworks>;
 }) {
   const { data } = useSuspenseFragment({
-    fragment: Omnibar.fragments.Query,
-    fragmentName: "Omnibar_Query",
-    from: parent,
+    fragment: Omnibar.fragments.frameworks,
+    fragmentName: "Omnibar_frameworks",
+    from: frameworks,
   });
 
   switch (data.aiFramework) {

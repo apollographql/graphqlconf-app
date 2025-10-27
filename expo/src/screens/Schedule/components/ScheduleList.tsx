@@ -10,12 +10,12 @@ import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { fragmentRegistry } from "@/apollo/client";
 import { SectionHeader } from "./SectionHeader";
 import { ThemedText } from "@/components/themed-text";
-import { ScheduleList_QueryFragmentDoc } from "./ScheduleList.generated";
+import { ScheduleList_EventFragmentDoc } from "./ScheduleList.generated";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment ScheduleList_Query on Query {
+    fragment ScheduleList_event on Query {
       event(id: $eventId) {
         id
         sessions {
@@ -24,8 +24,8 @@ if (false) {
           venue {
             id
           }
-          ...ScheduleListItem_SchedSession
-          ...SectionHeader_SchedEvent
+          ...ScheduleListItem_session
+          ...SectionHeader_event
         }
       }
     }
@@ -33,16 +33,16 @@ if (false) {
 }
 
 ScheduleList.fragments = {
-  Query: ScheduleList_QueryFragmentDoc,
+  event: ScheduleList_EventFragmentDoc,
 } as const;
-fragmentRegistry.register(ScheduleList.fragments.Query);
+fragmentRegistry.register(ScheduleList.fragments.event);
 
 export function ScheduleList({
-  parent,
+  event,
   queryRef,
   variables,
 }: {
-  parent: FragmentType<typeof ScheduleList.fragments.Query>;
+  event: FragmentType<typeof ScheduleList.fragments.event>;
   queryRef: QueryRef;
   variables: { eventId: string };
 }) {
@@ -55,9 +55,9 @@ export function ScheduleList({
   };
 
   const { data } = useSuspenseFragment({
-    fragment: ScheduleList.fragments.Query,
-    fragmentName: "ScheduleList_Query",
-    from: parent,
+    fragment: ScheduleList.fragments.event,
+    fragmentName: "ScheduleList_event",
+    from: event,
     variables,
   });
   const sections = useMemo(() => {
@@ -95,7 +95,7 @@ export function ScheduleList({
       style={{ margin: 5 }}
       sections={sections}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <ScheduleListItem SchedSession={item} />}
+      renderItem={({ item }) => <ScheduleListItem session={item} />}
       renderSectionHeader={({ section: { firstEvent, firstEventOfDay } }) =>
         firstEvent ? (
           <SectionHeader event={firstEvent} firstEventOfDay={firstEventOfDay} />

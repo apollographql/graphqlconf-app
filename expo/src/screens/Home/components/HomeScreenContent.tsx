@@ -10,13 +10,13 @@ import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { fragmentRegistry } from "@/apollo/client";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { HomeScreenContent_QueryFragmentDoc } from "./HomeScreenContent.generated";
+import { HomeScreenContent_EventFragmentDoc } from "./HomeScreenContent.generated";
 import { Fonts } from "@/constants/theme";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment HomeScreenContent_Query on Query {
+    fragment HomeScreenContent_event on Query {
       event(id: $eventId) {
         id
         name
@@ -26,7 +26,7 @@ if (false) {
           end_date
           end_time
           type
-          ...ScheduleListItem_SchedSession
+          ...ScheduleListItem_session
         }
       }
     }
@@ -34,16 +34,16 @@ if (false) {
 }
 
 HomeScreenContent.fragments = {
-  Query: HomeScreenContent_QueryFragmentDoc,
+  event: HomeScreenContent_EventFragmentDoc,
 } as const;
-fragmentRegistry.register(HomeScreenContent.fragments.Query);
+fragmentRegistry.register(HomeScreenContent.fragments.event);
 
 export function HomeScreenContent({
-  parent,
+  event,
   queryRef,
   variables,
 }: {
-  parent: FragmentType<typeof HomeScreenContent.fragments.Query>;
+  event: FragmentType<typeof HomeScreenContent.fragments.event>;
   queryRef: QueryRef;
   variables: { eventId: string };
 }) {
@@ -56,9 +56,9 @@ export function HomeScreenContent({
   };
 
   const { data } = useSuspenseFragment({
-    fragment: HomeScreenContent.fragments.Query,
-    fragmentName: "HomeScreenContent_Query",
-    from: parent,
+    fragment: HomeScreenContent.fragments.event,
+    fragmentName: "HomeScreenContent_event",
+    from: event,
     variables,
   });
 
@@ -134,7 +134,7 @@ export function HomeScreenContent({
           </ThemedText>
         ) : (
           ongoingTalks.map((talk) => (
-            <ScheduleListItem key={talk.id} SchedSession={talk} />
+            <ScheduleListItem key={talk.id} session={talk} />
           ))
         )}
       </ThemedView>
@@ -148,7 +148,7 @@ export function HomeScreenContent({
             No upcoming talks scheduled
           </ThemedText>
         ) : (
-          <ScheduleListItem SchedSession={upcomingTalk} />
+          <ScheduleListItem session={upcomingTalk} />
         )}
       </ThemedView>
     </ScrollView>

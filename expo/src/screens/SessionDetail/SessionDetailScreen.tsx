@@ -10,7 +10,7 @@ if (false) {
     query SessionDetailScreen($sessionId: String!) {
       session(id: $sessionId) {
         id
-        ...SessionDetailContent_SchedSession
+        ...SessionDetailContent_session
       }
     }
   `;
@@ -29,7 +29,5 @@ export default function SessionDetailScreen({
     return null;
   }
 
-  return (
-    <SessionDetailContent SchedSession={data.session} queryRef={queryRef} />
-  );
+  return <SessionDetailContent session={data.session} queryRef={queryRef} />;
 }

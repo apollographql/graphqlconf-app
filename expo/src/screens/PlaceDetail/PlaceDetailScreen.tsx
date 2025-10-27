@@ -10,7 +10,7 @@ if (false) {
     query PlaceDetailScreen($placeId: String!) {
       place(id: $placeId) {
         id
-        ...PlaceDetailContent_Place
+        ...PlaceDetailContent_place
       }
     }
   `;
@@ -29,5 +29,5 @@ export default function PlaceDetailScreen({
     return null;
   }
 
-  return <PlaceDetailContent Place={data.place} queryRef={queryRef} />;
+  return <PlaceDetailContent place={data.place} queryRef={queryRef} />;
 }

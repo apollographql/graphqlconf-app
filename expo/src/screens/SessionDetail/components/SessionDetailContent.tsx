@@ -19,14 +19,14 @@ import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { SessionDetailContent_SchedSessionFragmentDoc } from "./SessionDetailContent.generated";
+import { SessionDetailContent_SessionFragmentDoc } from "./SessionDetailContent.generated";
 import { Fonts } from "@/constants/theme";
 import { ToggleBookmarkDocument } from "@/mutations/ToggleBookmark";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment SessionDetailContent_SchedSession on SchedSession {
+    fragment SessionDetailContent_session on SchedSession {
       __typename
       id
       name
@@ -58,17 +58,17 @@ if (false) {
 }
 
 SessionDetailContent.fragments = {
-  SchedSession: SessionDetailContent_SchedSessionFragmentDoc,
+  session: SessionDetailContent_SessionFragmentDoc,
 } as const;
-fragmentRegistry.register(SessionDetailContent.fragments.SchedSession);
+fragmentRegistry.register(SessionDetailContent.fragments.session);
 
 export function SessionDetailContent({
-  SchedSession,
+  session,
   queryRef,
 }: {
-  SchedSession:
-    | FragmentType<typeof SessionDetailContent.fragments.SchedSession>
-    | FromParent<typeof SessionDetailContent.fragments.SchedSession>;
+  session:
+    | FragmentType<typeof SessionDetailContent.fragments.session>
+    | FromParent<typeof SessionDetailContent.fragments.session>;
   queryRef: QueryRef;
 }) {
   const { width } = useWindowDimensions();
@@ -81,10 +81,10 @@ export function SessionDetailContent({
     });
   };
 
-  const { data: session } = useSuspenseFragment({
-    fragment: SessionDetailContent.fragments.SchedSession,
-    fragmentName: "SessionDetailContent_SchedSession",
-    from: SchedSession,
+  const { data } = useSuspenseFragment({
+    fragment: SessionDetailContent.fragments.session,
+    fragmentName: "SessionDetailContent_session",
+    from: session,
   });
 
   const [toggleBookmark] = useMutation(ToggleBookmarkDocument);
@@ -92,8 +92,8 @@ export function SessionDetailContent({
   const handleToggleBookmark = () => {
     toggleBookmark({
       variables: {
-        id: session.id,
-        typename: session.__typename,
+        id: data.id,
+        typename: data.__typename,
       },
     });
   };
@@ -108,11 +108,11 @@ export function SessionDetailContent({
       <ThemedView style={styles.content}>
         <ThemedView style={styles.titleRow}>
           <ThemedText type="title" style={styles.title}>
-            {session.name}
+            {data.name}
           </ThemedText>
           <Pressable onPress={handleToggleBookmark} hitSlop={8}>
             <Ionicons
-              name={session.isBookmarked ? "bookmark" : "bookmark-outline"}
+              name={data.isBookmarked ? "bookmark" : "bookmark-outline"}
               size={32}
               color="#007AFF"
             />
@@ -123,8 +123,8 @@ export function SessionDetailContent({
           <ThemedText type="defaultSemiBold" style={styles.label}>
             Type
           </ThemedText>
-          <ThemedText>{session.type}</ThemedText>
-          {!session.subtype ? null : <ThemedText>{session.subtype}</ThemedText>}
+          <ThemedText>{data.type}</ThemedText>
+          {!data.subtype ? null : <ThemedText>{data.subtype}</ThemedText>}
         </ThemedView>
 
         <ThemedView style={styles.section}>
@@ -132,27 +132,27 @@ export function SessionDetailContent({
             Time
           </ThemedText>
           <ThemedText>
-            {session.start_date} {session.start_time} - {session.end_time}
+            {data.start_date} {data.start_time} - {data.end_time}
           </ThemedText>
         </ThemedView>
 
-        {!session.venue ? null : (
+        {!data.venue ? null : (
           <ThemedView style={styles.section}>
             <ThemedText type="defaultSemiBold" style={styles.label}>
               Venue
             </ThemedText>
-            <ThemedText>{session.venue.name}</ThemedText>
+            <ThemedText>{data.venue.name}</ThemedText>
           </ThemedView>
         )}
 
-        {!session.description ? null : (
+        {!data.description ? null : (
           <ThemedView style={styles.section}>
             <ThemedText type="defaultSemiBold" style={styles.label}>
               Description
             </ThemedText>
             <RenderHtml
               contentWidth={width}
-              source={{ html: session.description }}
+              source={{ html: data.description }}
               baseStyle={{
                 color: textColor,
                 fontSize: 16,
@@ -165,14 +165,14 @@ export function SessionDetailContent({
           </ThemedView>
         )}
 
-        {!session.speakers
+        {!data.speakers
           ? null
-          : session.speakers.length > 0 && (
+          : data.speakers.length > 0 && (
               <ThemedView style={styles.section}>
                 <ThemedText type="defaultSemiBold" style={styles.label}>
                   Speakers
                 </ThemedText>
-                {session.speakers.map((speaker) => (
+                {data.speakers.map((speaker) => (
                   <ThemedView key={speaker.id} style={styles.speaker}>
                     <ThemedText type="defaultSemiBold">
                       {speaker.name}
@@ -187,12 +187,12 @@ export function SessionDetailContent({
               </ThemedView>
             )}
 
-        {!session.files || session.files.length === 0 ? null : (
+        {!data.files || data.files.length === 0 ? null : (
           <ThemedView style={styles.section}>
             <ThemedText type="defaultSemiBold" style={styles.label}>
               Files
             </ThemedText>
-            {session.files.map((file, idx) => (
+            {data.files.map((file, idx) => (
               <ThemedText key={idx}>{file.name}</ThemedText>
             ))}
           </ThemedView>

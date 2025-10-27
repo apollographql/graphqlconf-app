@@ -11,7 +11,7 @@ import type { PlacesMapProps } from "./PlacesMap";
 import {
   PlaceMarkerInfo,
   getPlaceMarkerData,
-  PlaceMarkerInfoFragmentDoc,
+  PlaceMarkerInfo_PlaceFragmentDoc,
 } from "./PlaceMarkerInfo";
 import { useFragment } from "@apollo/client/react";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
@@ -19,15 +19,15 @@ import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 export type { PlacesMapProps };
 
 PlacesMap.fragments = {
-  Places: PlaceMarkerInfoFragmentDoc,
+  places: PlaceMarkerInfo_PlaceFragmentDoc,
 } as const;
 
-export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
+export function PlacesMap({ places: locations, height = 300 }: PlacesMapProps) {
   const [selectedMarkerIndex, setSelectedMarkerIndex] = useState<number | null>(
     null
   );
   const places = useFragment({
-    fragment: PlacesMap.fragments.Places,
+    fragment: PlacesMap.fragments.places,
     fragmentName: "PlaceMarkerInfo",
     from: locations,
   });
@@ -101,7 +101,7 @@ export function PlacesMap({ Places: locations, height = 300 }: PlacesMapProps) {
               >
                 <View style={styles.infoWindowContainer}>
                   <PlaceMarkerInfo
-                    Place={locations[selectedMarkerIndex]}
+                    place={locations[selectedMarkerIndex]}
                     showLink
                   />
                 </View>

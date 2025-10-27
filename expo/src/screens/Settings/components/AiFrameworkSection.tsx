@@ -5,7 +5,7 @@ import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment, useMutation } from "@apollo/client/react";
 import {
-  AiFrameworkSection_QueryFragmentDoc,
+  AiFrameworkSection_FrameworksFragmentDoc,
   ChooseAiFrameworkDocument,
 } from "./AiFrameworkSection.generated";
 import { Picker } from "@react-native-picker/picker";
@@ -14,7 +14,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment AiFrameworkSection_Query on Query {
+    fragment AiFrameworkSection_frameworks on Query {
       aiFramework @client
     }
   `;
@@ -27,22 +27,22 @@ if (false) {
 }
 
 AiFrameworkSection.fragments = {
-  Query: AiFrameworkSection_QueryFragmentDoc,
+  frameworks: AiFrameworkSection_FrameworksFragmentDoc,
 } as const;
 
-fragmentRegistry.register(AiFrameworkSection.fragments.Query);
+fragmentRegistry.register(AiFrameworkSection.fragments.frameworks);
 
 export function AiFrameworkSection({
-  parent,
+  frameworks,
 }: {
-  parent:
-    | FragmentType<typeof AiFrameworkSection.fragments.Query>
-    | FromParent<typeof AiFrameworkSection.fragments.Query>;
+  frameworks:
+    | FragmentType<typeof AiFrameworkSection.fragments.frameworks>
+    | FromParent<typeof AiFrameworkSection.fragments.frameworks>;
 }) {
   const { data } = useSuspenseFragment({
-    fragment: AiFrameworkSection.fragments.Query,
-    fragmentName: "AiFrameworkSection_Query",
-    from: parent,
+    fragment: AiFrameworkSection.fragments.frameworks,
+    fragmentName: "AiFrameworkSection_frameworks",
+    from: frameworks,
   });
 
   const [chooseAiFramework] = useMutation(ChooseAiFrameworkDocument);

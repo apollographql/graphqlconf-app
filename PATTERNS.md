@@ -25,13 +25,13 @@ Components declare their fragments using a specific pattern:
 import { fragmentRegistry, FromParent } from "@/apollo/client";
 import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
-import { ScheduleListItem_SchedSessionFragmentDoc } from "./ScheduleListItem.generated";
+import { ScheduleListItem_SessionFragmentDoc } from "./ScheduleListItem.generated";
 
-// Fragment definition in if(false) block - this fragment is used by codegen to create `ScheduleListItem_SchedSessionFragmentDoc` in the colocated generated file
+// Fragment definition in if(false) block - this fragment is used by codegen to create `ScheduleListItem_SessionFragmentDoc` in the colocated generated file
 // Will be stripped at runtime
 if (false) {
   gql`
-    fragment ScheduleListItem_SchedSession on SchedSession {
+    fragment ScheduleListItem_session on SchedSession {
       __typename
       id
       name
@@ -48,24 +48,24 @@ if (false) {
 
 // Export fragments as static property
 ScheduleListItem.fragments = {
-  SchedSession: ScheduleListItem_SchedSessionFragmentDoc,
+  session: ScheduleListItem_SessionFragmentDoc,
 } as const;
 
 // Register fragment with Apollo Client
-fragmentRegistry.register(ScheduleListItem.fragments.SchedSession);
+fragmentRegistry.register(ScheduleListItem.fragments.session);
 
 // Component implementation
 export function ScheduleListItem({
-  SchedSession,
+  session,
 }: {
-  SchedSession:
-    | FragmentType<typeof ScheduleListItem.fragments.SchedSession>
-    | FromParent<typeof ScheduleListItem.fragments.SchedSession>;
+  session:
+    | FragmentType<typeof ScheduleListItem.fragments.session>
+    | FromParent<typeof ScheduleListItem.fragments.session>;
 }) {
   const { data } = useSuspenseFragment({
-    fragment: ScheduleListItem.fragments.SchedSession,
-    fragmentName: "ScheduleListItem_SchedSession",
-    from: SchedSession,
+    fragment: ScheduleListItem.fragments.session,
+    fragmentName: "ScheduleListItem_session",
+    from: session,
   });
 
   return <div>{data.name}</div>;
@@ -88,7 +88,7 @@ GraphQL Code Generator creates a `.generated.ts` file next to each component:
 
 ```tsx
 // src/components/ListItems/ScheduleListItem.generated.ts
-export type ScheduleListItem_SchedSessionFragment = {
+export type ScheduleListItem_SessionFragment = {
   __typename: 'SchedSession';
   id: string;
   name: string;
@@ -96,13 +96,13 @@ export type ScheduleListItem_SchedSessionFragment = {
   venue: { __typename: 'SchedVenue'; id: string; name: string | null } | null;
   start_time: string;
   end_time: string;
-} & { ' $fragmentName'?: 'ScheduleListItem_SchedSessionFragment' };
+} & { ' $fragmentName'?: 'ScheduleListItem_SessionFragment' };
 
-export const ScheduleListItem_SchedSessionFragmentDoc = {
+export const ScheduleListItem_SessionFragmentDoc = {
   // ... DocumentNode definition
 }: TypedDocumentNode<
-  ScheduleListItem_SchedSessionFragment,
-  ScheduleListItem_SchedSessionFragmentVariables
+  ScheduleListItem_SessionFragment,
+  ScheduleListItem_SessionFragmentVariables
 >;
 ```
 
@@ -128,7 +128,7 @@ if (false) {
         sessions {
           id
           start_time_ts
-          ...ScheduleListItem_SchedSession  # Spread child fragment
+          ...ScheduleListItem_session  # Spread child fragment
         }
       }
     }
@@ -152,7 +152,7 @@ export function ScheduleList({ parent }: {
   return (
     <SectionList
       data={data.event?.sessions}
-      renderItem={({ item }) => <ScheduleListItem SchedSession={item} />}
+      renderItem={({ item }) => <ScheduleListItem session={item} />}
     />
   );
 }
@@ -160,7 +160,7 @@ export function ScheduleList({ parent }: {
 
 **Key aspects:**
 
-- **Fragment spreading**: `...ScheduleListItem_SchedSession` includes the child fragment in the parent query or parent fragment
+- **Fragment spreading**: `...ScheduleListItem_session` includes the child fragment in the parent query or parent fragment
 - **No need to import fragment doc**: The fragment name reference is enough; the registry handles the rest
 - **Data masking preserved**: Parent can't access child fragment fields directly
 - **Type safety**: TypeScript ensures the correct data shape is passed to child components
@@ -180,14 +180,23 @@ export function ScheduleList({ parent }: {
 Follow this naming pattern for consistency:
 
 ```
-{ComponentName}_{TypeName}
+{ComponentName}_{propName}
 ```
 
+The fragment name is composed of the exact component name, followed by an underscore and the name of the prop that passes in the parent object or `{ __typename, id }` combination. 
+
 Examples:
-- `ScheduleListItem_SchedSession`
-- `SpeakerListItem_SchedSpeaker`
-- `PlaceListItem_Place`
-- `BookmarksScreen_Query`
+- `ScheduleListItem_session` (`ScheduleListItem` component receives a `session` prop for SchedSession type)
+- `SpeakerListItem_speaker` (`SpeakerListItem` component receives a `speaker` prop for SchedSpeaker type)
+- `PlaceListItem_place` (`PlaceListItem` component receives a `place` prop for Place type)
+- `PlacesMap_places` (`PlacesMap` component receives a `places` prop for array of Place types)
+- `Omnibar_frameworks` (`Omnibar` component receives a `frameworks` prop for Query type with AI framework data)
+
+The prop name should:
+- Describe **what the data represents** to the component
+- Be **concise and semantic** (prefer `session` over `SchedSession`)
+- Match the **component's prop interface** exactly
+- Be singular for a single parent object or identifier, plural for an array of parent objects or identifiers.
 
 ### Client-Side Fields
 
@@ -267,7 +276,7 @@ export const availableFragmentComponents = {
   SpeakerListItem: expose(SpeakerListItem, {
     description: `Display a speaker item, e.g. a conference speaker`,
     props: {
-      SchedSpeaker: fragmentIdentifier(SpeakerListItem.fragments.SchedSpeaker),
+      speaker: fragmentIdentifier(SpeakerListItem.fragments.speaker),
     },
   }),
   // ...
@@ -279,10 +288,10 @@ export const availableFragmentComponents = {
 {
   "type": "object",
   "properties": {
-    "SchedSession": {
+    "speaker": {
       "type": "object",
       "properties": {
-        "__typename": { "type": "string", "const": "SchedSession" },
+        "__typename": { "type": "string", "const": "SchedSpeaker" },
         "id": { "type": "string" }
       },
       "required": ["__typename", "id"]
@@ -294,8 +303,8 @@ export const availableFragmentComponents = {
 **AI calls the tool with**:
 ```json
 {
-  "SchedSession": {
-    "__typename": "SchedSession",
+  "speaker": {
+    "__typename": "SchedSpeaker",
     "id": "12345"
   }
 }
@@ -326,7 +335,7 @@ export const availableFragmentComponents = {
   ScheduleListItem: expose(ScheduleListItem, {
     description: `Display a schedule item, e.g. a conference talk`,
     props: {
-      SchedSession: fragmentIdentifier(ScheduleListItem.fragments.SchedSession),
+      session: fragmentIdentifier(ScheduleListItem.fragments.session),
     },
     fetchIfMissing: true,  // Enable automatic fetching
   }),
@@ -340,7 +349,7 @@ Same as Approach 1 - only `__typename` and `id`:
 {
   "type": "object",
   "properties": {
-    "SchedSession": {
+    "session": {
       "type": "object",
       "properties": {
         "__typename": { "type": "string", "const": "SchedSession" },
@@ -355,7 +364,7 @@ Same as Approach 1 - only `__typename` and `id`:
 **AI calls the tool with**:
 ```json
 {
-  "SchedSession": {
+  "session": {
     "__typename": "SchedSession",
     "id": "12345"
   }
@@ -439,9 +448,9 @@ export const availableFragmentComponents = {
   PlacesMap: expose(PlacesMap, {
     description: `Display a map with markers for one or more locations`,
     props: {
-      Places: {
+      places: {
         type: "array",
-        items: fullFragmentData(PlacesMap.fragments.Places),
+        items: fullFragmentData(PlacesMap.fragments.places),
       },
     },
   }),
@@ -453,7 +462,7 @@ export const availableFragmentComponents = {
 {
   "type": "object",
   "properties": {
-    "Places": {
+    "places": {
       "type": "array",
       "items": {
         "type": "object",
@@ -479,7 +488,7 @@ export const availableFragmentComponents = {
 **AI calls the tool with complete data**:
 ```json
 {
-  "Places": [
+  "places": [
     {
       "__typename": "Place",
       "id": "place_123",
@@ -967,7 +976,7 @@ These are:
 2. **MCP server executes**: Queries the supergraph and returns results
 3. **Transport intercepts**: Detects `tool-output-available` chunk
 4. **Cache write**: `client.writeQuery()` normalizes and stores session data
-5. **AI calls embed**: `ShowEmbed-ScheduleListItem({ SchedSession: { __typename: "SchedSession", id: "session_123" } })`
+5. **AI calls embed**: `ShowEmbed-ScheduleListItem({ session: { __typename: "SchedSession", id: "session_123" } })`
 6. **Embed reads cache**: Component uses `useSuspenseFragment` to read from cache
 7. **UI renders**: ScheduleListItem displays with rich formatting
 
@@ -1961,13 +1970,13 @@ if (false) {
       entities(identifiers: $identifiers) {
         id
         ... on SchedSession {
-          ...ScheduleListItem_SchedSession
+          ...ScheduleListItem_session
         }
         ... on SchedSpeaker {
-          ...SpeakerListItem_SchedSpeaker
+          ...SpeakerListItem_speaker
         }
         ... on Place {
-          ...PlaceListItem_Place
+          ...PlaceListItem_place
         }
       }
     }
@@ -1981,13 +1990,13 @@ export function BookmarksScreen({ queryRef }) {
     <ScrollView>
       {data.entities.map((entity) => {
         if (entity.__typename === "SchedSession") {
-          return <ScheduleListItem key={entity.id} SchedSession={entity} />;
+          return <ScheduleListItem key={entity.id} session={entity} />;
         }
         if (entity.__typename === "SchedSpeaker") {
-          return <SpeakerListItem key={entity.id} SchedSpeaker={entity} />;
+          return <SpeakerListItem key={entity.id} speaker={entity} />;
         }
         if (entity.__typename === "Place") {
-          return <PlaceListItem key={entity.id} Place={entity} />;
+          return <PlaceListItem key={entity.id} place={entity} />;
         }
         return null;
       })}
