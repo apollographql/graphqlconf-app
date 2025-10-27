@@ -12,9 +12,7 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "dependsOn": [
-        "Start Expo Dev Server"
-      ],
+      "dependsOn": [],
       "isBackground": true,
       "problemMatcher": {
         "pattern": {

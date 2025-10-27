@@ -9,7 +9,7 @@ operations:
     - ./operations
 schema:
   source: local
-  path: ./supergraph.graphql
+  path: supergraph.graphqls
 overrides:
   mutation_mode: all
 introspection:
