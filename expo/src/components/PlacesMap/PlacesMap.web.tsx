@@ -28,7 +28,7 @@ export function PlacesMap({ places: locations, height = 300 }: PlacesMapProps) {
   );
   const places = useFragment({
     fragment: PlacesMap.fragments.places,
-    fragmentName: "PlaceMarkerInfo",
+    fragmentName: "PlaceMarkerInfo_place",
     from: locations,
   });
 

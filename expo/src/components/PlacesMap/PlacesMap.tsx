@@ -31,7 +31,7 @@ export function PlacesMap({ places, height = 300 }: PlacesMapProps) {
 
   const data = useFragment({
     fragment: PlacesMap.fragments.places,
-    fragmentName: "PlaceMarkerInfo",
+    fragmentName: "PlaceMarkerInfo_place",
     from: places,
   });
 

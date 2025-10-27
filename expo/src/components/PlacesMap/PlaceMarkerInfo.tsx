@@ -40,7 +40,7 @@ PlaceMarkerInfo.fragments = {
 export function PlaceMarkerInfo({ place, showLink }: PlaceMarkerInfoProps) {
   const { data } = useFragment({
     fragment: PlaceMarkerInfo.fragments.place,
-    fragmentName: "PlaceMarkerInfo",
+    fragmentName: "PlaceMarkerInfo_place",
     from: place,
   });
 
