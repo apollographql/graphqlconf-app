@@ -9,5 +9,5 @@ connectors:
       $config:
         api_key: ${env.GOOGLE_MAPS_API_KEY}
 override_subgraph_url:
-  conferences.base: ${env.EXPO_HOST:-http://localhost:8081/}api/
-  conferences.conf: ${env.EXPO_HOST:-http://localhost:8081/}api/conf/
+  conferences.base: ${env.EXPO_HOST:-https://expo-production-e86b.up.railway.app/}api/
+  conferences.conf: ${env.EXPO_HOST:-https://expo-production-e86b.up.railway.app/}api/conf/
