@@ -4,12 +4,15 @@ import { AgentContext } from "@/agent/AgentContext";
 import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
 
 export async function getTools() {
-  const supergraphMcpClient = await experimental_createMCPClient({
-    transport: new StreamableHTTPClientTransport(
-      new URL(process.env.GRAPH_MCP_SERVER!)
-    ),
-  });
+  let supergraphMcpClient: Awaited<
+    ReturnType<typeof experimental_createMCPClient>
+  >;
   try {
+    supergraphMcpClient = await experimental_createMCPClient({
+      transport: new StreamableHTTPClientTransport(
+        new URL(process.env.GRAPH_MCP_SERVER!)
+      ),
+    });
     const tools = await supergraphMcpClient.tools();
     return {
       tools: {
@@ -43,7 +46,7 @@ export async function getTools() {
     );
     return {
       tools: {},
-      close: () => supergraphMcpClient.close(),
+      close: () => supergraphMcpClient?.close(),
     };
   }
 }
