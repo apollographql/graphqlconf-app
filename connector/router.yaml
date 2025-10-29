@@ -13,3 +13,9 @@ connectors:
       override_url: ${env.EXPO_HOST:-https://localhost:8081}/api/
     conferences.conf:
       override_url: ${env.EXPO_HOST:-https://localhost:8081}/api/conf/
+telemetry:
+  instrumentation:
+    events:
+      connector:
+        request: info
+        response: info
