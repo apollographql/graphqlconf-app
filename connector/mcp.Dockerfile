@@ -1,8 +1,9 @@
 FROM ghcr.io/apollographql/apollo-mcp-server:latest
 
-COPY mcp.yaml /mcp.yaml
-COPY operations /operations
+COPY mcp.yaml /data/mcp.yaml
+COPY operations /data/operations
+COPY supergraph.graphqls /data/supergraph.graphqls
 
 EXPOSE 5000
 
-CMD ["mcp.yaml"]
+CMD ["/data/mcp.yaml"]
