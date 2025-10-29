@@ -6,7 +6,7 @@ import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
 export async function getTools() {
   const supergraphMcpClient = await experimental_createMCPClient({
     transport: new StreamableHTTPClientTransport(
-      new URL("http://127.0.0.1:5000/mcp")
+      new URL(process.env.GRAPH_MCP_SERVER!)
     ),
   });
   const tools = await supergraphMcpClient.tools();

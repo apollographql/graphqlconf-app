@@ -2,7 +2,7 @@ import { ExtendedMCPEndpointConfig } from "../agent";
 import { MCPTool } from "@copilotkit/runtime";
 
 export const supergraphMcp: ExtendedMCPEndpointConfig = {
-  endpoint: "http://127.0.0.1:5000/mcp",
+  endpoint: process.env.GRAPH_MCP_SERVER!,
   async create(config, defaultCreate) {
     const supergraphMcpClient = await defaultCreate(config);
     return {
