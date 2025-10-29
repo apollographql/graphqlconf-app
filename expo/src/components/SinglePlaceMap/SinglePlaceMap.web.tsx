@@ -20,7 +20,9 @@ export function SinglePlaceMap({
 }: SinglePlaceMapProps) {
   const colorScheme = useColorScheme();
   const apiKey =
-    { ...process.env }["EXPO_PUBLIC_" + "GOOGLE_MAPS_API_KEY"] || "";
+    { ...process.env }["EXPO_PUBLIC_" + "GOOGLE_MAPS_API_KEY"] ||
+    process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ||
+    "";
 
   return (
     <ThemeProvider value={DefaultTheme}>
