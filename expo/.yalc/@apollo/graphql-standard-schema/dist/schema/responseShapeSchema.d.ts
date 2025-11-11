@@ -1,0 +1,3 @@
+import type { OperationDefinitionNode, FormattedExecutionResult } from "graphql";
+export declare function responseShapeSchema(definition: OperationDefinitionNode): import("../types.ts").CombinedSpec<Omit<FormattedExecutionResult<import("graphql/jsutils/ObjMap.js").ObjMap<unknown>, import("graphql/jsutils/ObjMap.js").ObjMap<unknown>>, "data">, Omit<FormattedExecutionResult<import("graphql/jsutils/ObjMap.js").ObjMap<unknown>, import("graphql/jsutils/ObjMap.js").ObjMap<unknown>>, "data">>;
+//# sourceMappingURL=responseShapeSchema.d.ts.map

@@ -2,18 +2,7 @@
   "version": "v1",
   "packages": {
     "@apollo/graphql-standard-schema": {
-      "signature": "71a4ea4e61917ef9c3fea614db658eb6",
-      "file": true
-    },
-    "graphql": {
-      "version": "16.11.0-364f17f",
-      "signature": "d2aed2c9e7e4b66333ea19c20c6aeb0e",
-      "file": true,
-      "replaced": "^16.11.0"
-    },
-    "@copilotkit/shared": {
-      "version": "1.10.6",
-      "signature": "510e667fe969cceb0eac582f98678165",
+      "signature": "ab83900a88265b3f5a2a806c0d58db87",
       "file": true
     }
   }

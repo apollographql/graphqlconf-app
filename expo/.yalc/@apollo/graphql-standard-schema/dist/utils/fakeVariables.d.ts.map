@@ -1,0 +1,1 @@
+{"version":3,"file":"fakeVariables.d.ts","sourceRoot":"","sources":["../../src/utils/fakeVariables.ts"],"names":[],"mappings":"AAAA,OAAO,EAGL,KAAK,aAAa,EAClB,KAAK,sBAAsB,EAQ5B,MAAM,SAAS,CAAC;AAEjB,OAAO,KAAK,EAAE,8BAA8B,EAAE,MAAM,sCAAsC,CAAC;AAE3F,wBAAgB,aAAa,CAC3B,WAAW,EAAE,aAAa,CAAC,sBAAsB,CAAC,EAClD,MAAM,EAAE,aAAa,EACrB,OAAO,EAAE,8BAA8B,CAAC,iBAAiB;;EAwE1D"}

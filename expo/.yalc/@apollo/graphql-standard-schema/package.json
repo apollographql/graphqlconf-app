@@ -6,8 +6,10 @@
   },
   "keywords": [
     "graphql",
-    "standard-schema"
+    "standard-schema",
+    "JSON schema"
   ],
+  "sideEffects": false,
   "type": "module",
   "exports": {
     ".": {
@@ -29,15 +31,23 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "node --test",
+    "test": "node --disable-warning=ExperimentalWarning --experimental-test-coverage --test",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "prepack": "npm run clean && npm run build"
   },
   "peerDependencies": {
-    "graphql": "^16 || ^17.0.0-alpha"
+    "graphql": "^16 || ^17.0.0-alpha",
+    "zod": "^3 || ^4"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
   },
   "dependencies": {
-    "@graphql-typed-document-node/core": "^3.2.0"
+    "@graphql-tools/utils": "^10.10.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@standard-schema/spec": "^1.0.0"
   },
-  "yalcSig": "71a4ea4e61917ef9c3fea614db658eb6"
+  "yalcSig": "ab83900a88265b3f5a2a806c0d58db87"
 }

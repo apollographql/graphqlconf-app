@@ -1,0 +1,9 @@
+import { GraphQLEnumType, GraphQLScalarType, type FragmentDefinitionNode, type GraphQLSchema, type OperationDefinitionNode } from "graphql";
+import type { GraphQLStandardSchemaGenerator } from "../GraphQLStandardSchemaGenerator.ts";
+import type { StandardSchemaV1 } from "@standard-schema/spec";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+export type SchemaResult<TData, Scalars extends GraphQLStandardSchemaGenerator.ScalarDefinitions, Mode = "normalize" | "deserialize" | "serialize"> = Mode extends "deserialize" ? GraphQLStandardSchemaGenerator.Deserialized<TData, Scalars> : GraphQLStandardSchemaGenerator.Serialized<TData, Scalars>;
+export declare function parseData<TData, TVariables extends Record<string, unknown>, Scalars extends GraphQLStandardSchemaGenerator.ScalarDefinitions, Mode extends "normalize" | "deserialize" | "serialize">(data: unknown, operation: OperationDefinitionNode, schema: GraphQLSchema, document: TypedDocumentNode<TData, TVariables>, variableValues: TVariables, mode: Mode, initialPath?: Array<string | number>): StandardSchemaV1.Result<SchemaResult<TData, Scalars, Mode>>;
+export declare function parseFragment<TData, TVariables extends Record<string, unknown>, Scalars extends GraphQLStandardSchemaGenerator.ScalarDefinitions, Mode extends "normalize" | "deserialize" | "serialize">(data: unknown, fragment: FragmentDefinitionNode, schema: GraphQLSchema, document: TypedDocumentNode<TData, TVariables>, variableValues: TVariables, mode: Mode, initialPath?: Array<string | number>): StandardSchemaV1.Result<SchemaResult<TData, Scalars, Mode>>;
+export declare function getScalarParser<Mode extends "normalize" | "deserialize" | "serialize">(mode: Mode): (value: unknown, scalar: GraphQLScalarType | GraphQLEnumType) => any;
+//# sourceMappingURL=parseData.d.ts.map
