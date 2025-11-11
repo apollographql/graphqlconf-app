@@ -28,7 +28,7 @@ export function handleNavigateToRouteToolCall(
 
   console.log("Navigating to route:", routeDescription);
 
-  router.push(routeDescription);
+  router.push(routeDescription as any);
 
   return {
     tool: toolCall.toolName,
