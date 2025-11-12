@@ -4,7 +4,7 @@ import { ApolloClient, gql } from "@apollo/client";
 import { firstFragment } from "@/utils/firstFragment";
 import { mapEntries } from "@/utils/mapEntries";
 import { generateFragmentJsonSchema } from "@/utils/generateJsonSchema";
-import { DocumentNode, Kind, visit } from "graphql";
+import { Kind, visit } from "graphql";
 
 type EmbedResult =
   | {

@@ -6,7 +6,7 @@ import PlaceDetailScreen from "@/screens/PlaceDetail/PlaceDetailScreen";
 import { ScheduleScreen } from "@/screens/Schedule/ScheduleScreen";
 import SessionDetailScreen from "@/screens/SessionDetail/SessionDetailScreen";
 import { generateQueryJsonSchema } from "@/utils/generateJsonSchema";
-import { Schema, tool, ToolExecuteFunction } from "ai";
+import { Schema, tool } from "ai";
 import { AgentContext, AgentInternalContext } from "../AgentContext";
 import type { JSONSchema7Definition } from "json-schema";
 import {
@@ -15,7 +15,7 @@ import {
   RelativePathString,
 } from "expo-router";
 import { validatingJSONSchema } from "@/utils/validatingJSONSchema";
-import { DocumentNode, print } from "graphql";
+import { print } from "graphql";
 import {
   TypedDocumentNode,
   VariablesOf,

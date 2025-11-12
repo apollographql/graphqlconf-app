@@ -26,7 +26,6 @@ export interface AdjustedFragmentTypeHKT extends HKT {
 }
 
 declare module "@apollo/client" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface TypeOverrides
     extends Omit<GraphQLCodegenDataMasking.TypeOverrides, "FragmentType"> {
     FragmentType: AdjustedFragmentTypeHKT;
