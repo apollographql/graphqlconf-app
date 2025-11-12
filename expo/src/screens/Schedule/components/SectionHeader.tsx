@@ -1,12 +1,12 @@
 import { FragmentType, gql } from "@apollo/client";
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/ThemedText";
 
 import { SectionHeader_EventFragmentDoc } from "./SectionHeader.generated";
 import { fragmentRegistry } from "@/apollo/client";
 import { useMemo } from "react";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { StyleSheet } from "react-native";
-import { ThemedView } from "@/components/themed-view";
+import { ThemedView } from "@/components/ThemedView";
 // eslint-disable-next-line no-unused-expressions
 gql`
   fragment SectionHeader_event on SchedSession {

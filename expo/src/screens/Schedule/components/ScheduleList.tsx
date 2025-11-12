@@ -9,7 +9,7 @@ import { SectionList } from "react-native";
 import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { fragmentRegistry } from "@/apollo/client";
 import { SectionHeader } from "./SectionHeader";
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/ThemedText";
 import { ScheduleList_EventFragmentDoc } from "./ScheduleList.generated";
 
 if (false) {

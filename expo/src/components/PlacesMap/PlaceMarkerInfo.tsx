@@ -1,7 +1,7 @@
 import { FragmentType, gql } from "@apollo/client";
 import { PlaceMarkerInfo_PlaceFragmentDoc } from "./PlaceMarkerInfo.generated";
 import { View, StyleSheet } from "react-native";
-import { ThemedText } from "../themed-text";
+import { ThemedText } from "@/components/ThemedText";
 import { useFragment } from "@apollo/client/react";
 import { Link } from "expo-router";
 

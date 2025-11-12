@@ -16,8 +16,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { fragmentRegistry, FromParent } from "@/apollo/client";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { PlaceDetailContent_PlaceFragmentDoc } from "./PlaceDetailContent.generated";
 import { Fonts } from "@/constants/theme";
 import { ToggleBookmarkDocument } from "@/mutations/ToggleBookmark";

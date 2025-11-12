@@ -12,8 +12,8 @@ import {
   UIToolInvocation,
 } from "ai";
 import { Suspense } from "react";
-import { ThemedView } from "@/components/themed-view";
-import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 import { ApolloClient } from "@apollo/client";
 import { handleEmbedCacheOperations } from "@/agent/utils/handleEmbedCacheOperations";
 

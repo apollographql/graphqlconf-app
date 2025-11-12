@@ -10,8 +10,8 @@ import {
 import { handleEmbedCacheOperations } from "../utils/handleEmbedCacheOperations";
 import { useApolloClient } from "@apollo/client/react";
 import { Suspense } from "react";
-import { ThemedView } from "@/components/themed-view";
-import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 import { TypingIndicator } from "@/components/Omnibar/TypingIndicator";
 
 export function useEmbeds() {

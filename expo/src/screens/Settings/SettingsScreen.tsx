@@ -6,8 +6,8 @@ import {
   Linking,
   Platform,
 } from "react-native";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { generateAPIUrl } from "@/generateApiUrl";
 import { gql } from "@apollo/client";
 import { QueryRef, useReadQuery } from "@apollo/client/react";

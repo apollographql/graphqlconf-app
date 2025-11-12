@@ -1,5 +1,5 @@
 import { UIDataTypes, UIMessagePart, UITools } from "ai";
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/ThemedText";
 import { isShowEmbedToolUIPart, ShowEmbedPart } from "./ShowEmbedTool";
 
 export function MessagePart({

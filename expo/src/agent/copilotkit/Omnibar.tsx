@@ -3,7 +3,7 @@ import { CopilotKit, useCopilotChatHeadless_c } from "@copilotkit/react-core";
 import { useRef } from "react";
 import { OmnibarFrame } from "@/components/Omnibar/OmnibarFrame";
 import { Message } from "@/components/Omnibar/Message";
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/ThemedText";
 import { useAppContext, makeSystemMessage } from "./useAppContext";
 import { useEmbeds } from "./useEmbeds";
 

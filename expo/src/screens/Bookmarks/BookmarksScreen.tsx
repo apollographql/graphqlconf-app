@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 import { useReadQuery, QueryRef } from "@apollo/client/react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { BookmarksScreenQueryDocument } from "./BookmarksScreen.generated";
 import {
   ResultOf,

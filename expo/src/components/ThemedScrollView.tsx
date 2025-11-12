@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 import { StyleSheet } from "react-native";
 import Animated from "react-native-reanimated";
 
-import { ThemedView } from "@/components/themed-view";
+import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/use-theme-color";
 
 type Props = PropsWithChildren;

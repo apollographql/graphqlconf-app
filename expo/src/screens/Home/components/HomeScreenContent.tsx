@@ -8,8 +8,8 @@ import { useMemo, useTransition } from "react";
 import { ScrollView, RefreshControl, StyleSheet } from "react-native";
 import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { fragmentRegistry } from "@/apollo/client";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { HomeScreenContent_EventFragmentDoc } from "./HomeScreenContent.generated";
 import { Fonts } from "@/constants/theme";
 

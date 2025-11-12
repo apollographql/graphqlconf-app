@@ -2,8 +2,8 @@ import { useLocalSearchParams } from "expo-router";
 import { SettingsScreen } from "@/screens/Settings/SettingsScreen";
 import { useBackgroundQuery } from "@apollo/client/react";
 import { Suspense } from "react";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 
 export default function Settings() {
   const params = useLocalSearchParams<{

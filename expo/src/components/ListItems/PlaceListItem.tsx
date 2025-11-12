@@ -3,8 +3,8 @@ import { FragmentType, gql } from "@apollo/client";
 import { useSuspenseFragment } from "@apollo/client/react";
 import { Pressable, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import { ThemedView } from "@/components/themed-view";
-import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 import { PlaceListItem_PlaceFragmentDoc } from "./PlaceListItem.generated";
 import { BookmarkIcon } from "@/components/BookmarkIcon";
 
