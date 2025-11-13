@@ -4,6 +4,7 @@ import type { GraphQLCodegenDataMasking } from "@apollo/client/masking";
 import { createFragmentRegistry } from "@apollo/client/cache";
 import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { LocalState } from "@apollo/client/local-state";
+import { bookmarksResolvers } from "./bookmarksResolvers";
 
 declare module "@apollo/client" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -63,7 +64,17 @@ const _client = new ApolloClient({
   link: new HttpLink({
     uri,
   }),
-  localState: new LocalState({}),
+  localState: new LocalState({
+    resolvers: {
+      ...bookmarksResolvers,
+      Query: {
+        ...bookmarksResolvers.Query,
+      },
+      Mutation: {
+        ...bookmarksResolvers.Mutation,
+      },
+    },
+  }),
   dataMasking: true,
 });
 

@@ -11,7 +11,6 @@ import {
 } from "@graphql-typed-document-node/core";
 import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
 import { SpeakerListItem } from "@/components/ListItems/SpeakerListItem";
-import { PlaceListItem } from "@/components/ListItems/PlaceListItem";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -28,9 +27,6 @@ if (false) {
         }
         ... on SchedSpeaker {
           ...SpeakerListItem_speaker
-        }
-        ... on Place {
-          ...PlaceListItem_place
         }
       }
     }
@@ -76,10 +72,6 @@ export function BookmarksScreen({
 
         if (entity.__typename === "SchedSpeaker") {
           return <SpeakerListItem key={entity.id} speaker={entity} />;
-        }
-
-        if (entity.__typename === "Place") {
-          return <PlaceListItem key={entity.id} place={entity} />;
         }
 
         return null;
