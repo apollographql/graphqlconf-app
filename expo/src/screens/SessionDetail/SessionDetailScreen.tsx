@@ -1,8 +1,12 @@
 import { gql } from "@apollo/client";
-import { useReadQuery, QueryRef } from "@apollo/client/react";
+import {
+  useReadQuery,
+  QueryRef,
+  useQueryRefHandlers,
+} from "@apollo/client/react";
 import { SessionDetailContent } from "./components/SessionDetailContent";
 import { SessionDetailScreenDocument } from "./SessionDetailScreen.generated";
-import { ResultOf } from "@graphql-typed-document-node/core";
+import { ThemedText } from "@/components/ThemedText";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -24,10 +28,11 @@ export default function SessionDetailScreen({
   queryRef: QueryRef.ForQuery<typeof SessionDetailScreen.Query>;
 }) {
   const { data } = useReadQuery(queryRef);
+  const { refetch } = useQueryRefHandlers(queryRef);
 
   if (!data.session) {
-    return null;
+    return <ThemedText>No session found.</ThemedText>;
   }
 
-  return <SessionDetailContent session={data.session} queryRef={queryRef} />;
+  return <SessionDetailContent session={data.session} refetch={refetch} />;
 }

@@ -1,10 +1,5 @@
 import { FragmentType, gql } from "@apollo/client";
-import {
-  QueryRef,
-  useQueryRefHandlers,
-  useSuspenseFragment,
-  useMutation,
-} from "@apollo/client/react";
+import { useSuspenseFragment, useMutation } from "@apollo/client/react";
 import { useTransition } from "react";
 import {
   ScrollView,
@@ -72,14 +67,13 @@ fragmentRegistry.register(PlaceDetailContent.fragments.place);
 
 export function PlaceDetailContent({
   place: place,
-  queryRef,
+  refetch,
 }: {
   place:
     | FragmentType<typeof PlaceDetailContent.fragments.place>
     | FromParent<typeof PlaceDetailContent.fragments.place>;
-  queryRef: QueryRef;
+  refetch: () => void;
 }) {
-  const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
   const onRefresh = () => {
     transition(() => {

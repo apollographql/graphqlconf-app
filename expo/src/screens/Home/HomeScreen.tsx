@@ -1,14 +1,22 @@
 import { gql } from "@apollo/client";
-import { QueryRef } from "@apollo/client/react";
+import {
+  QueryRef,
+  useQueryRefHandlers,
+  useReadQuery,
+} from "@apollo/client/react";
 import { HomeScreenDocument } from "./HomeScreen.generated";
 import { HomeScreenContent } from "./components/HomeScreenContent";
-import { ResultOf, VariablesOf } from "@graphql-typed-document-node/core";
+import { VariablesOf } from "@graphql-typed-document-node/core";
+import { ThemedText } from "@/components/ThemedText";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     query HomeScreen($eventId: String!) {
-      ...HomeScreenContent_event
+      event(id: $eventId) {
+        id
+        ...HomeScreenContent_event
+      }
     }
   `;
 }
@@ -22,11 +30,12 @@ export function HomeScreen({
   queryRef: QueryRef.ForQuery<typeof HomeScreen.Query>;
   variables: VariablesOf<typeof HomeScreen.Query>;
 }) {
+  const { data } = useReadQuery(queryRef);
+  const { refetch } = useQueryRefHandlers(queryRef);
+  if (!data.event) {
+    return <ThemedText>No event found.</ThemedText>;
+  }
   return (
-    <HomeScreenContent
-      event={"ROOT_QUERY" as any}
-      queryRef={queryRef}
-      variables={variables}
-    />
+    <HomeScreenContent event={data.event} refetch={refetch} variables={variables} />
   );
 }
