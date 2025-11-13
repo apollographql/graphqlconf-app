@@ -14,7 +14,7 @@
     "serve": "dotenvx run -v -fk ~/.dotenvx.keys --convention=nextjs -- expo serve"
   },
   "dependencies": {
-    "@apollo/client": "https://pkg.pr.new/apollographql/apollo-client/@apollo/client@13011",
+    "@apollo/client": "https://pkg.pr.new/apollographql/apollo-client/@apollo/client@13012",
     "@apollo/graphql-standard-schema": "file:.yalc/@apollo/graphql-standard-schema",
     "@apollo/server": "^5.0.0",
     "@apollo/subgraph": "^2.11.2",

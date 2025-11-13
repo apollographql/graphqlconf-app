@@ -21,7 +21,7 @@ PlaceDetailScreen.Query = PlaceDetailScreenDocument;
 export default function PlaceDetailScreen({
   queryRef,
 }: {
-  queryRef: QueryRef<ResultOf<typeof PlaceDetailScreen.Query>>;
+  queryRef: QueryRef.ForQuery<typeof PlaceDetailScreen.Query>;
 }) {
   const { data } = useReadQuery(queryRef);
 

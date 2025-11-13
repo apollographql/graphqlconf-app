@@ -21,7 +21,7 @@ SessionDetailScreen.Query = SessionDetailScreenDocument;
 export default function SessionDetailScreen({
   queryRef,
 }: {
-  queryRef: QueryRef<ResultOf<typeof SessionDetailScreen.Query>>;
+  queryRef: QueryRef.ForQuery<typeof SessionDetailScreen.Query>;
 }) {
   const { data } = useReadQuery(queryRef);
 
