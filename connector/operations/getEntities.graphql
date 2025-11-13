@@ -31,24 +31,24 @@ query GetEntities($identifiers: [EntityIdentifier!]!) {
       venueName: name
     }
 
-    ... on Place {
-      __typename
-      id
-      displayName {
-        __typename
-        text
-        languageCode
-      }
-      location {
-        __typename
-        latitude
-        longitude
-      }
-      primaryTypeDisplayName {
-        __typename
-        text
-        languageCode
-      }
-    }
+    # ... on Place {
+    #   __typename
+    #   id
+    #   displayName {
+    #     __typename
+    #     text
+    #     languageCode
+    #   }
+    #   location {
+    #     __typename
+    #     latitude
+    #     longitude
+    #   }
+    #   primaryTypeDisplayName {
+    #     __typename
+    #     text
+    #     languageCode
+    #   }
+    # }
   }
 }

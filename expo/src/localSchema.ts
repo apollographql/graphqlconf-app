@@ -31,10 +31,6 @@ gql`
     isBookmarked: Boolean!
   }
 
-  extend type Place implements BookmarkEntity {
-    isBookmarked: Boolean!
-  }
-
   extend type Query {
     bookmarks(typename: String): [Bookmark!]!
     aiFramework: String!

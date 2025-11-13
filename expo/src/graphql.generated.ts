@@ -83,12 +83,6 @@ export type LocalizedText = {
   text: Scalars['String']['output'];
 };
 
-export type LocationRestrictionInput = {
-  latitude: Scalars['Float']['input'];
-  longitude: Scalars['Float']['input'];
-  radiusInMeters: Scalars['Int']['input'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   chooseAiFramework: Scalars['String']['output'];
@@ -106,73 +100,6 @@ export type MutationToggleBookmarkArgs = {
   isBookmarked?: InputMaybe<Scalars['Boolean']['input']>;
   typename: Scalars['String']['input'];
 };
-
-export enum NearbyPlaceType {
-  AcaiShop = 'acai_shop',
-  AfghaniRestaurant = 'afghani_restaurant',
-  AfricanRestaurant = 'african_restaurant',
-  AmericanRestaurant = 'american_restaurant',
-  AsianRestaurant = 'asian_restaurant',
-  BagelShop = 'bagel_shop',
-  Bakery = 'bakery',
-  Bar = 'bar',
-  BarAndGrill = 'bar_and_grill',
-  BarbecueRestaurant = 'barbecue_restaurant',
-  BrazilianRestaurant = 'brazilian_restaurant',
-  BreakfastRestaurant = 'breakfast_restaurant',
-  BrunchRestaurant = 'brunch_restaurant',
-  BuffetRestaurant = 'buffet_restaurant',
-  Cafe = 'cafe',
-  Cafeteria = 'cafeteria',
-  CandyStore = 'candy_store',
-  CatCafe = 'cat_cafe',
-  ChineseRestaurant = 'chinese_restaurant',
-  ChocolateFactory = 'chocolate_factory',
-  ChocolateShop = 'chocolate_shop',
-  CoffeeShop = 'coffee_shop',
-  Confectionery = 'confectionery',
-  Deli = 'deli',
-  DessertRestaurant = 'dessert_restaurant',
-  DessertShop = 'dessert_shop',
-  Diner = 'diner',
-  DogCafe = 'dog_cafe',
-  DonutShop = 'donut_shop',
-  FastFoodRestaurant = 'fast_food_restaurant',
-  FineDiningRestaurant = 'fine_dining_restaurant',
-  FoodCourt = 'food_court',
-  FrenchRestaurant = 'french_restaurant',
-  GreekRestaurant = 'greek_restaurant',
-  HamburgerRestaurant = 'hamburger_restaurant',
-  IceCreamShop = 'ice_cream_shop',
-  IndianRestaurant = 'indian_restaurant',
-  IndonesianRestaurant = 'indonesian_restaurant',
-  ItalianRestaurant = 'italian_restaurant',
-  JapaneseRestaurant = 'japanese_restaurant',
-  JuiceShop = 'juice_shop',
-  KoreanRestaurant = 'korean_restaurant',
-  LebaneseRestaurant = 'lebanese_restaurant',
-  MealDelivery = 'meal_delivery',
-  MealTakeaway = 'meal_takeaway',
-  MediterraneanRestaurant = 'mediterranean_restaurant',
-  MexicanRestaurant = 'mexican_restaurant',
-  MiddleEasternRestaurant = 'middle_eastern_restaurant',
-  PizzaRestaurant = 'pizza_restaurant',
-  Pub = 'pub',
-  RamenRestaurant = 'ramen_restaurant',
-  Restaurant = 'restaurant',
-  SandwichShop = 'sandwich_shop',
-  SeafoodRestaurant = 'seafood_restaurant',
-  SpanishRestaurant = 'spanish_restaurant',
-  SteakHouse = 'steak_house',
-  SushiRestaurant = 'sushi_restaurant',
-  TeaHouse = 'tea_house',
-  ThaiRestaurant = 'thai_restaurant',
-  TurkishRestaurant = 'turkish_restaurant',
-  VeganRestaurant = 'vegan_restaurant',
-  VegetarianRestaurant = 'vegetarian_restaurant',
-  VietnameseRestaurant = 'vietnamese_restaurant',
-  WineBar = 'wine_bar'
-}
 
 export type Photo = {
   __typename?: 'Photo';
@@ -221,7 +148,6 @@ export type Query = {
   entities: Array<Entity>;
   event?: Maybe<SchedEvent>;
   events: Array<SchedEvent>;
-  nearbyPlaces: Array<Place>;
   place?: Maybe<Place>;
   session?: Maybe<SchedSession>;
   speaker?: Maybe<SchedSpeaker>;
@@ -249,13 +175,6 @@ export type QueryEventArgs = {
 export type QueryEventsArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
   year?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryNearbyPlacesArgs = {
-  includedTypes: Array<NearbyPlaceType>;
-  locationRestriction: LocationRestrictionInput;
-  maxResultCount?: InputMaybe<Scalars['Int']['input']>;
 };
 
 

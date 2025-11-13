@@ -9,7 +9,8 @@
       "./src/**/*.tsx"
     ],
     "excludes": [
-      "**/*.generated.ts"
+      "**/*.generated.ts",
+      "**/*+api.ts"
     ]
   }
 }

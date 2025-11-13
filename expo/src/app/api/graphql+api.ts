@@ -40,9 +40,9 @@ const typeDefs = gql`
     id: String! @external
   }
 
-  extend type Place implements Entity @key(fields: "id") {
-    id: String! @external
-  }
+  # extend type Place implements Entity @key(fields: "id") {
+  #   id: String! @external
+  # }
 `;
 
 const resolvers = {
