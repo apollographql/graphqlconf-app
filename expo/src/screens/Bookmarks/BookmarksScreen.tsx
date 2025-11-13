@@ -46,7 +46,7 @@ BookmarksScreen.Query = BookmarksScreenQueryDocument as TypedDocumentNode<
 export function BookmarksScreen({
   queryRef,
 }: {
-  queryRef: QueryRef<ResultOf<typeof BookmarksScreen.Query>>;
+  queryRef: QueryRef.ForQuery<typeof BookmarksScreen.Query>;
 }) {
   const { data } = useReadQuery(queryRef);
 

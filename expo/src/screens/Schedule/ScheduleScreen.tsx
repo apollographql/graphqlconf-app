@@ -19,10 +19,7 @@ export function ScheduleScreen({
   queryRef,
   variables,
 }: {
-  queryRef: QueryRef<
-    ResultOf<typeof ScheduleScreen.Query>,
-    VariablesOf<typeof ScheduleScreen.Query>
-  >;
+  queryRef: QueryRef.ForQuery<typeof ScheduleScreen.Query>;
   variables: VariablesOf<typeof ScheduleScreen.Query>;
 }) {
   return (

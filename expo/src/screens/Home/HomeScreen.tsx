@@ -19,10 +19,7 @@ export function HomeScreen({
   queryRef,
   variables,
 }: {
-  queryRef: QueryRef<
-    ResultOf<typeof HomeScreen.Query>,
-    VariablesOf<typeof HomeScreen.Query>
-  >;
+  queryRef: QueryRef.ForQuery<typeof HomeScreen.Query>;
   variables: VariablesOf<typeof HomeScreen.Query>;
 }) {
   return (
