@@ -1,10 +1,5 @@
 import { FragmentType, gql } from "@apollo/client";
-import {
-  QueryRef,
-  useQueryRefHandlers,
-  useSuspenseFragment,
-  useMutation,
-} from "@apollo/client/react";
+import { useSuspenseFragment, useMutation } from "@apollo/client/react";
 import { useTransition } from "react";
 import {
   ScrollView,
@@ -64,16 +59,15 @@ fragmentRegistry.register(SessionDetailContent.fragments.session);
 
 export function SessionDetailContent({
   session,
-  queryRef,
+  refetch,
 }: {
   session:
     | FragmentType<typeof SessionDetailContent.fragments.session>
     | FromParent<typeof SessionDetailContent.fragments.session>;
-  queryRef: QueryRef;
+  refetch: () => void;
 }) {
   const { width } = useWindowDimensions();
   const textColor = useThemeColor({}, "text");
-  const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
   const onRefresh = () => {
     transition(() => {

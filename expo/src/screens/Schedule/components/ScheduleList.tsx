@@ -1,9 +1,5 @@
 import { FragmentType, gql } from "@apollo/client";
-import {
-  QueryRef,
-  useQueryRefHandlers,
-  useSuspenseFragment,
-} from "@apollo/client/react";
+import { useSuspenseFragment } from "@apollo/client/react";
 import { useMemo, useTransition } from "react";
 import { SectionList } from "react-native";
 import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
@@ -15,18 +11,16 @@ import { ScheduleList_EventFragmentDoc } from "./ScheduleList.generated";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment ScheduleList_event on Query {
-      event(id: $eventId) {
+    fragment ScheduleList_event on SchedEvent {
+      id
+      sessions {
         id
-        sessions {
+        start_time_ts
+        venue {
           id
-          start_time_ts
-          venue {
-            id
-          }
-          ...ScheduleListItem_session
-          ...SectionHeader_event
         }
+        ...ScheduleListItem_session
+        ...SectionHeader_event
       }
     }
   `;
@@ -39,14 +33,13 @@ fragmentRegistry.register(ScheduleList.fragments.event);
 
 export function ScheduleList({
   event,
-  queryRef,
+  refetch,
   variables,
 }: {
   event: FragmentType<typeof ScheduleList.fragments.event>;
-  queryRef: QueryRef;
+  refetch: () => void;
   variables: { eventId: string };
 }) {
-  const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
   const onRefresh = () => {
     transition(() => {
@@ -62,7 +55,7 @@ export function ScheduleList({
   });
   const sections = useMemo(() => {
     // Flatten sessions from all events (typically just one event per year)
-    const sessions = data.event?.sessions || [];
+    const sessions = data.sessions || [];
     const grouped = Object.groupBy(sessions, (item) => item.start_time_ts ?? 0);
     let previousDay: undefined | string;
     return Object.entries(grouped)
@@ -87,7 +80,7 @@ export function ScheduleList({
         }
         return { ...section, firstEventOfDay: false };
       });
-  }, [data.event]);
+  }, [data]);
   return (
     <SectionList
       refreshing={refreshing}

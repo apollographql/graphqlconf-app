@@ -1,9 +1,5 @@
 import { FragmentType, gql } from "@apollo/client";
-import {
-  QueryRef,
-  useQueryRefHandlers,
-  useSuspenseFragment,
-} from "@apollo/client/react";
+import { useSuspenseFragment } from "@apollo/client/react";
 import { useMemo, useTransition } from "react";
 import { ScrollView, RefreshControl, StyleSheet } from "react-native";
 import { ScheduleListItem } from "@/components/ListItems/ScheduleListItem";
@@ -16,18 +12,16 @@ import { Fonts } from "@/constants/theme";
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
-    fragment HomeScreenContent_event on Query {
-      event(id: $eventId) {
+    fragment HomeScreenContent_event on SchedEvent {
+      id
+      name
+      sessions {
         id
-        name
-        sessions {
-          id
-          start_time_ts
-          end_date
-          end_time
-          type
-          ...ScheduleListItem_session
-        }
+        start_time_ts
+        end_date
+        end_time
+        type
+        ...ScheduleListItem_session
       }
     }
   `;
@@ -40,14 +34,13 @@ fragmentRegistry.register(HomeScreenContent.fragments.event);
 
 export function HomeScreenContent({
   event,
-  queryRef,
+  refetch,
   variables,
 }: {
   event: FragmentType<typeof HomeScreenContent.fragments.event>;
-  queryRef: QueryRef;
+  refetch: () => void;
   variables: { eventId: string };
 }) {
-  const { refetch } = useQueryRefHandlers(queryRef);
   const [refreshing, transition] = useTransition();
   const onRefresh = () => {
     transition(() => {
@@ -64,7 +57,7 @@ export function HomeScreenContent({
 
   const { ongoingTalks, upcomingTalk } = useMemo(() => {
     const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-    const sessions = data.event?.sessions || [];
+    const sessions = data.sessions || [];
 
     // Organizational session types to filter out (normalized in connectors)
     const organizationalTypes = ["Registration", "Breaks"];
@@ -109,7 +102,7 @@ export function HomeScreenContent({
       ongoingTalks: ongoing,
       upcomingTalk: upcoming,
     };
-  }, [data.event?.sessions]);
+  }, [data.sessions]);
 
   return (
     <ScrollView
@@ -120,7 +113,7 @@ export function HomeScreenContent({
     >
       <ThemedView style={styles.section}>
         <ThemedText type="title" style={styles.title}>
-          {data.event?.name ?? "Event"}
+          {data.name ?? "Event"}
         </ThemedText>
       </ThemedView>
 

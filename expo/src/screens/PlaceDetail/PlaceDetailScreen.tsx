@@ -1,8 +1,12 @@
 import { gql } from "@apollo/client";
-import { useReadQuery, QueryRef } from "@apollo/client/react";
+import {
+  useReadQuery,
+  QueryRef,
+  useQueryRefHandlers,
+} from "@apollo/client/react";
 import { PlaceDetailContent } from "./components/PlaceDetailContent";
 import { PlaceDetailScreenDocument } from "./PlaceDetailScreen.generated";
-import { ResultOf } from "@graphql-typed-document-node/core";
+import { ThemedText } from "@/components/ThemedText";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
@@ -24,10 +28,11 @@ export default function PlaceDetailScreen({
   queryRef: QueryRef.ForQuery<typeof PlaceDetailScreen.Query>;
 }) {
   const { data } = useReadQuery(queryRef);
+  const { refetch } = useQueryRefHandlers(queryRef);
 
   if (!data.place) {
-    return null;
+    return <ThemedText>No place found.</ThemedText>;
   }
 
-  return <PlaceDetailContent place={data.place} queryRef={queryRef} />;
+  return <PlaceDetailContent place={data.place} refetch={refetch} />;
 }

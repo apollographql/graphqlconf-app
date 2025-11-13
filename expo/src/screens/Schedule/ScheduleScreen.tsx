@@ -1,14 +1,22 @@
 import { gql } from "@apollo/client";
-import { QueryRef } from "@apollo/client/react";
+import {
+  QueryRef,
+  useQueryRefHandlers,
+  useReadQuery,
+} from "@apollo/client/react";
 import { ScheduleScreenDocument } from "./ScheduleScreen.generated";
 import { ScheduleList } from "./components/ScheduleList";
-import { ResultOf, VariablesOf } from "@graphql-typed-document-node/core";
+import { VariablesOf } from "@graphql-typed-document-node/core";
+import { ThemedText } from "@/components/ThemedText";
 
 if (false) {
   // eslint-disable-next-line no-unused-expressions
   gql`
     query ScheduleScreen($eventId: String!) {
-      ...ScheduleList_event
+      event(id: $eventId) {
+        id
+        ...ScheduleList_event
+      }
     }
   `;
 }
@@ -22,11 +30,12 @@ export function ScheduleScreen({
   queryRef: QueryRef.ForQuery<typeof ScheduleScreen.Query>;
   variables: VariablesOf<typeof ScheduleScreen.Query>;
 }) {
+  const { data } = useReadQuery(queryRef);
+  const { refetch } = useQueryRefHandlers(queryRef);
+  if (!data.event) {
+    return <ThemedText>No event found.</ThemedText>;
+  }
   return (
-    <ScheduleList
-      event={"ROOT_QUERY" as any}
-      queryRef={queryRef}
-      variables={variables}
-    />
+    <ScheduleList event={data.event} refetch={refetch} variables={variables} />
   );
 }
