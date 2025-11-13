@@ -2,34 +2,12 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { Platform } from "react-native";
 import type { GraphQLCodegenDataMasking } from "@apollo/client/masking";
 import { createFragmentRegistry } from "@apollo/client/cache";
-import {
-  DocumentTypeDecoration,
-  TypedDocumentNode,
-} from "@graphql-typed-document-node/core";
-import { HKT } from "@apollo/client/utilities";
+import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { LocalState } from "@apollo/client/local-state";
-import { bookmarksResolvers } from "@/apollo/bookmarksResolvers";
-import { aiFrameworkResolvers } from "@/apollo/aiFrameworkResolvers";
-
-type AdjustedFragmentType<TData> =
-  TData extends DocumentTypeDecoration<infer RealTData, any>
-    ? AdjustedFragmentType<RealTData>
-    : [TData] extends [{ " $fragmentName"?: infer TKey }]
-      ? TKey extends string
-        ? { " $fragmentRefs"?: { [key in TKey]: TData } }
-        : never
-      : never;
-
-export interface AdjustedFragmentTypeHKT extends HKT {
-  arg1: unknown; // TData
-  return: AdjustedFragmentType<this["arg1"]>;
-}
 
 declare module "@apollo/client" {
-  interface TypeOverrides
-    extends Omit<GraphQLCodegenDataMasking.TypeOverrides, "FragmentType"> {
-    FragmentType: AdjustedFragmentTypeHKT;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface TypeOverrides extends GraphQLCodegenDataMasking.TypeOverrides {}
 }
 
 if (!process.env.EXPO_PUBLIC__GRAPHQL_SERVER) {
@@ -85,19 +63,7 @@ const _client = new ApolloClient({
   link: new HttpLink({
     uri,
   }),
-  localState: new LocalState({
-    resolvers: {
-      ...bookmarksResolvers,
-      Query: {
-        ...bookmarksResolvers.Query,
-        ...aiFrameworkResolvers.Query,
-      },
-      Mutation: {
-        ...bookmarksResolvers.Mutation,
-        ...aiFrameworkResolvers.Mutation,
-      },
-    },
-  }),
+  localState: new LocalState({}),
   dataMasking: true,
 });
 
