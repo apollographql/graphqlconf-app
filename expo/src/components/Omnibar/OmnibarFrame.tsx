@@ -6,7 +6,7 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 import { ThemedView } from "../ThemedView";
 import { ThemedText } from "../ThemedText";
 import { TypingIndicator } from "./TypingIndicator";
-import { IconSymbol } from "../ui/icon-symbol";
+import { IconSymbol } from "../IconSymbol";
 import { Colors } from "@/constants/theme";
 
 export declare namespace OmnibarFrame {
