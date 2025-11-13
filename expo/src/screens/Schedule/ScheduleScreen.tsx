@@ -6,7 +6,6 @@ import {
 } from "@apollo/client/react";
 import { ScheduleScreenDocument } from "./ScheduleScreen.generated";
 import { ScheduleList } from "./components/ScheduleList";
-import { VariablesOf } from "@graphql-typed-document-node/core";
 import { ThemedText } from "@/components/ThemedText";
 
 if (false) {
@@ -25,17 +24,13 @@ ScheduleScreen.Query = ScheduleScreenDocument;
 
 export function ScheduleScreen({
   queryRef,
-  variables,
 }: {
   queryRef: QueryRef.ForQuery<typeof ScheduleScreen.Query>;
-  variables: VariablesOf<typeof ScheduleScreen.Query>;
 }) {
   const { data } = useReadQuery(queryRef);
   const { refetch } = useQueryRefHandlers(queryRef);
   if (!data.event) {
     return <ThemedText>No event found.</ThemedText>;
   }
-  return (
-    <ScheduleList event={data.event} refetch={refetch} variables={variables} />
-  );
+  return <ScheduleList event={data.event} refetch={refetch} />;
 }

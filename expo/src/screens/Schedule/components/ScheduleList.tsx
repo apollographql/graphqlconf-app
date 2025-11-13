@@ -34,11 +34,9 @@ fragmentRegistry.register(ScheduleList.fragments.event);
 export function ScheduleList({
   event,
   refetch,
-  variables,
 }: {
   event: FragmentType<typeof ScheduleList.fragments.event>;
   refetch: () => void;
-  variables: { eventId: string };
 }) {
   const [refreshing, transition] = useTransition();
   const onRefresh = () => {
@@ -51,7 +49,6 @@ export function ScheduleList({
     fragment: ScheduleList.fragments.event,
     fragmentName: "ScheduleList_event",
     from: event,
-    variables,
   });
   const sections = useMemo(() => {
     // Flatten sessions from all events (typically just one event per year)
