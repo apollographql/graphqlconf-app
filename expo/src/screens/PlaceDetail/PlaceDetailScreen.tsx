@@ -27,8 +27,8 @@ export default function PlaceDetailScreen({
 }: {
   queryRef: QueryRef.ForQuery<typeof PlaceDetailScreen.Query>;
 }) {
-  const { data } = useReadQuery(queryRef);
   const { refetch } = useQueryRefHandlers(queryRef);
+  const { data } = useReadQuery(queryRef);
 
   if (!data.place) {
     return <ThemedText>No place found.</ThemedText>;

@@ -27,8 +27,8 @@ export default function SessionDetailScreen({
 }: {
   queryRef: QueryRef.ForQuery<typeof SessionDetailScreen.Query>;
 }) {
-  const { data } = useReadQuery(queryRef);
   const { refetch } = useQueryRefHandlers(queryRef);
+  const { data } = useReadQuery(queryRef);
 
   if (!data.session) {
     return <ThemedText>No session found.</ThemedText>;

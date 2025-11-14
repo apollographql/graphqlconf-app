@@ -57,11 +57,6 @@ const resolvers = {
       }));
     },
   },
-  Entity: {
-    __resolveType(obj: { __typename: string }) {
-      return obj.__typename;
-    },
-  },
 };
 
 const schema = buildSubgraphSchema({ typeDefs, resolvers });
@@ -76,6 +71,7 @@ declare global {
 }
 
 async function getServer() {
+  // Singleton pattern to ensure we only create one ApolloServer instance, even when Expo hot-reloads modules.
   let server = global.__apolloServer;
   if (!server) {
     console.log("Starting new ApolloServer instance");
