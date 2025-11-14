@@ -1,6 +1,7 @@
 import { Types } from "@graphql-codegen/plugin-helpers";
 import type { TypeScriptDocumentsPluginConfig } from "@graphql-codegen/typescript-operations";
 import type { TypeScriptTypedDocumentNodesConfig as TypedDocumentNodeConfig } from "@graphql-codegen/typed-document-node";
+import type { LocalStatePluginConfig } from "@apollo/client-graphql-codegen/local-state";
 
 type PluginConfig = TypeScriptDocumentsPluginConfig & TypedDocumentNodeConfig;
 
@@ -26,11 +27,8 @@ const sharedConfig: PluginConfig = {
 };
 
 const supergraphSchema = ["http://localhost:4000"];
-const fullSchema = [
-  ...supergraphSchema,
-  "./src/localSchema.ts",
-  "./src/localSchema.*.ts",
-];
+const localSchema = ["./src/localSchema.ts", "./src/localSchema.*.ts"];
+const fullSchema = [...supergraphSchema, ...localSchema];
 
 const config: Types.Config = {
   overwrite: true,
@@ -104,6 +102,14 @@ const config: Types.Config = {
         ...sharedConfig,
         // would also like this to not create runtime code for fragments, but that seems impossible
       } satisfies PluginConfig,
+    },
+    "./src/apollo/localResolvers.generated.types.ts": {
+      schema: localSchema,
+      plugins: ["typescript", "@apollo/client-graphql-codegen/local-state"],
+      config: {
+        nonOptionalTypename: true,
+        baseTypesPath: "@/graphql.generated",
+      } satisfies LocalStatePluginConfig,
     },
   },
 };

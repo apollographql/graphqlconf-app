@@ -1,36 +1,43 @@
-import type { LocalState } from "@apollo/client/local-state";
 import {
   getBookmarks,
   toggleBookmark,
   isBookmarked,
 } from "@/utils/bookmarksStorage";
+import { Resolvers } from "./localResolvers.generated.types";
+import { DeepPartial } from "@apollo/client/utilities";
 
-export const bookmarksResolvers = {
+export const bookmarksResolvers: DeepPartial<Resolvers> = {
   Query: {
-    bookmarks: async (_root: unknown, args: { typename?: string }) => {
+    bookmarks: async (_root: unknown, args) => {
       const allBookmarks = await getBookmarks();
       if (args.typename) {
-        return allBookmarks.filter(
-          (bookmark) => bookmark.typename === args.typename
-        );
+        return allBookmarks
+          .filter((bookmark) => bookmark.typename === args.typename)
+          .map((bookmark) => ({
+            __typename: "Bookmark",
+            ...bookmark,
+          }));
       }
-      return allBookmarks;
+      return allBookmarks.map((bookmark) => ({
+        __typename: "Bookmark",
+        ...bookmark,
+      }));
     },
   },
 
   Mutation: {
-    toggleBookmark: async (
-      _root: unknown,
-      args: { id: string; typename: string; isBookmarked?: boolean },
-      { client }
-    ) => {
+    toggleBookmark: async (_root: unknown, args, { client }) => {
       const newState = await toggleBookmark(
         args.id,
         args.typename,
-        args.isBookmarked
+        args.isBookmarked ?? undefined
       );
       client.cache.evict({ fieldName: "bookmarks" });
-      return { __typename: args.typename, id: args.id, isBookmarked: newState };
+      return {
+        __typename: args.typename as any,
+        id: args.id,
+        isBookmarked: newState,
+      };
     },
   },
 
@@ -45,4 +52,4 @@ export const bookmarksResolvers = {
   Place: {
     isBookmarked,
   },
-} satisfies LocalState.Resolvers;
+};
