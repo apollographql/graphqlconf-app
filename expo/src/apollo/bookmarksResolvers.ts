@@ -11,17 +11,11 @@ export const bookmarksResolvers: DeepPartial<Resolvers> = {
     bookmarks: async (_root: unknown, args) => {
       const allBookmarks = await getBookmarks();
       if (args.typename) {
-        return allBookmarks
-          .filter((bookmark) => bookmark.typename === args.typename)
-          .map((bookmark) => ({
-            __typename: "Bookmark",
-            ...bookmark,
-          }));
+        return allBookmarks.filter(
+          (bookmark) => bookmark.typename === args.typename
+        );
       }
-      return allBookmarks.map((bookmark) => ({
-        __typename: "Bookmark",
-        ...bookmark,
-      }));
+      return allBookmarks;
     },
   },
 

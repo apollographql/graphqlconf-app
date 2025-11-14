@@ -107,7 +107,6 @@ const config: Types.Config = {
       schema: localSchema,
       plugins: ["typescript", "@apollo/client-graphql-codegen/local-state"],
       config: {
-        nonOptionalTypename: true,
         baseTypesPath: "@/graphql.generated",
       } satisfies LocalStatePluginConfig,
     },

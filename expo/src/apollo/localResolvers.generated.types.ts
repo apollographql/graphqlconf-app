@@ -20,7 +20,7 @@ export type Scalars = {
 };
 
 export type Bookmark = {
-  __typename: 'Bookmark';
+  __typename?: 'Bookmark';
   id: Scalars['String']['output'];
   typename: Scalars['String']['output'];
 };
@@ -31,7 +31,7 @@ export type BookmarkEntity = {
 };
 
 export type Mutation = {
-  __typename: 'Mutation';
+  __typename?: 'Mutation';
   chooseAiFramework: Scalars['String']['output'];
   toggleBookmark: BookmarkEntity;
 };
@@ -49,12 +49,12 @@ export type MutationToggleBookmarkArgs = {
 };
 
 export type Place = BookmarkEntity & {
-  __typename: 'Place';
+  __typename?: 'Place';
   isBookmarked: Scalars['Boolean']['output'];
 };
 
 export type Query = {
-  __typename: 'Query';
+  __typename?: 'Query';
   aiFramework: Scalars['String']['output'];
   bookmarks: Array<Bookmark>;
 };
@@ -65,12 +65,12 @@ export type QueryBookmarksArgs = {
 };
 
 export type SchedSession = BookmarkEntity & {
-  __typename: 'SchedSession';
+  __typename?: 'SchedSession';
   isBookmarked: Scalars['Boolean']['output'];
 };
 
 export type SchedSpeaker = BookmarkEntity & {
-  __typename: 'SchedSpeaker';
+  __typename?: 'SchedSpeaker';
   isBookmarked: Scalars['Boolean']['output'];
 };
 
