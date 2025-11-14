@@ -30,12 +30,17 @@ export function HomeScreen({
   queryRef: QueryRef.ForQuery<typeof HomeScreen.Query>;
   variables: VariablesOf<typeof HomeScreen.Query>;
 }) {
-  const { data } = useReadQuery(queryRef);
   const { refetch } = useQueryRefHandlers(queryRef);
+  const { data } = useReadQuery(queryRef);
+
   if (!data.event) {
     return <ThemedText>No event found.</ThemedText>;
   }
   return (
-    <HomeScreenContent event={data.event} refetch={refetch} variables={variables} />
+    <HomeScreenContent
+      event={data.event}
+      refetch={refetch}
+      variables={variables}
+    />
   );
 }

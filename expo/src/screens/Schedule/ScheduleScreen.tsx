@@ -30,8 +30,9 @@ export function ScheduleScreen({
   queryRef: QueryRef.ForQuery<typeof ScheduleScreen.Query>;
   variables: VariablesOf<typeof ScheduleScreen.Query>;
 }) {
-  const { data } = useReadQuery(queryRef);
   const { refetch } = useQueryRefHandlers(queryRef);
+  const { data } = useReadQuery(queryRef);
+
   if (!data.event) {
     return <ThemedText>No event found.</ThemedText>;
   }
