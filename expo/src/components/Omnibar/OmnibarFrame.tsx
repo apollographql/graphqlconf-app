@@ -26,7 +26,7 @@ export function OmnibarFrame({
 }: {
   children: React.ReactNode;
   messages: React.ReactNode;
-  handle: React.Ref<OmnibarFrame.Handle>;
+  handle?: React.Ref<OmnibarFrame.Handle>;
   onSendMessage: (message: string) => void;
   onReset: () => Promise<void>;
   error?: Error;
