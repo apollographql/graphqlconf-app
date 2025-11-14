@@ -1,6 +1,7 @@
 import { Types } from "@graphql-codegen/plugin-helpers";
 import type { TypeScriptDocumentsPluginConfig } from "@graphql-codegen/typescript-operations";
 import type { TypeScriptTypedDocumentNodesConfig as TypedDocumentNodeConfig } from "@graphql-codegen/typed-document-node";
+import type { LocalStatePluginConfig } from "@apollo/client-graphql-codegen/local-state";
 
 type PluginConfig = TypeScriptDocumentsPluginConfig & TypedDocumentNodeConfig;
 
@@ -25,19 +26,28 @@ const sharedConfig: PluginConfig = {
   },
 };
 
+const supergraphSchema = ["http://localhost:4000"];
+const localSchema = ["./src/localSchema.ts", "./src/localSchema.*.ts"];
+const fullSchema = [...supergraphSchema, ...localSchema];
+
 const config: Types.Config = {
   overwrite: true,
-  schema: ["http://localhost:4000", "./src/localSchema.ts"],
   // Don't exit with non-zero status when there are no documents
   ignoreNoDocuments: true,
   generates: {
     "./src/schema.json": {
+      schema: fullSchema,
       plugins: ["introspection"],
       config: {
         minify: false,
       },
     },
+    "../connector/supergraph.graphqls": {
+      plugins: ["schema-ast"],
+      schema: supergraphSchema,
+    },
     "./src/graphql.generated.ts": {
+      schema: fullSchema,
       plugins: [
         {
           add: {
@@ -48,6 +58,7 @@ const config: Types.Config = {
       ],
     },
     "./src/": {
+      schema: fullSchema,
       documents: ["src/**/*.{ts,tsx}", "!src/app/**/*.{ts,tsx}"],
       preset: "near-operation-file",
       presetConfig: {
@@ -64,10 +75,10 @@ const config: Types.Config = {
         "typescript-operations",
         "typed-document-node",
       ],
-      // Note: these config options moved from the other generated file config
       config: sharedConfig,
     },
     "./src/app-queries.generated.ts": {
+      schema: fullSchema,
       documents: [
         // We only want to include queries used in the app directory
         "src/app/**/*.{ts,tsx}",
@@ -92,7 +103,16 @@ const config: Types.Config = {
         // would also like this to not create runtime code for fragments, but that seems impossible
       } satisfies PluginConfig,
     },
+    "./src/apollo/localResolvers.generated.types.ts": {
+      schema: localSchema,
+      plugins: ["typescript", "@apollo/client-graphql-codegen/local-state"],
+      config: {
+        nonOptionalTypename: true,
+        baseTypesPath: "@/graphql.generated",
+      } satisfies LocalStatePluginConfig,
+    },
     "./src/agent/mcp/supergraph-mcp-operations.ts": {
+      schema: fullSchema,
       documents: ["../connector/operations/*.graphql"],
       preset: "import-types",
       presetConfig: {

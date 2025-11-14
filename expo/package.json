@@ -71,6 +71,7 @@
     "zod": "^3.25.75"
   },
   "devDependencies": {
+    "@apollo/client-graphql-codegen": "https://pkg.pr.new/apollographql/apollo-client/@apollo/client-graphql-codegen@23cb97d",
     "@graphql-codegen/add": "^6.0.0",
     "@graphql-codegen/cli": "^6.0.0",
     "@graphql-codegen/import-types-preset": "^3.0.1",

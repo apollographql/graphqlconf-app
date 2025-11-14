@@ -60,9 +60,12 @@ export async function getBookmarks(): Promise<BookmarkItem[]> {
  * Check if an item is bookmarked
  */
 export async function isBookmarked(parent: {
-  id: string;
-  __typename: string;
+  id?: string;
+  __typename?: string;
 }): Promise<boolean> {
+  if (!parent.id || !parent.__typename) {
+    return false;
+  }
   const bookmarksMap = await getBookmarksMap();
   const key = createKey(parent.__typename, parent.id);
   return key in bookmarksMap;
