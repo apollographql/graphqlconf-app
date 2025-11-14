@@ -77,7 +77,6 @@ const config: Types.Config = {
         "typescript-operations",
         "typed-document-node",
       ],
-      // Note: these config options moved from the other generated file config
       config: sharedConfig,
     },
     "./src/app-queries.generated.ts": {
