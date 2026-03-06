@@ -9,7 +9,7 @@ private extension NumberFormatter {
   }
 }
 
-extension Int32 {
+extension Int {
   var ordinal: String {
     guard self != 0 else { return "Ground" }
 
