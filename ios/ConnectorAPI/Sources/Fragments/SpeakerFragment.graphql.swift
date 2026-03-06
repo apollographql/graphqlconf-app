@@ -2,17 +2,18 @@
 // This file was automatically generated and should not be edited.
 
 @_exported import ApolloAPI
+@_spi(Execution) @_spi(Unsafe) import ApolloAPI
 
 public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable {
   public static var fragmentDefinition: StaticString {
     #"fragment SpeakerFragment on Speaker { __typename id name about company position avatar socialUrls { __typename service url } }"#
   }
 
-  public let __data: DataDict
-  public init(_dataDict: DataDict) { __data = _dataDict }
+  @_spi(Unsafe) public let __data: DataDict
+  @_spi(Unsafe) public init(_dataDict: DataDict) { __data = _dataDict }
 
-  public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Speaker }
-  public static var __selections: [ApolloAPI.Selection] { [
+  @_spi(Execution) public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.Speaker }
+  @_spi(Execution) public static var __selections: [ApolloAPI.Selection] { [
     .field("__typename", String.self),
     .field("id", ConnectorAPI.ID.self),
     .field("name", String.self),
@@ -21,6 +22,9 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     .field("position", String.self),
     .field("avatar", String.self),
     .field("socialUrls", [SocialUrl].self),
+  ] }
+  @_spi(Execution) public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+    SpeakerFragment.self
   ] }
 
   public var id: ConnectorAPI.ID { __data["id"] }
@@ -40,35 +44,33 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
     avatar: String,
     socialUrls: [SocialUrl]
   ) {
-    self.init(_dataDict: DataDict(
-      data: [
-        "__typename": ConnectorAPI.Objects.Speaker.typename,
-        "id": id,
-        "name": name,
-        "about": about,
-        "company": company,
-        "position": position,
-        "avatar": avatar,
-        "socialUrls": socialUrls._fieldData,
-      ],
-      fulfilledFragments: [
-        ObjectIdentifier(SpeakerFragment.self)
-      ]
-    ))
+    self.init(unsafelyWithData: [
+      "__typename": ConnectorAPI.Objects.Speaker.typename,
+      "id": id,
+      "name": name,
+      "about": about,
+      "company": company,
+      "position": position,
+      "avatar": avatar,
+      "socialUrls": socialUrls._fieldData,
+    ])
   }
 
   /// SocialUrl
   ///
   /// Parent Type: `SocialUrl`
   public struct SocialUrl: ConnectorAPI.SelectionSet {
-    public let __data: DataDict
-    public init(_dataDict: DataDict) { __data = _dataDict }
+    @_spi(Unsafe) public let __data: DataDict
+    @_spi(Unsafe) public init(_dataDict: DataDict) { __data = _dataDict }
 
-    public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.SocialUrl }
-    public static var __selections: [ApolloAPI.Selection] { [
+    @_spi(Execution) public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.SocialUrl }
+    @_spi(Execution) public static var __selections: [ApolloAPI.Selection] { [
       .field("__typename", String.self),
       .field("service", GraphQLEnum<ConnectorAPI.SocialService>.self),
       .field("url", String.self),
+    ] }
+    @_spi(Execution) public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      SpeakerFragment.SocialUrl.self
     ] }
 
     public var service: GraphQLEnum<ConnectorAPI.SocialService> { __data["service"] }
@@ -78,16 +80,11 @@ public struct SpeakerFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable
       service: GraphQLEnum<ConnectorAPI.SocialService>,
       url: String
     ) {
-      self.init(_dataDict: DataDict(
-        data: [
-          "__typename": ConnectorAPI.Objects.SocialUrl.typename,
-          "service": service,
-          "url": url,
-        ],
-        fulfilledFragments: [
-          ObjectIdentifier(SpeakerFragment.SocialUrl.self)
-        ]
-      ))
+      self.init(unsafelyWithData: [
+        "__typename": ConnectorAPI.Objects.SocialUrl.typename,
+        "service": service,
+        "url": url,
+      ])
     }
   }
 }
