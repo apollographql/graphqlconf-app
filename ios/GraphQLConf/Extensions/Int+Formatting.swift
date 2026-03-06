@@ -1,12 +1,12 @@
 import Foundation
 
 private extension NumberFormatter {
-  static var ordinalFormatter: NumberFormatter {
+  static let ordinalFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .ordinal
 
     return formatter
-  }
+  }()
 }
 
 extension Int {
