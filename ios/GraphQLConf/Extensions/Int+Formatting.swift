@@ -1,15 +1,15 @@
 import Foundation
 
 private extension NumberFormatter {
-  static var ordinalFormatter: NumberFormatter {
+  static let ordinalFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .ordinal
 
     return formatter
-  }
+  }()
 }
 
-extension Int32 {
+extension Int {
   var ordinal: String {
     guard self != 0 else { return "Ground" }
 

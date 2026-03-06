@@ -2,7 +2,6 @@
 // This file was automatically generated and should not be edited.
 
 import ApolloAPI
-import Foundation
 
 public protocol SelectionSet: ApolloAPI.SelectionSet & ApolloAPI.RootSelectionSet
 where Schema == ConnectorAPI.SchemaMetadata {}
@@ -19,7 +18,7 @@ where Schema == ConnectorAPI.SchemaMetadata {}
 public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static let configuration: any ApolloAPI.SchemaConfiguration.Type = SchemaConfiguration.self
 
-  public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
+  @_spi(Execution) public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
     switch typename {
     case "Query": return ConnectorAPI.Objects.Query
     case "Room": return ConnectorAPI.Objects.Room
@@ -34,6 +33,3 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
 public enum Objects {}
 public enum Interfaces {}
 public enum Unions {}
-
-extension NSArray: @retroactive @unchecked Sendable {}
-
