@@ -6,10 +6,10 @@ plugins {
   id("com.apollographql.execution")
   id("org.jetbrains.kotlin.plugin.serialization")
   id("com.gradleup.loud")
-  id("com.gradleup.compat.patrouille")
+  id("com.gradleup.tapmoc")
 }
 
-compatPatrouille {
+tapmoc {
   java(17)
   kotlin(getKotlinPluginVersion())
 }

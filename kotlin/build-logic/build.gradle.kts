@@ -39,5 +39,5 @@ dependencies {
 }
 
 extensions.getByType(GratatouilleExtension::class.java).apply {
-  codeGeneration()
+//  codeGeneration()
 }

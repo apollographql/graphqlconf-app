@@ -9,12 +9,12 @@ plugins {
   id("org.jetbrains.kotlin.plugin.serialization")
   id("org.jetbrains.compose")
   id("org.jetbrains.compose.hot-reload")
-  id("com.gradleup.compat.patrouille")
+  id("com.gradleup.tapmoc")
   id("com.android.application")
   id("app.cash.licensee")
 }
 
-compatPatrouille {
+tapmoc {
   java(17)
 }
 
