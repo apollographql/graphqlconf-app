@@ -1,0 +1,28 @@
+package graphqlconf.app.screen
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.Composable
+import graphqlconf.app.misc.Header
+import graphqlconf.app.misc.MainHeaderContainerState
+import graphqlconf.app.misc.MainHeaderTitleBar
+import graphqlconf.app.misc.SpeakerList
+import graphqlconf_app.shared.generated.resources.Res
+import graphqlconf_app.shared.generated.resources.nav_destination_speakers
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun SpeakersScreen(onSpeaker: (String) -> Unit) {
+  Column {
+
+    Header(
+      state = MainHeaderContainerState.Title,
+      titleContent = {
+        MainHeaderTitleBar(
+          title = stringResource(Res.string.nav_destination_speakers),
+        )
+      },
+    )
+
+    SpeakerList(onSpeaker)
+  }
+}

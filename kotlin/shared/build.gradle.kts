@@ -1,0 +1,170 @@
+@file:OptIn(ExperimentalAbiValidation::class)
+
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+
+plugins {
+  id("org.jetbrains.kotlin.multiplatform")
+  id("com.android.kotlin.multiplatform.library")
+  id("com.apollographql.apollo")
+  id("org.jetbrains.kotlin.plugin.compose")
+  id("org.jetbrains.kotlin.plugin.serialization")
+  id("org.jetbrains.compose")
+  id("org.jetbrains.compose.hot-reload")
+  id("com.gradleup.tapmoc")
+  id("app.cash.licensee")
+}
+
+tapmoc {
+  java(17)
+}
+
+kotlin {
+  jvm()
+  android {
+    namespace = "graphqlconf.app.shared"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    minSdk = libs.versions.minSdk.get().toInt()
+    androidResources.enable = true
+  }
+
+  compilerOptions {
+    optIn.add("com.russhwolf.settings.ExperimentalSettingsApi")
+    optIn.add("kotlin.time.ExperimentalTime")
+  }
+
+  sourceSets {
+    getByName("commonMain").dependencies {
+      implementation(apollo.deps.runtime)
+      implementation(apollo.deps.normalizedCache)
+      implementation(apollo.deps.normalizedCacheSqlite)
+
+      implementation(compose.runtime)
+      implementation(compose.foundation)
+      implementation(compose.material3)
+      implementation(compose.components.resources)
+
+      implementation(libs.kotlinx.datetime)
+      implementation(libs.kotlinx.serialization.json)
+      implementation(libs.kotlinx.coroutines.core)
+      implementation(libs.androidx.lifecycle.runtime.compose)
+      implementation(libs.androidx.navigation.compose)
+      implementation(libs.coil.compose)
+      implementation(libs.coil.network.ktor3)
+
+      // Multiplatform Settings
+      implementation(libs.settings)
+      implementation(libs.settings.serialization)
+      implementation(libs.settings.observable)
+      implementation(libs.settings.coroutines)
+
+      implementation(libs.components.ui.tooling.preview)
+    }
+
+    getByName("androidMain").dependencies {
+      implementation(libs.androidx.core.splashscreen)
+      implementation(libs.androidx.activity.compose)
+      implementation(libs.ktor.client.okhttp)
+      implementation(libs.androidx.preference)
+      implementation(libs.androidx.core)
+      implementation(libs.androidx.work)
+      implementation(libs.zoomable.image)
+    }
+
+    getByName("commonTest").dependencies {
+      implementation(kotlin("test"))
+    }
+
+    getByName("jvmMain").dependencies {
+      implementation(compose.desktop.currentOs)
+      implementation(compose.desktop.common)
+      implementation(libs.ktor.client.okhttp)
+      implementation(libs.coil.network.okhttp)
+      implementation(libs.kotlinx.coroutines.swing)
+    }
+
+    getByName("jvmTest").dependencies {
+      implementation(compose.desktop.currentOs)
+      implementation(compose.desktop.uiTestJUnit4)
+    }
+  }
+}
+
+apollo {
+  service("service") {
+    packageName.set("graphqlconf.api")
+    schemaFiles.from("../backend/graphql/schema.graphqls")
+    mapScalar("LocalDateTime", "kotlinx.datetime.LocalDateTime", "graphqlconf.app.LocalDateTimeAdapter")
+
+    introspection {
+      endpointUrl.set("https://graphqlconf.app/graphql")
+      schemaFile.set(file("../backend/graphql/schema.graphqls"))
+    }
+  }
+}
+
+compose.desktop {
+  application {
+    mainClass = "MainKt"
+
+    nativeDistributions {
+      targetFormats(TargetFormat.Dmg, TargetFormat.Deb)
+      packageName = "GraphQLConf"
+      packageVersion = "1.0.0"
+
+      val iconsRoot = project.file("desktop-icons")
+      macOS {
+        iconFile.set(iconsRoot.resolve("icon-mac.icns"))
+      }
+      linux {
+        iconFile.set(iconsRoot.resolve("icon-linux.png"))
+      }
+    }
+
+    buildTypes.release.proguard {
+      configurationFiles.from(project.file("rules.pro"))
+    }
+  }
+}
+
+composeCompiler {
+  featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
+}
+
+compose.resources {
+  publicResClass = true
+  nameOfResClass = "Res"
+}
+
+
+tasks.register("allJar", Jar::class.java) {
+  from(tasks.named("jvmJar").map { zipTree((it as Jar).archiveFile) })
+  from(configurations.getByName("jvmRuntimeClasspath").map { if (it.isDirectory) it else zipTree(it) })
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  this.archiveFileName.set("all.jar")
+  manifest {
+    attributes(
+      "Main-Class" to "MainKt"
+    )
+  }
+}
+
+licensee {
+  allow("Apache-2.0")
+  allow("MIT")
+  allowUrl("https://opensource.org/license/mit")
+}
+
+tasks.register("updateResources", Copy::class.java) {
+  from(file("build/reports/licensee/androidRelease/artifacts.json"))
+  into(file("src/commonMain/composeResources/files"))
+  dependsOn("licenseeAndroidRelease")
+}
+
+kotlin {
+  abiValidation {
+    enabled = true
+  }
+}

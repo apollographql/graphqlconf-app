@@ -16,6 +16,6 @@ plugins {
 
 rootProject.name = "graphqlconf-app"
 
-include(":backend", ":app")
+include(":backend", ":shared", ":androidApp")
 
 includeBuild("build-logic")
