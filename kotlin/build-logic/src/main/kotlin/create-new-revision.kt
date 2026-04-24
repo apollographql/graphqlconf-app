@@ -1,6 +1,5 @@
 import com.google.api.gax.core.FixedCredentialsProvider
 import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.run.v2.Service
 import com.google.cloud.run.v2.ServiceName
 import com.google.cloud.run.v2.ServicesClient
 import com.google.cloud.run.v2.ServicesSettings
