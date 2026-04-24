@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "rewrites": [{
+      "source": "**",
+      "run": {
+        "serviceId": "us",
+        "region": "us-west1"
+      }
+    }]
+  }
+}

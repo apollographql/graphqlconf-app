@@ -69,7 +69,7 @@ tasks.register("run", JavaExec::class.java) {
 
 apollo {
   service("supabase") {
-    packageName.set("app.graphqlconf.supabase")
+    packageName.set("graphqlconf.supabase")
     introspection {
       schemaFile.set(file("src/main/graphql/schema.graphqls"))
       endpointUrl.set("https://ejuwwdxlemkjxfjrrseb.supabase.co/graphql/v1")

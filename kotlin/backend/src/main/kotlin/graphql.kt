@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-import app.graphqlconf.supabase.SubmitFeedbackMutation
+import graphqlconf.supabase.SubmitFeedbackMutation
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.ast.GQLStringValue
 import com.apollographql.apollo.ast.GQLValue
