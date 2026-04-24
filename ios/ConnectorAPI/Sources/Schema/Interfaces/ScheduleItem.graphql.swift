@@ -4,7 +4,7 @@
 import ApolloAPI
 
 public extension Interfaces {
-  static let ScheduleItem = ApolloAPI.Interface(
+  nonisolated static let ScheduleItem = ApolloAPI.Interface(
     name: "ScheduleItem",
     keyFields: nil,
     implementingObjects: [

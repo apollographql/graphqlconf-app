@@ -4,7 +4,7 @@
 import ApolloAPI
 
 public extension Objects {
-  static let Room = ApolloAPI.Object(
+  nonisolated static let Room = ApolloAPI.Object(
     typename: "Room",
     implementedInterfaces: [],
     keyFields: nil

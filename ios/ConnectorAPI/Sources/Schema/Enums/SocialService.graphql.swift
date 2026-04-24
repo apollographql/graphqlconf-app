@@ -3,7 +3,7 @@
 
 @_spi(Internal) import ApolloAPI
 
-public enum SocialService: String, EnumType {
+nonisolated public enum SocialService: String, EnumType {
   case instagram = "Instagram"
   case twitter = "Twitter"
   case linkedIn = "LinkedIn"

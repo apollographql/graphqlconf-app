@@ -3,33 +3,34 @@
 
 import ApolloAPI
 
-public protocol SelectionSet: ApolloAPI.SelectionSet & ApolloAPI.RootSelectionSet
+nonisolated public protocol SelectionSet: ApolloAPI.SelectionSet & ApolloAPI.RootSelectionSet
 where Schema == ConnectorAPI.SchemaMetadata {}
 
-public protocol InlineFragment: ApolloAPI.SelectionSet & ApolloAPI.InlineFragment
+nonisolated public protocol InlineFragment: ApolloAPI.SelectionSet & ApolloAPI.InlineFragment
 where Schema == ConnectorAPI.SchemaMetadata {}
 
-public protocol MutableSelectionSet: ApolloAPI.MutableRootSelectionSet
+nonisolated public protocol MutableSelectionSet: ApolloAPI.MutableRootSelectionSet
 where Schema == ConnectorAPI.SchemaMetadata {}
 
-public protocol MutableInlineFragment: ApolloAPI.MutableSelectionSet & ApolloAPI.InlineFragment
+nonisolated public protocol MutableInlineFragment: ApolloAPI.MutableSelectionSet & ApolloAPI.InlineFragment
 where Schema == ConnectorAPI.SchemaMetadata {}
 
-public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
+nonisolated public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static let configuration: any ApolloAPI.SchemaConfiguration.Type = SchemaConfiguration.self
 
+  private static let objectTypeMap: [String: ApolloAPI.Object] = [
+    "Query": ConnectorAPI.Objects.Query,
+    "Room": ConnectorAPI.Objects.Room,
+    "Session": ConnectorAPI.Objects.Session,
+    "SocialUrl": ConnectorAPI.Objects.SocialUrl,
+    "Speaker": ConnectorAPI.Objects.Speaker
+  ]
+
   @_spi(Execution) public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
-    switch typename {
-    case "Query": return ConnectorAPI.Objects.Query
-    case "Room": return ConnectorAPI.Objects.Room
-    case "Session": return ConnectorAPI.Objects.Session
-    case "SocialUrl": return ConnectorAPI.Objects.SocialUrl
-    case "Speaker": return ConnectorAPI.Objects.Speaker
-    default: return nil
-    }
+    objectTypeMap[typename]
   }
 }
 
-public enum Objects {}
-public enum Interfaces {}
-public enum Unions {}
+nonisolated public enum Objects {}
+nonisolated public enum Interfaces {}
+nonisolated public enum Unions {}

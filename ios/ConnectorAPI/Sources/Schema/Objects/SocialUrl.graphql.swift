@@ -4,7 +4,7 @@
 import ApolloAPI
 
 public extension Objects {
-  static let SocialUrl = ApolloAPI.Object(
+  nonisolated static let SocialUrl = ApolloAPI.Object(
     typename: "SocialUrl",
     implementedInterfaces: [],
     keyFields: nil

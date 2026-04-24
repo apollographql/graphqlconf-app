@@ -4,7 +4,7 @@
 import ApolloAPI
 
 public extension Objects {
-  static let Speaker = ApolloAPI.Object(
+  nonisolated static let Speaker = ApolloAPI.Object(
     typename: "Speaker",
     implementedInterfaces: [],
     keyFields: ["id"]
