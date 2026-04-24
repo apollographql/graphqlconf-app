@@ -1,5 +1,7 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
+import app.graphqlconf.supabase.SubmitFeedbackMutation
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.ast.GQLStringValue
 import com.apollographql.apollo.ast.GQLValue
 import com.apollographql.apollo.execution.Coercing
@@ -9,7 +11,6 @@ import com.apollographql.execution.annotation.GraphQLMutation
 import com.apollographql.execution.annotation.GraphQLName
 import com.apollographql.execution.annotation.GraphQLQuery
 import com.apollographql.execution.annotation.GraphQLScalar
-import io.github.jan.supabase.postgrest.from
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -21,8 +22,6 @@ import model.JsonSocialUrl
 import model.JsonSpeaker
 import model.allSessions
 import model.allSpeakers
-import supabase.SupabaseComment
-import supabase.SupabaseVote
 
 @GraphQLScalar(StringCoercing::class)
 typealias ID = String
@@ -130,7 +129,8 @@ class Query {
   }
 
   fun speakers(): List<Speaker> {
-    val speakersWithSessions = allSessions.flatMap { it.speakers }.map { it.username }.distinct().toSet()
+    val speakersWithSessions =
+      allSessions.flatMap { it.speakers }.map { it.username }.distinct().toSet()
     return allSpeakers.filter { speakersWithSessions.contains(it.username) }.map {
       it.toGraphQLSpeaker()
     }.sortedBy { it.name }
@@ -199,10 +199,10 @@ enum class SocialService {
 
 private fun String.toGraphQLSocialService(): SocialService {
   return when (this) {
-    "Twitter" ->SocialService.Twitter
-      "LinkedIn" -> SocialService.LinkedIn
-      "Instagram" -> SocialService.Instagram
-      "Facebook" -> SocialService.Facebook
+    "Twitter" -> SocialService.Twitter
+    "LinkedIn" -> SocialService.LinkedIn
+    "Instagram" -> SocialService.Instagram
+    "Facebook" -> SocialService.Facebook
     else -> SocialService.Other
   }
 }
@@ -264,8 +264,17 @@ sealed interface ScheduleItem {
   val start: GraphQLLocalDateTime
   val end: GraphQLLocalDateTime
 }
-class DayHeader(override val start: GraphQLLocalDateTime, override val end: GraphQLLocalDateTime, val title: String) : ScheduleItem
-class TimeHeader(override val start: GraphQLLocalDateTime, override val end: GraphQLLocalDateTime, ) : ScheduleItem
+
+class DayHeader(
+  override val start: GraphQLLocalDateTime,
+  override val end: GraphQLLocalDateTime,
+  val title: String
+) : ScheduleItem
+
+class TimeHeader(
+  override val start: GraphQLLocalDateTime,
+  override val end: GraphQLLocalDateTime,
+) : ScheduleItem
 
 private fun String.toRoom(): Room? {
   return when (this) {
@@ -318,45 +327,47 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
    * List of time slots created by the notebook and then tweaked manually.
    */
   listOf(
-    "2025-09-08 08:00" to "2025-09-08 09:00", // edited (registration)
-    "2025-09-08 09:00" to "2025-09-08 10:20", // edited (keynotes)
-    "2025-09-08 10:20" to "2025-09-08 10:45", // edited (removed solutions showcase)
-    "2025-09-08 10:45" to "2025-09-08 11:15",
-    "2025-09-08 11:25" to "2025-09-08 11:55",
-    "2025-09-08 12:05" to "2025-09-08 12:35",
-    "2025-09-08 12:35" to "2025-09-08 13:45",
-    "2025-09-08 13:45" to "2025-09-08 14:15",
-    "2025-09-08 14:25" to "2025-09-08 14:55",
-    "2025-09-08 15:05" to "2025-09-08 15:35",
-    "2025-09-08 15:55" to "2025-09-08 16:25",
-    "2025-09-08 16:35" to "2025-09-08 17:05",
-    "2025-09-08 17:15" to "2025-09-08 17:45",
-    "2025-09-08 17:45" to "2025-09-08 18:45",
-    "2025-09-09 08:00" to "2025-09-09 09:00", // edited (registration)
-    "2025-09-09 09:00" to "2025-09-09 10:30",
-    "2025-09-09 10:45" to "2025-09-09 11:25",
-    "2025-09-09 11:35" to "2025-09-09 12:15",
-    "2025-09-09 12:15" to "2025-09-09 14:15",
-    "2025-09-09 14:15" to "2025-09-09 14:55",
-    "2025-09-09 15:05" to "2025-09-09 15:45",
-    "2025-09-09 16:00" to "2025-09-09 16:40",
-    "2025-09-09 16:50" to "2025-09-09 17:30",
-    "2025-09-10 08:00" to "2025-09-10 09:00", // edited (registration)
-    "2025-09-10 09:00" to "2025-09-10 09:30",
-    "2025-09-10 09:40" to "2025-09-10 10:10",
-    "2025-09-10 10:20" to "2025-09-10 10:50",
-    "2025-09-10 11:15" to "2025-09-10 11:45",
-    "2025-09-10 11:55" to "2025-09-10 12:25",
-    "2025-09-10 12:25" to "2025-09-10 13:40",
-    "2025-09-10 13:40" to "2025-09-10 14:10",
-    "2025-09-10 14:20" to "2025-09-10 14:50",
-    "2025-09-10 15:00" to "2025-09-10 15:30",
-    "2025-09-10 15:50" to "2025-09-10 16:20",
-    "2025-09-10 16:30" to "2025-09-10 16:45",
-    "2025-09-10 16:45" to "2025-09-10 17:00",
-  ).forEach {
+    "2026-05-19 08:00" to "2026-05-19 09:00", // Registration + Badge Pick-up
+    "2026-05-19 09:00" to "2026-05-19 10:15", // Keynote Sessions To Be Announced
+    "2026-05-19 10:15" to "2026-05-19 10:35", // Break
+    "2026-05-19 10:35" to "2026-05-19 11:10", // "Big Graphs, Tiny Contexts: Dev Tools for Agents - Stephen Spalding & Kavitha Srinivasan, Netflix"
+    "2026-05-19 11:10" to "2026-05-19 11:45", // "React Server Components Vs. GraphQL - Jordan Eldredge, Meta"
+    "2026-05-19 11:45" to "2026-05-19 12:00", // "Shopify's Breadth-First Bet: Rethinking GraphQL Execution - Greg MacWilliam, Shopify"
+    "2026-05-19 12:00" to "2026-05-19 12:10", // "GraphQL: The Internal Agentic API - Christopher Chedeau, Meta"
+    "2026-05-19 12:10" to "2026-05-19 13:25", // Lunch
+    "2026-05-19 13:25" to "2026-05-19 14:00", // "The State of GraphQL Agent Skills - Dale Seo, Apollo GraphQL"
+    "2026-05-19 14:00" to "2026-05-19 14:25", // "Schema Composition Without Federation - Matt Mahoney, Meta"
+    "2026-05-19 14:25" to "2026-05-19 14:35", // "Making GraphQL Fun for the Backend Too - Stephen Haberman, Homebound"
+    "2026-05-19 14:35" to "2026-05-19 14:50", // "Bringing GraphQL Natively To Relational Databases With AI - Shashank Gugnani, Oracle"
+    "2026-05-19 14:50" to "2026-05-19 15:10", // "Breaking up With Inputs (Without Breaking Your Users) - Laurin Quast, The Guild"
+    "2026-05-19 15:10" to "2026-05-19 15:35", // "Connecting LLMs To GraphQL With Schema-Aware Embeddings - Thore Koritzius, Self"
+    "2026-05-19 15:35" to "2026-05-19 15:55", // Break
+    "2026-05-19 15:55" to "2026-05-19 16:30", // "Simplifying MCP Tool Sprawl With GraphQL - Roy Derks, IBM"
+    "2026-05-19 16:30" to "2026-05-19 17:05", // "Shifting Instagram Development Towards Monolith Server Via Federated Schema - Xiao Han, Chi Chan, Lisa Watkins & Anirudh Padmarao, Meta"
+    "2026-05-19 17:05" to "2026-05-20 08:00", // "Understanding Your Graph, One Hash at a Time - Jens Neuse, WunderGraph"
+    "2026-05-20 08:00" to "2026-05-20 09:00", // Registration + Badge Pick-up
+    "2026-05-20 09:00" to "2026-05-20 10:00", // GraphQL All Hands Meeting
+    "2026-05-20 10:00" to "2026-05-20 10:15", // Break
+    "2026-05-20 10:15" to "2026-05-20 10:30", // "When GraphQL Gets Expensive: Performance & Cost Patterns in Production Serverless Architectures - Harpreet Siddhu, AWS Community Builder & Shravanth Gowda Venkatesh, Independent Researcher"
+    "2026-05-20 10:30" to "2026-05-20 10:50", // "Resolvers Everywhere: Rethinking Client and Server Boundaries in GraphQL - Janette Cheng, Meta"
+    "2026-05-20 10:50" to "2026-05-20 11:25", // "GraphQL Meets LLMs & Agents: Building Production AI at Starbucks Scale - Sharon Gorla, Starbucks"
+    "2026-05-20 11:25" to "2026-05-20 12:00", // "Semantic Introspection - Pascal Senn, ChilliCream"
+    "2026-05-20 12:00" to "2026-05-20 12:25", // "GraphQL Embeddings: AI-Powered Dynamic Operations From Schema To IDE - Michael Watson, Self"
+    "2026-05-20 12:25" to "2026-05-20 13:40", // Lunch
+    "2026-05-20 13:40" to "2026-05-20 14:15", // "A GraphQL-inspired Orchestration Language for the AI Era - Martijn Walraven, Apollo"
+    "2026-05-20 14:15" to "2026-05-20 14:30", // "Governing the AI-Graph: Observability and Security for LLM-Generated Queries - Rajeshwari Sah, Apple Inc"
+    "2026-05-20 14:30" to "2026-05-20 14:50", // "Inside a Modern GraphQL Compiler - Alec Aivazis, Arista Networks"
+    "2026-05-20 14:50" to "2026-05-20 15:15", // "GraphQL Data Mocking at Scale With LLMs and @generateMock - Michael Rebello, Airbnb"
+    "2026-05-20 15:15" to "2026-05-20 15:35", // Break
+    "2026-05-20 15:35" to "2026-05-20 16:10", // "Observability for a Multi-Tenant GraphQL Gateway at Scale - Vickey Yeh, Airbnb"
+    "2026-05-20 16:10" to "2026-05-20 16:45", // "From Query to Conversation: GraphQL as an AI Interface Layer - Hugh Nguyen, Ben Golub, Adam Conrad & Kewei Qu, Meta"
+    "2026-05-20 16:45" to "2026-05-20 17:00", // "Keynote: GraphQL’s Next Chapter: Progress, Proposals, and Participation - Kewei Qu, Software Engineer, Meta; Pascal Senn, COO, Chillicream; Mark Larah, Group Tech Lead, Yelp"
+    "2026-05-20 17:00" to "2026-05-20 17:15", // Keynote Sessions To Be Announced
+    "2026-05-21 09:30" to "2026-05-20 16:30", // WG day
+    ).forEach {
     val start = dateFormat.parse(it.first)
     val end = dateFormat.parse(it.second)
+
     val date = start.date
     if (lastDate == null || lastDate != date) {
       items.add(DayHeader(start, end, "Day $dayIndex"))
@@ -365,7 +376,6 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
     }
     items.add(TimeHeader(start, end))
     items.addAll(
-      // could be optimized but 🤷‍♂️
       sessions.filter {
         it.start in start..<end
       }.sortedBy {
@@ -377,38 +387,44 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
   return items
 }
 
-class VoteInput(
+class FeedbackInput(
   val userId: String,
   val sessionId: String,
-  val vote: Int
+  val rating: Int,
+  val comment: String,
 )
 
-class CommentInput(
-  val userId: String,
-  val sessionId: String,
-  val comment: String
-)
+private val apolloClient = ApolloClient.Builder()
+  .serverUrl("https://ejuwwdxlemkjxfjrrseb.supabase.co/graphql/v1")
+  .addHttpHeader("apiKey", "sb_publishable_5E7EbV547Wu9kX9GRYiV_Q_q7oHk0CD")
+  .build()
 
 @GraphQLMutation
 class Mutation {
-  suspend fun setVote(input: VoteInput): Boolean {
-    return try {
-      supabase.from("votes").upsert(SupabaseVote(input.userId, input.sessionId, input.vote))
-      true
-    } catch (e: Exception) {
-      println(e.message)
-      false
-    }
-  }
+  suspend fun submitFeedback(feedbackInput: FeedbackInput): Boolean {
 
-  suspend fun setComment(input: CommentInput): Boolean {
-    return try {
-      supabase.from("comments").upsert(SupabaseComment(input.userId, input.sessionId, input.comment))
-      true
-    } catch (e: Exception) {
-      println(e.message)
-      false
+    val response = apolloClient.mutation(SubmitFeedbackMutation(
+      feedbackInput.userId,
+      feedbackInput.sessionId,
+      feedbackInput.rating,
+      feedbackInput.comment
+    )).execute()
+
+    response.exception.let {
+      if (it != null) {
+        println("There was an exception while saving the feedback")
+        it.printStackTrace()
+        return false
+      }
     }
+    response.errors.orEmpty().let {
+      if (it.isNotEmpty()) {
+        println("There was an exception while saving the feedback: $it")
+        return false
+      }
+    }
+
+    return true
   }
 }
 

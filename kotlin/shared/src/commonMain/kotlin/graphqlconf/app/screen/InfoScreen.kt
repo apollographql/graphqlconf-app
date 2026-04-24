@@ -94,7 +94,7 @@ fun InfoScreen(navigateToLicenses: () -> Unit, navigateToFloorPlan: () -> Unit) 
       Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         LinkCard(
           title = stringResource(Res.string.code_of_conduct),
-          url = "https://graphql.org/conf/2025/resources/#code-of-conduct",
+          url = "https://graphql.org/conf/2026/resources/#code-of-conduct",
         )
         Spacer(modifier = Modifier.height(16.dp))
         LinkCard(
@@ -104,17 +104,17 @@ fun InfoScreen(navigateToLicenses: () -> Unit, navigateToFloorPlan: () -> Unit) 
         Spacer(modifier = Modifier.height(16.dp))
         LinkCard(
           title = stringResource(Res.string.health_and_safety),
-          url = "https://graphql.org/conf/2025/resources/#health--safety",
+          url = "https://graphql.org/conf/2026/resources/#health--safety",
         )
         Spacer(modifier = Modifier.height(16.dp))
         LinkCard(
           title = stringResource(Res.string.inclusion_and_diversity),
-          url = "https://graphql.org/conf/2025/resources/#inclusion--accessibility",
+          url = "https://graphql.org/conf/2026/resources/#inclusion--accessibility",
         )
         Spacer(modifier = Modifier.height(16.dp))
         LinkCard(
           title = stringResource(Res.string.onsite_resources),
-          url = "https://graphql.org/conf/2025/resources/#onsite-resources",
+          url = "https://graphql.org/conf/2026/resources/#onsite-resources",
         )
         Spacer(modifier = Modifier.height(16.dp))
         InAppLinkCard(

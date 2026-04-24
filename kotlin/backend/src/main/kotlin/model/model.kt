@@ -6,7 +6,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.atTime
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -15,7 +14,6 @@ import okhttp3.Request
 import java.io.InputStream
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @Serializable
 data class JsonSession(
@@ -73,7 +71,7 @@ private class Refesher<D>(
   private var lastTime = 0L
   private var job: Job? = null
   private var tryCount = 0
-  private val lock = Object()
+  private val lock = Any()
 
   fun data(): D {
     synchronized(lock) {
@@ -99,8 +97,8 @@ private class Refesher<D>(
 }
 
 private val sessionRefresher = Refesher(
-  initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("schedule-2025.json")!!.toSessionList() },
-  refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/schedule-2025.json").toSessionList() },
+  initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("schedule-2026.json")!!.toSessionList() },
+  refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/schedule-2026.json").toSessionList() },
 )
 
 private val client = OkHttpClient()

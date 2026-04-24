@@ -162,9 +162,3 @@ tasks.register("updateResources", Copy::class.java) {
   into(file("src/commonMain/composeResources/files"))
   dependsOn("licenseeAndroidRelease")
 }
-
-kotlin {
-  abiValidation {
-    enabled = true
-  }
-}

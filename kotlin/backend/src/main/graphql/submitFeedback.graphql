@@ -1,0 +1,3 @@
+mutation SubmitFeedback($userId: String!, $sessionId: String!, $rating: Int!, $comment: String!) {
+  submitFeedback(userId: $userId, sessionId: $sessionId, rating: $rating, comment: $comment)
+}

@@ -7,6 +7,7 @@ plugins {
   id("org.jetbrains.kotlin.plugin.serialization")
   id("com.gradleup.loud")
   id("com.gradleup.tapmoc")
+  id("com.apollographql.apollo")
 }
 
 tapmoc {
@@ -31,8 +32,7 @@ dependencies {
   implementation(libs.kotlinx.datetime)
   implementation(libs.slf4j.simple)
   implementation(libs.okhttp)
-  implementation(platform(libs.supabase.bom))
-  implementation(libs.supabase.postgre)
+  implementation(apollo.deps.runtime)
 }
 
 // Configure codegen
@@ -43,20 +43,20 @@ apolloExecution {
 }
 
 loud {
-  region.set("europe-west4")
+  region.set("us-west1")
   project.set("graphqlconf-mobile")
   serviceAccount.set(System.getenv("GOOGLE_SERVICES_JSON"))
 
   artifactRegistry {
-    repository.set("main")
+    repository.set("us")
     imageName.set("main")
   }
   jib {
-    baseImageReference.set("openjdk:17-alpine")
+    baseImageReference.set("azul/zulu-openjdk:25")
     mainClass.set("MainKt")
   }
   cloudRun {
-    service.set("main")
+    service.set("us")
   }
 }
 registerDownloadResourcesTask()
@@ -65,4 +65,15 @@ tasks.register("run", JavaExec::class.java) {
   classpath(java.sourceSets.main.get().output)
   classpath(configurations.getByName("runtimeClasspath"))
   mainClass.set("MainKt")
+}
+
+apollo {
+  service("supabase") {
+    packageName.set("app.graphqlconf.supabase")
+    introspection {
+      schemaFile.set(file("src/main/graphql/schema.graphqls"))
+      endpointUrl.set("https://ejuwwdxlemkjxfjrrseb.supabase.co/graphql/v1")
+      headers.put("apiKey", "sb_publishable_5E7EbV547Wu9kX9GRYiV_Q_q7oHk0CD")
+    }
+  }
 }

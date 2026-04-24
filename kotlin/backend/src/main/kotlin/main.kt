@@ -2,15 +2,12 @@ import com.apollographql.execution.ktor.apolloModule
 import com.apollographql.execution.ktor.apolloSandboxModule
 import com.apollographql.execution.ktor.apolloSubscriptionModule
 import graphqlconf.ServiceExecutableSchemaBuilder
-import io.github.jan.supabase.createSupabaseClient
-import io.github.jan.supabase.postgrest.Postgrest
-import io.github.jan.supabase.serializer.KotlinXSerializer
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import io.ktor.server.plugins.forwardedheaders.*
-import io.ktor.server.util.*
+import io.ktor.http.path
+import io.ktor.server.application.install
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.forwardedheaders.XForwardedHeaders
+import io.ktor.server.util.url
 
 fun main(args: Array<String>) {
   embeddedServer(Netty, port = 8080) {
@@ -29,11 +26,4 @@ fun main(args: Array<String>) {
       }
     }
   }.start(wait = true)
-}
-
-val supabase = createSupabaseClient(
-  supabaseUrl = "https://eizhvjdxyhsczhhznyqk.supabase.co",
-  supabaseKey = System.getenv("SUPABASE_KEY")
-) {
-  install(Postgrest)
 }

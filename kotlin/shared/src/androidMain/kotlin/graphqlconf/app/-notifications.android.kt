@@ -18,6 +18,7 @@ import coil3.PlatformContext
 import graphqlconf_app.shared.generated.resources.Res
 import graphqlconf_app.shared.generated.resources.channel_description
 import graphqlconf_app.shared.generated.resources.channel_name
+import graphqlconf_app.shared.generated.resources.graphql
 import graphqlconf_app.shared.generated.resources.notification_description
 import graphqlconf_app.shared.generated.resources.notification_title
 import kotlinx.coroutines.DelicateCoroutinesApi
