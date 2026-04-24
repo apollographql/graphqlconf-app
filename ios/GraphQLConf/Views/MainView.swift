@@ -37,7 +37,7 @@ struct MainView: View {
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .principal) {
-          Text("GraphQLConf 2025")
+          Text("GraphQLConf 2026")
             .foregroundStyle(Theme.tintReverse)
             .font(.HostGrotesk.navigationTitle)
         }
