@@ -18,6 +18,7 @@ import com.apollographql.apollo.cache.normalized.FetchPolicy
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.apollographql.apollo.cache.normalized.isFromCache
 import graphqlconf.api.GetScheduleItemsQuery
+import graphqlconf.api.type.LocalDateTime
 import graphqlconf.app.apolloClient
 import graphqlconf.app.misc.Schedule
 import graphqlconf.app.misc.Header
@@ -133,20 +134,20 @@ private fun computeNowButtonState(
   val now = now()
 
   val first = items.first()
-  if (first.start.toInstant(amsterdamTimeZone) > now) {
+  if (first.start.toInstant(timeZone) > now) {
     // The conference has not started yet.
     return null
   }
   val last = items.last()
-  if (last.end.toInstant(amsterdamTimeZone) < now) {
+  if (last.end.toInstant(timeZone) < now) {
     // The conference is over.
     return null
   }
 
   val firstVisible = items.get(firstVisibleItemIndex)
 
-  val visibleStart = firstVisible.start.toInstant(amsterdamTimeZone)
-  val visibleEnd = firstVisible.end.toInstant(amsterdamTimeZone)
+  val visibleStart = firstVisible.start.toInstant(timeZone)
+  val visibleEnd = firstVisible.end.toInstant(timeZone)
   return when {
     now < visibleStart -> {
       NowButtonState.After
@@ -162,7 +163,7 @@ private fun computeNowButtonState(
 
 fun now(): Instant {
   return Clock.System.now()
-//  return LocalDateTime(2025,9,8,11,0).toInstant(amsterdamTimeZone)
+//  return kotlinx.datetime.LocalDateTime(2026, 5, 19, 11, 0).toInstant(timeZone)
 }
 
 private fun computeNowIndex(
@@ -173,7 +174,7 @@ private fun computeNowIndex(
 
   val now = now()
   val ret = response.data!!.scheduleItems.indexOfFirst {
-    it.onTimeHeader != null && (it.end.toInstant(amsterdamTimeZone) >= now || it.start.toInstant(amsterdamTimeZone) >= now)
+    it.onTimeHeader != null && (it.end.toInstant(timeZone) >= now || it.start.toInstant(timeZone) >= now)
   }
 
   if (ret == -1) {
@@ -183,4 +184,4 @@ private fun computeNowIndex(
   }
 }
 
-val amsterdamTimeZone = TimeZone.of("Europe/Amsterdam")
+val timeZone = TimeZone.of("US/Pacific")

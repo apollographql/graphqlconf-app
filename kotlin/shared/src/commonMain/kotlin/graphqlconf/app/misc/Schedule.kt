@@ -22,7 +22,7 @@ import graphqlconf.app.SessionId
 import graphqlconf.app.bookmarks
 import graphqlconf.app.cancelNotification
 import graphqlconf.app.scheduleNotification
-import graphqlconf.app.screen.amsterdamTimeZone
+import graphqlconf.app.screen.timeZone
 import graphqlconf.app.screen.now
 import graphqlconf.app.setBookmarks
 import graphqlconf.design.component.DayHeader
@@ -69,7 +69,7 @@ fun Schedule(
 
     LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
       this.items(scheduleItems) { scheduleItem ->
-        val alpha = if (now > scheduleItem.end.toInstant(amsterdamTimeZone)) {
+        val alpha = if (now > scheduleItem.end.toInstant(timeZone)) {
           0.5f
         } else {
           1f
@@ -82,7 +82,7 @@ fun Schedule(
           scheduleItem.onTimeHeader != null -> {
             Text(
               modifier = Modifier.padding(horizontal = 16.dp).alpha(alpha),
-              text = DateTimeFormatting.timeToTime(scheduleItem.start.time, scheduleItem.end.time),
+              text = DateTimeFormatting.time(scheduleItem.start.time),
               color = GraphqlConfTheme.colors.text,
               style = GraphqlConfTheme.typography.h3,
             )
@@ -104,7 +104,7 @@ fun Schedule(
                   val newBookmarks = if (it) {
                     context.scheduleNotification(
                       sessionId = session.id,
-                      scheduleAt = scheduleItem.start.toInstant(amsterdamTimeZone) - 10.minutes,
+                      scheduleAt = scheduleItem.start.toInstant(timeZone) - 10.minutes,
                       title = session.title,
                       room = session.room?.name ?: ""
                     )
