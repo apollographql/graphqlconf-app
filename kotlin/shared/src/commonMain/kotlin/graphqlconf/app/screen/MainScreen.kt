@@ -110,7 +110,7 @@ private fun BottomNavigation(nestedNavController: NavHostController) {
         label = stringResource(Res.string.nav_destination_schedule),
         icon = Res.drawable.calendar_today,
         iconSelected = Res.drawable.calendar_today_filled,
-        route = ScheduleScreen,
+        route = ScheduleScreen(false),
         routeClass = ScheduleScreen::class
       ),
       MainNavDestination(
