@@ -47,7 +47,10 @@ fun SponsorList() {
             text = group.name,
             style = GraphqlConfTheme.typography.h3,
             color = GraphqlConfTheme.colors.text,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(horizontal = 16.dp, vertical = 8.dp),
           )
         }
         items(group.sponsors, key = { "${group.name}-${it.name}" }) { sponsor ->
