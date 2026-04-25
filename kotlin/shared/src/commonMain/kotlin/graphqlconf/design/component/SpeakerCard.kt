@@ -35,7 +35,7 @@ import graphqlconf_app.shared.generated.resources.speaker_photo
 import graphqlconf_app.shared.generated.resources.user
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SpeakerCard(

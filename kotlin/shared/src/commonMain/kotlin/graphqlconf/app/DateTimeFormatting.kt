@@ -3,7 +3,6 @@ package graphqlconf.app
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.atDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
@@ -19,7 +18,7 @@ object DateTimeFormatting {
   private val dateFormat = LocalDate.Format {
     monthName(MonthNames.ENGLISH_FULL)
     char(' ')
-    dayOfMonth()
+    this@Format.day(padding = Padding.ZERO)
   }
 
   private val monthFormat = LocalDate.Format {

@@ -5,12 +5,12 @@ import com.apollographql.apollo.api.Adapter
 import com.apollographql.apollo.api.CustomScalarAdapters
 import com.apollographql.apollo.api.json.JsonReader
 import com.apollographql.apollo.api.json.JsonWriter
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.api.MemoryCache
-import com.apollographql.apollo.cache.normalized.api.MemoryCacheFactory
-import com.apollographql.apollo.cache.normalized.fetchPolicy
-import com.apollographql.apollo.cache.normalized.normalizedCache
-import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.memory.MemoryCacheFactory
+import com.apollographql.cache.normalized.normalizedCache
+import com.apollographql.cache.normalized.sql.SqlNormalizedCacheFactory
+import graphqlconf.api.cache.Cache.cache
 import graphqlconf.api.fragment.SpeakerSummary
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -69,7 +69,7 @@ object LocalDateAdapter: Adapter<LocalDate> {
 
 internal val apolloClient = ApolloClient.Builder()
   .serverUrl("https://graphqlconf.app/graphql")
-  .normalizedCache(MemoryCacheFactory().chain(SqlNormalizedCacheFactory()))
+  .cache(MemoryCacheFactory(maxSizeBytes = 10 * 1024 * 1024).chain(SqlNormalizedCacheFactory("apollo2.db")))
   .fetchPolicy(FetchPolicy.NetworkFirst)
   .build()
 

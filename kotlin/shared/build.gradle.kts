@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
@@ -37,13 +36,14 @@ kotlin {
   sourceSets {
     getByName("commonMain").dependencies {
       implementation(apollo.deps.runtime)
-      implementation(apollo.deps.normalizedCache)
-      implementation(apollo.deps.normalizedCacheSqlite)
+      implementation(libs.apollo.cache)
+      implementation(libs.apollo.cache.sqlite)
 
-      implementation(compose.runtime)
-      implementation(compose.foundation)
-      implementation(compose.material3)
-      implementation(compose.components.resources)
+      implementation(libs.compose.runtime)
+      implementation(libs.foundation)
+      implementation(libs.material3)
+      implementation(libs.components.resources)
+      implementation(libs.ui.tooling.preview)
 
       implementation(libs.kotlinx.datetime)
       implementation(libs.kotlinx.serialization.json)
@@ -78,7 +78,7 @@ kotlin {
 
     getByName("jvmMain").dependencies {
       implementation(compose.desktop.currentOs)
-      implementation(compose.desktop.common)
+      implementation(libs.desktop)
       implementation(libs.ktor.client.okhttp)
       implementation(libs.coil.network.okhttp)
       implementation(libs.kotlinx.coroutines.swing)
@@ -86,7 +86,7 @@ kotlin {
 
     getByName("jvmTest").dependencies {
       implementation(compose.desktop.currentOs)
-      implementation(compose.desktop.uiTestJUnit4)
+      implementation(libs.ui.test.junit4)
     }
   }
 }
@@ -101,6 +101,8 @@ apollo {
       endpointUrl.set("https://graphqlconf.app/graphql")
       schemaFile.set(file("../backend/graphql/schema.graphqls"))
     }
+    plugin(libs.apollo.cache.plugin)
+    pluginArgument("com.apollographql.cache.packageName", packageName.get())
   }
 }
 
@@ -126,10 +128,6 @@ compose.desktop {
       configurationFiles.from(project.file("rules.pro"))
     }
   }
-}
-
-composeCompiler {
-  featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
 }
 
 compose.resources {
