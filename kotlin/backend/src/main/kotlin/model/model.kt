@@ -16,6 +16,11 @@ import kotlin.math.pow
 import kotlin.time.Duration.Companion.minutes
 
 @Serializable
+class JsonFile(
+  val name: String,
+  val path: String
+)
+@Serializable
 data class JsonSession(
   val name: String,
   val event_start: String,
@@ -26,6 +31,7 @@ data class JsonSession(
   val id: String,
   val description: String,
   val speakers: List<JsonSpeaker> = emptyList()
+  val files: List<JsonFile> = emptyList()
 ) {
   @Serializable
   class JsonSpeaker(

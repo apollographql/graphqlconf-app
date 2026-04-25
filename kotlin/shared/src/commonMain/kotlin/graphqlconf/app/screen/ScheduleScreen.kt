@@ -3,7 +3,10 @@ package graphqlconf.app.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -36,6 +39,7 @@ import graphqlconf_app.shared.generated.resources.nav_destination_schedule
 import graphqlconf_app.shared.generated.resources.search
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -46,7 +50,9 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 var firstLaunch: Boolean = true
+private var lastScheduleResponse: ApolloResponse<GetScheduleItemsQuery.Data>? = null
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("UnrememberedMutableState")
 @Composable
 fun ScheduleScreen(
@@ -59,7 +65,11 @@ fun ScheduleScreen(
 
   Column {
     val listState = rememberLazyListState()
-    val responseState = remember {
+    val responseState = remember { mutableStateOf(lastScheduleResponse) }
+    var isRefreshing by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
       val fetchPolicy = if (firstLaunch) {
         firstLaunch = false
         FetchPolicy.NetworkFirst
@@ -70,7 +80,12 @@ fun ScheduleScreen(
         .fetchPolicy(fetchPolicy)
         .toFlow()
         .removeNetworkErrors()
-    }.collectAsStateWithLifecycle(null)
+        .collect {
+          lastScheduleResponse = it
+          responseState.value = it
+        }
+    }
+
     val bookmarkState = remember {
       bookmarks()
     }.collectAsStateWithLifecycle(emptySet())
@@ -85,9 +100,6 @@ fun ScheduleScreen(
     Header(
       state = headerState,
       titleContent = {
-
-        val scope = rememberCoroutineScope()
-
         MainHeaderTitleBar(
           title = stringResource(Res.string.nav_destination_schedule), startContent = {
             if (nowButtonState != null) {
@@ -116,14 +128,36 @@ fun ScheduleScreen(
       },
     )
 
-    ApolloWrapper(response) {
-      Schedule(
-        listState = listState,
-        scheduleItems = filteredItems!!,
-        bookmarks = bookmarks,
-        onSession = onSession,
-        filterBookmarked = filterBookmarked
-      )
+    PullToRefreshBox(
+      isRefreshing = isRefreshing,
+      onRefresh = {
+        scope.launch {
+          isRefreshing = true
+          try {
+            apolloClient.query(GetScheduleItemsQuery())
+              .fetchPolicy(FetchPolicy.NetworkOnly)
+              .toFlow()
+              .removeNetworkErrors()
+              .firstOrNull()
+              ?.let {
+                lastScheduleResponse = it
+                responseState.value = it
+              }
+          } finally {
+            isRefreshing = false
+          }
+        }
+      },
+    ) {
+      ApolloWrapper(response) {
+        Schedule(
+          listState = listState,
+          scheduleItems = filteredItems!!,
+          bookmarks = bookmarks,
+          onSession = onSession,
+          filterBookmarked = filterBookmarked
+        )
+      }
     }
   }
 }

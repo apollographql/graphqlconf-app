@@ -93,9 +93,17 @@ type Session implements ScheduleItem {
 
   id: ID!
 
+  resources: [SessionResource!]!
+
   speakers: [Speaker!]!
 
   room: Room
+}
+
+type SessionResource {
+  name: String!
+
+  url: String!
 }
 
 type SocialUrl {

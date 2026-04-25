@@ -98,12 +98,28 @@ class Room(
   val floor: Int,
 )
 
+class SponsorGroup(
+  val name: String,
+  val sponsors: List<Sponsor>
+)
+
+class Sponsor(
+  val name: String,
+  val url: String,
+  val logoLight: String,
+  val logoDark: String
+)
+
 @GraphQLQuery
 class Query {
   fun sessions(): List<Session> {
     return allSessions.map {
       it.toGraphQLSession()
     }
+  }
+
+  fun sponsorGroups(): List<SponsorGroup> {
+    return listOf()
   }
 
   /**
@@ -146,6 +162,11 @@ class Query {
   val timezone = "Europe/Amsterdam"
 }
 
+class SessionResource(
+  val name: String,
+  val url: String,
+)
+
 class Session(
   val title: String,
   val description: String,
@@ -156,6 +177,7 @@ class Session(
   @Deprecated("Use room instead")
   val venue: String?,
   val id: ID,
+  val resources: List<SessionResource>,
   private val speakerUsernames: List<String>
 ) : ScheduleItem {
   val speakers: List<Speaker>
@@ -257,6 +279,7 @@ private fun JsonSession.toGraphQLSession(): Session {
     event_subtype = event_subtype,
     venue = venue,
     speakerUsernames = speakers.map { it.username },
+    resources = files.map { SessionResource(it.name, it.path) }
   )
 }
 
