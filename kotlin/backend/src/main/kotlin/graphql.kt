@@ -392,7 +392,11 @@ enum class Rating {
   Neutral,
   Happy
 }
+
 class FeedbackInput(
+  /**
+   * an arbitrary userId. This is typically linked to an app install since we do not support app sign in yet
+   */
   val userId: String,
   val sessionId: String,
   val rating: Rating,
