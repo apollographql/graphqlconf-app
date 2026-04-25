@@ -78,7 +78,8 @@ fun MainScreen(rootNavController: NavHostController) {
       }
       composable<SpeakersScreen> {
         SpeakersScreen(
-          onSpeaker = { rootNavController.navigate(SpeakerScreen(it)) }
+          onSpeaker = { rootNavController.navigate(SpeakerScreen(it)) },
+          onSearch = { rootNavController.navigate(SearchResultsScreen) },
         )
       }
       composable<InfoScreen> {
