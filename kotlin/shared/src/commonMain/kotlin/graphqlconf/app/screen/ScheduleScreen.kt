@@ -137,6 +137,11 @@ private fun computeNowButtonState(
     return null
   }
 
+  if (items.isEmpty()) {
+    // empty list: no bookmarks, ...
+    return null
+  }
+
   val firstVisibleItemIndex = listState.firstVisibleItemIndex
   if (firstVisibleItemIndex == -1) {
     // No list visible
