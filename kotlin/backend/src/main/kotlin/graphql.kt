@@ -363,7 +363,7 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
     "2026-05-20 16:10" to "2026-05-20 16:45", // "From Query to Conversation: GraphQL as an AI Interface Layer - Hugh Nguyen, Ben Golub, Adam Conrad & Kewei Qu, Meta"
     "2026-05-20 16:45" to "2026-05-20 17:00", // "Keynote: GraphQL’s Next Chapter: Progress, Proposals, and Participation - Kewei Qu, Software Engineer, Meta; Pascal Senn, COO, Chillicream; Mark Larah, Group Tech Lead, Yelp"
     "2026-05-20 17:00" to "2026-05-20 17:15", // Keynote Sessions To Be Announced
-    "2026-05-21 09:30" to "2026-05-20 16:30", // WG day
+    "2026-05-21 09:30" to "2026-05-21 16:30", // WG day
     ).forEach {
     val start = dateFormat.parse(it.first)
     val end = dateFormat.parse(it.second)
