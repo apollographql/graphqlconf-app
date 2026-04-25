@@ -42,6 +42,7 @@ import graphqlconf_app.shared.generated.resources.Res
 import graphqlconf_app.shared.generated.resources.calendar_today
 import graphqlconf_app.shared.generated.resources.calendar_today_filled
 import graphqlconf_app.shared.generated.resources.heart
+import graphqlconf_app.shared.generated.resources.heart_filled
 import graphqlconf_app.shared.generated.resources.info_box
 import graphqlconf_app.shared.generated.resources.info_box_filled
 import graphqlconf_app.shared.generated.resources.nav_destination_info
@@ -132,6 +133,7 @@ private fun BottomNavigation(nestedNavController: NavHostController) {
       MainNavDestination(
         label = stringResource(Res.string.sponsors),
         icon = Res.drawable.heart,
+        iconSelected = Res.drawable.heart_filled,
         route = SponsorsScreen,
         routeClass = SponsorsScreen::class
       ),
