@@ -2,33 +2,41 @@ package graphqlconf.app.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import graphqlconf.api.GetSessionQuery
+import graphqlconf.api.SubmitFeedbackMutation
+import graphqlconf.api.type.FeedbackInput
+import graphqlconf.api.type.Rating
 import graphqlconf.app.DateTimeFormatting
 import graphqlconf.app.apolloClient
 import graphqlconf.app.misc.ApolloWrapper
@@ -36,6 +44,7 @@ import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
 import graphqlconf.app.misc.MainHeaderTitleBar
 import graphqlconf.app.misc.PaddingRow
+import graphqlconf.app.userId
 import graphqlconf.design.component.Badges
 import graphqlconf.design.component.SpeakerCardContent
 import graphqlconf.design.component.TopMenuButton
@@ -43,13 +52,20 @@ import graphqlconf.design.theme.ColorValues
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.shared.generated.resources.Res
 import graphqlconf_app.shared.generated.resources.arrow_left
-import graphqlconf_app.shared.generated.resources.back
-import graphqlconf_app.shared.generated.resources.bookmark_filled
 import graphqlconf_app.shared.generated.resources.calendar_today
+import graphqlconf_app.shared.generated.resources.feedback_comment_placeholder
+import graphqlconf_app.shared.generated.resources.feedback_rating_disappointed
+import graphqlconf_app.shared.generated.resources.feedback_rating_happy
+import graphqlconf_app.shared.generated.resources.feedback_rating_neutral
+import graphqlconf_app.shared.generated.resources.feedback_submit
+import graphqlconf_app.shared.generated.resources.feedback_submitting
+import graphqlconf_app.shared.generated.resources.feedback_thanks
+import graphqlconf_app.shared.generated.resources.feedback_title
 import graphqlconf_app.shared.generated.resources.location
 import graphqlconf_app.shared.generated.resources.nav_destination_session
 import graphqlconf_app.shared.generated.resources.session_description
 import graphqlconf_app.shared.generated.resources.session_speakers
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -194,6 +210,10 @@ fun SessionScreen(id: String, onBack: () -> Unit, onSpeaker: (String) -> Unit) {
               }
             }
           }
+          if (session.speakers.isNotEmpty()) {
+            HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+            FeedbackSection(sessionId = session.id)
+          }
         }
         PaddingRow(Modifier.fillMaxHeight()) {
           Spacer(modifier = Modifier.weight(1f))
@@ -202,3 +222,169 @@ fun SessionScreen(id: String, onBack: () -> Unit, onSpeaker: (String) -> Unit) {
     }
   }
 }
+
+@Composable
+private fun FeedbackSection(sessionId: String) {
+  var rating by remember(sessionId) { mutableStateOf<Rating?>(null) }
+  var comment by remember(sessionId) { mutableStateOf("") }
+  var submitting by remember(sessionId) { mutableStateOf(false) }
+  var submitted by remember(sessionId) { mutableStateOf(false) }
+  var error by remember(sessionId) { mutableStateOf<String?>(null) }
+  val scope = rememberCoroutineScope()
+  val textColor = GraphqlConfTheme.colors.text
+
+  PaddingRow(Modifier.height(IntrinsicSize.Min)) {
+    Column(modifier = Modifier.weight(1f).padding(horizontal = 8.dp, vertical = 16.dp)) {
+      Text(
+        text = stringResource(Res.string.feedback_title),
+        color = textColor,
+        style = GraphqlConfTheme.typography.h2,
+      )
+
+      if (submitted) {
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+          text = stringResource(Res.string.feedback_thanks),
+          color = textColor,
+          style = GraphqlConfTheme.typography.bodyMedium,
+        )
+        return@Column
+      }
+
+      Spacer(modifier = Modifier.height(16.dp))
+      Row(modifier = Modifier.fillMaxWidth()) {
+        RatingChip(
+          label = stringResource(Res.string.feedback_rating_disappointed),
+          selected = rating == Rating.Disappointed,
+          enabled = !submitting,
+          onClick = { rating = Rating.Disappointed },
+          modifier = Modifier.weight(1f),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        RatingChip(
+          label = stringResource(Res.string.feedback_rating_neutral),
+          selected = rating == Rating.Neutral,
+          enabled = !submitting,
+          onClick = { rating = Rating.Neutral },
+          modifier = Modifier.weight(1f),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        RatingChip(
+          label = stringResource(Res.string.feedback_rating_happy),
+          selected = rating == Rating.Happy,
+          enabled = !submitting,
+          onClick = { rating = Rating.Happy },
+          modifier = Modifier.weight(1f),
+        )
+      }
+
+      Spacer(modifier = Modifier.height(16.dp))
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .heightIn(min = 96.dp)
+          .border(width = 1.dp, color = GraphqlConfTheme.colors.textDimmed)
+          .padding(12.dp),
+      ) {
+        BasicTextField(
+          value = comment,
+          onValueChange = { comment = it },
+          enabled = !submitting,
+          modifier = Modifier.fillMaxWidth(),
+          textStyle = GraphqlConfTheme.typography.bodyMedium.copy(color = textColor),
+          cursorBrush = SolidColor(textColor),
+          decorationBox = { innerTextField ->
+            if (comment.isEmpty()) {
+              Text(
+                text = stringResource(Res.string.feedback_comment_placeholder),
+                style = GraphqlConfTheme.typography.bodyMedium,
+                color = GraphqlConfTheme.colors.textDimmed,
+              )
+            }
+            innerTextField()
+          },
+        )
+      }
+
+      error?.let {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+          text = it,
+          color = ColorValues.primaryBase,
+          style = GraphqlConfTheme.typography.bodySmall,
+        )
+      }
+
+      Spacer(modifier = Modifier.height(16.dp))
+      val submitEnabled = rating != null && !submitting
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .border(
+            width = 1.dp,
+            color = if (submitEnabled) textColor else GraphqlConfTheme.colors.textDimmed,
+          )
+          .clickable(enabled = submitEnabled) {
+            val selected = rating ?: return@clickable
+            submitting = true
+            error = null
+            scope.launch {
+              val response = apolloClient.mutation(
+                SubmitFeedbackMutation(
+                  FeedbackInput(
+                    userId = userId(),
+                    sessionId = sessionId,
+                    rating = selected,
+                    comment = comment,
+                  )
+                )
+              ).execute()
+              submitting = false
+              if (response.data?.submitFeedback == true) {
+                submitted = true
+              } else {
+                error = response.exception?.message
+                  ?: response.errors?.firstOrNull()?.message
+              }
+            }
+          }
+          .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center,
+      ) {
+        Text(
+          text = stringResource(
+            if (submitting) Res.string.feedback_submitting else Res.string.feedback_submit
+          ),
+          color = if (submitEnabled) textColor else GraphqlConfTheme.colors.textDimmed,
+          style = GraphqlConfTheme.typography.bodyMedium,
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun RatingChip(
+  label: String,
+  selected: Boolean,
+  enabled: Boolean,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val borderColor = if (selected) ColorValues.primaryBase else GraphqlConfTheme.colors.textDimmed
+  val textColor = if (selected) ColorValues.primaryBase else GraphqlConfTheme.colors.text
+  Box(
+    modifier = modifier
+      .border(width = 1.dp, color = borderColor)
+      .clickable(enabled = enabled, onClick = onClick)
+      .padding(vertical = 12.dp),
+    contentAlignment = Alignment.Center,
+  ) {
+    Text(
+      text = label,
+      color = textColor,
+      style = GraphqlConfTheme.typography.bodyMedium,
+    )
+  }
+}
+

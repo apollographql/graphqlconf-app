@@ -79,3 +79,7 @@ query GetSpeaker($id: ID!) {
     }
   }
 }
+
+mutation SubmitFeedback($input: FeedbackInput!) {
+  submitFeedback(feedbackInput: $input)
+}

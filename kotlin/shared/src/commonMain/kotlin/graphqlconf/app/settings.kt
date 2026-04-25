@@ -3,6 +3,8 @@ package graphqlconf.app
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.coroutines.getStringOrNullFlow
 import com.russhwolf.settings.set
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.Serializable
@@ -43,3 +45,13 @@ fun setBookmarks(ids: Set<SessionId>) {
 @Serializable
 @JvmInline
 value class SessionId(val id: String)
+
+private const val KEY_USER_ID = "userId"
+
+@OptIn(ExperimentalUuidApi::class)
+fun userId(): String {
+  theSettings.getStringOrNull(KEY_USER_ID)?.let { return it }
+  val newId = Uuid.random().toString()
+  theSettings.set(KEY_USER_ID, newId)
+  return newId
+}

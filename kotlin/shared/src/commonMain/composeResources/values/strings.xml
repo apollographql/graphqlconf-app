@@ -14,6 +14,14 @@
   <string name="search_placeholder">Search</string>
   <string name="search_section_sessions">Sessions</string>
   <string name="search_section_speakers">Speakers</string>
+  <string name="feedback_title">Send feedback</string>
+  <string name="feedback_rating_disappointed">😞</string>
+  <string name="feedback_rating_neutral">😐</string>
+  <string name="feedback_rating_happy">😊</string>
+  <string name="feedback_comment_placeholder">Tell us what you think…</string>
+  <string name="feedback_submit">Submit</string>
+  <string name="feedback_submitting">Sending…</string>
+  <string name="feedback_thanks">Thanks for your feedback!</string>
   <string name="speaker_photo">Speaker photo</string>
   <string name="session_description">Session description</string>
   <string name="session_speakers">Session speakers</string>
