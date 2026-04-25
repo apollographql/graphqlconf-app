@@ -278,43 +278,43 @@ class TimeHeader(
 
 private fun String.toRoom(): Room? {
   return when (this) {
-    "Grote Zaal - 2nd Floor" -> Room(
-      name = "Grote Zaal",
+    "Mission Peak" -> Room(
+      name = "Mission Peak",
       rank = 0,
-      floor = 2
+      floor = 0
     )
-
-    "IJzaal - 5th Floor" -> Room(
-      name = "IJzaal",
+    "Dumbarton" -> Room(
+      name = "Dumbarton",
       rank = 1,
-      floor = 5
+      floor = 0
     )
-
-    "Studio - 5th Floor" -> Room(
-      name = "Studio",
+    "Humor" -> Room(
+      name = "Humor",
       rank = 2,
-      floor = 5
+      floor = 0
     )
-
-    "BG Foyer - Ground Floor" -> Room(
-      name = "BG foyer",
+    "FRE 117 Lobby" -> Room(
+      name = "FRE 117 Lobby",
       rank = 3,
       floor = 0
     )
-
-    "Foyer Grote Zaal - 2nd Floor" -> Room(
-      name = "Foyer Grote Zaal",
+    "Mission Peak Foyer" -> Room(
+      name = "Mission Peak Foyer",
       rank = 4,
-      floor = 2
+      floor = 0
     )
 
-    "Workspace - 2nd Floor" -> Room(
-      name = "Workspace",
+    "Cafeteria" -> Room(
+      name = "Cafeteria",
       rank = 5,
-      floor = 2
+      floor = 0
     )
 
-    else -> null
+    else -> Room(
+      name = this,
+      rank = 0,
+      floor = 6
+    )
   }
 }
 
