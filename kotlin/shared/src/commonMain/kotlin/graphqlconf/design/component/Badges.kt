@@ -18,6 +18,10 @@ import graphqlconf.design.theme.eventColor
 fun Badges(eventTypes: List<String>, modifier: Modifier = Modifier) {
   FlowRow(modifier = modifier) {
     eventTypes.distinct().forEach { eventType ->
+      if (eventType.trim().isEmpty()) {
+        return@forEach
+      }
+
       val color = eventColor(eventType) ?: Color(0xffD8BFD8)
       Text(
         text =  eventType.uppercase(),

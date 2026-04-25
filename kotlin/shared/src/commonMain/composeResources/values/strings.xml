@@ -12,6 +12,8 @@
   <string name="rewind">REWIND</string>
   <string name="back">Back</string>
   <string name="search_placeholder">Search</string>
+  <string name="search_section_sessions">Sessions</string>
+  <string name="search_section_speakers">Speakers</string>
   <string name="speaker_photo">Speaker photo</string>
   <string name="session_description">Session description</string>
   <string name="session_speakers">Session speakers</string>

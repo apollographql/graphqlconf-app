@@ -69,7 +69,11 @@ fun App() {
           FloorPlanScreen(onBack = navController::popBackStack)
         }
         composable<SearchResultsScreen> {
-          SearchResultsScreen(onBack = navController::popBackStack)
+          SearchResultsScreen(
+            onBack = navController::popBackStack,
+            onSession = { navController.navigate(SessionScreen(it)) },
+            onSpeaker = { navController.navigate(SpeakerScreen(it)) },
+          )
         }
       }
     }
