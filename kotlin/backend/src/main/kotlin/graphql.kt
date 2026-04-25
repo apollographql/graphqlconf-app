@@ -110,6 +110,68 @@ class Sponsor(
   val logoDark: String
 )
 
+private const val SPONSOR_LOGO_BASE =
+  "https://raw.githubusercontent.com/graphql/graphql.github.io/source/public/img/conf/Sponsors"
+
+private val allSponsorGroups = listOf(
+  SponsorGroup(
+    name = "Platinum",
+    sponsors = listOf(
+      Sponsor(
+        name = "Meta",
+        url = "https://about.facebook.com/meta/",
+        logoLight = "$SPONSOR_LOGO_BASE/Meta.svg",
+        logoDark = "$SPONSOR_LOGO_BASE/Meta-dark.svg",
+      ),
+    ),
+  ),
+  SponsorGroup(
+    name = "Gold",
+    sponsors = listOf(
+      Sponsor(
+        name = "Wundergraph",
+        url = "https://wundergraph.com/",
+        logoLight = "$SPONSOR_LOGO_BASE/WunderGraph-graded.svg",
+        logoDark = "$SPONSOR_LOGO_BASE/WunderGraph-graded.svg",
+      ),
+      Sponsor(
+        name = "The Guild",
+        url = "https://the-guild.dev/graphql/hive",
+        logoLight = "$SPONSOR_LOGO_BASE/TheGuild.svg",
+        logoDark = "$SPONSOR_LOGO_BASE/TheGuild.svg",
+      ),
+    ),
+  ),
+  SponsorGroup(
+    name = "Silver",
+    sponsors = listOf(
+      Sponsor(
+        name = "Apollo",
+        url = "https://www.apollographql.com",
+        logoLight = "$SPONSOR_LOGO_BASE/Apollo.svg",
+        logoDark = "$SPONSOR_LOGO_BASE/Apollo.svg",
+      ),
+      Sponsor(
+        name = "Chillicream",
+        url = "https://chillicream.com/",
+        logoLight = "$SPONSOR_LOGO_BASE/Chillicream.svg",
+        logoDark = "$SPONSOR_LOGO_BASE/Chillicream.svg",
+      ),
+    ),
+  ),
+  SponsorGroup(
+    name = "Bronze",
+    sponsors = listOf(
+      Sponsor(
+        name = "Grafast",
+        url = "https://grafast.org/",
+        logoLight = "$SPONSOR_LOGO_BASE/Grafast.svg",
+        logoDark = "$SPONSOR_LOGO_BASE/Grafast.svg",
+      ),
+    ),
+  ),
+)
+
 @GraphQLQuery
 class Query {
   fun sessions(): List<Session> {
@@ -119,7 +181,7 @@ class Query {
   }
 
   fun sponsorGroups(): List<SponsorGroup> {
-    return listOf()
+    return allSponsorGroups
   }
 
   /**

@@ -30,8 +30,8 @@ data class JsonSession(
   val venue: String? = null,
   val id: String,
   val description: String,
-  val speakers: List<JsonSpeaker> = emptyList()
-  val files: List<JsonFile> = emptyList()
+  val speakers: List<JsonSpeaker> = emptyList(),
+  val files: List<JsonFile> = emptyList(),
 ) {
   @Serializable
   class JsonSpeaker(

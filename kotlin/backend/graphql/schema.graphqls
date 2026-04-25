@@ -40,6 +40,8 @@ type Mutation {
 type Query {
   sessions: [Session!]!
 
+  sponsorGroups: [SponsorGroup!]!
+
   """
    null if the session doesn't exist.
   """
@@ -136,6 +138,22 @@ type Speaker {
   avatar: String!
 
   sessions: [Session!]!
+}
+
+type Sponsor {
+  name: String!
+
+  url: String!
+
+  logoLight: String!
+
+  logoDark: String!
+}
+
+type SponsorGroup {
+  name: String!
+
+  sponsors: [Sponsor!]!
 }
 
 type TimeHeader implements ScheduleItem {
