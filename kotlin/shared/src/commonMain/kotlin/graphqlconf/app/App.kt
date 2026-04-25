@@ -19,11 +19,13 @@ import graphqlconf.app.navigation.FloorPlanScreen
 import graphqlconf.app.navigation.InfoScreen
 import graphqlconf.app.navigation.LicensesScreen
 import graphqlconf.app.navigation.MainScreen
+import graphqlconf.app.navigation.SearchResultsScreen
 import graphqlconf.app.navigation.SessionScreen
 import graphqlconf.app.navigation.SpeakerScreen
 import graphqlconf.app.screen.FloorPlanScreen
 import graphqlconf.app.screen.LicensesScreen
 import graphqlconf.app.screen.MainScreen
+import graphqlconf.app.screen.SearchResultsScreen
 import graphqlconf.app.screen.SessionScreen
 import graphqlconf.app.screen.SpeakerScreen
 import graphqlconf.design.theme.GraphqlConfTheme
@@ -65,6 +67,9 @@ fun App() {
         }
         composable<FloorPlanScreen> {
           FloorPlanScreen(onBack = navController::popBackStack)
+        }
+        composable<SearchResultsScreen> {
+          SearchResultsScreen(onBack = navController::popBackStack)
         }
       }
     }

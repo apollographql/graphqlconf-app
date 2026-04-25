@@ -52,7 +52,8 @@ var firstLaunch: Boolean = true
 fun ScheduleScreen(
   filterBookmarked: Boolean,
   onSession: (String) -> Unit,
-  onFilterBookmarks: (Boolean) -> Unit
+  onFilterBookmarks: (Boolean) -> Unit,
+  onSearch: () -> Unit,
 ) {
   var headerState by rememberSaveable { mutableStateOf(MainHeaderContainerState.Title) }
 
@@ -103,7 +104,7 @@ fun ScheduleScreen(
           endContent = {
             TopMenuButton(
               icon = Res.drawable.search,
-              onClick = {},
+              onClick = onSearch,
             )
             TopMenuButton(
               icon = if (filterBookmarked) Res.drawable.bookmark_filled else Res.drawable.bookmark,

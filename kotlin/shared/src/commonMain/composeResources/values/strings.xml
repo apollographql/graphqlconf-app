@@ -11,6 +11,7 @@
   <string name="now">NOW</string>
   <string name="rewind">REWIND</string>
   <string name="back">Back</string>
+  <string name="search_placeholder">Search</string>
   <string name="speaker_photo">Speaker photo</string>
   <string name="session_description">Session description</string>
   <string name="session_speakers">Session speakers</string>

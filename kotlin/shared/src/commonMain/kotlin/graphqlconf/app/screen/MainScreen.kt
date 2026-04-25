@@ -32,6 +32,7 @@ import graphqlconf.app.navigation.FloorPlanScreen
 import graphqlconf.app.navigation.InfoScreen
 import graphqlconf.app.navigation.LicensesScreen
 import graphqlconf.app.navigation.ScheduleScreen
+import graphqlconf.app.navigation.SearchResultsScreen
 import graphqlconf.app.navigation.SessionScreen
 import graphqlconf.app.navigation.SpeakerScreen
 import graphqlconf.app.navigation.SpeakersScreen
@@ -71,7 +72,8 @@ fun MainScreen(rootNavController: NavHostController) {
           onFilterBookmarks = {
             nestedNavController.popBackStack()
             nestedNavController.navigate(ScheduleScreen(it))
-          }
+          },
+          onSearch = { rootNavController.navigate(SearchResultsScreen) },
         )
       }
       composable<SpeakersScreen> {

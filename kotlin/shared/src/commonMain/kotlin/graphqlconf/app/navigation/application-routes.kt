@@ -16,3 +16,6 @@ data object LicensesScreen
 
 @Serializable
 data object FloorPlanScreen
+
+@Serializable
+data object SearchResultsScreen
