@@ -148,14 +148,14 @@ private val allSponsorGroups = listOf(
       Sponsor(
         name = "Apollo",
         url = "https://www.apollographql.com",
-        logoLight = "$SPONSOR_LOGO_BASE/Apollo.png",
-        logoDark = "$SPONSOR_LOGO_BASE/Apollo.png",
+        logoLight = "$SPONSOR_LOGO_BASE/apollo-light.png",
+        logoDark = "$SPONSOR_LOGO_BASE/apollo-dark.png",
       ),
       Sponsor(
         name = "Chillicream",
         url = "https://chillicream.com/",
-        logoLight = "$SPONSOR_LOGO_BASE/Chillicream.png",
-        logoDark = "$SPONSOR_LOGO_BASE/Chillicream.png",
+        logoLight = "$SPONSOR_LOGO_BASE/chillicream-light.png",
+        logoDark = "$SPONSOR_LOGO_BASE/chillicream-dark.png",
       ),
     ),
   ),

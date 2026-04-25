@@ -80,6 +80,18 @@ query GetSpeaker($id: ID!) {
   }
 }
 
+query GetSponsorGroups {
+  sponsorGroups {
+    name
+    sponsors {
+      name
+      url
+      logoLight
+      logoDark
+    }
+  }
+}
+
 mutation SubmitFeedback($input: FeedbackInput!) {
   submitFeedback(feedbackInput: $input)
 }

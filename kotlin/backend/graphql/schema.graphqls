@@ -1,183 +1,3 @@
-schema {
-  query: Query
-  mutation: Mutation
-}
-
-scalar LocalDateTime
-
-enum Rating {
-  Disappointed
-
-  Neutral
-
-  Happy
-}
-
-enum SocialService {
-  Instagram
-
-  Twitter
-
-  LinkedIn
-
-  Facebook
-
-  Other
-}
-
-type DayHeader implements ScheduleItem {
-  start: LocalDateTime!
-
-  end: LocalDateTime!
-
-  title: String!
-}
-
-type Mutation {
-  submitFeedback(feedbackInput: FeedbackInput!): Boolean!
-}
-
-type Query {
-  sessions: [Session!]!
-
-  sponsorGroups: [SponsorGroup!]!
-
-  """
-   null if the session doesn't exist.
-  """
-  session(id: ID!): Session
-
-  """
-   Returns a list of ScheduleItems to be displayed in the UI.
-
-   ScheduleItems introduce day headers as well as time headers.
-   They also make sure the sessions are sorted by start time/room and group them by time slot.
-
-   A time slot is a manually configured time range. It usually corresponds to a 30-minute slot where 3 sessions can happen in parallel.
-   Because some sessions are shorter, several of them may fit into a single time slot.
-
-   ScheduleItems also filter out some
-  """
-  scheduleItems: [ScheduleItem!]!
-
-  speakers: [Speaker!]!
-
-  """
-   null if the speaker doesn't exist.
-  """
-  speaker(id: ID!): Speaker
-
-  timezone: String!
-}
-
-type Room {
-  name: String!
-
-  rank: Int!
-
-  floor: Int!
-}
-
-type Session implements ScheduleItem {
-  title: String!
-
-  description: String!
-
-  start: LocalDateTime!
-
-  end: LocalDateTime!
-
-  event_type: String!
-
-  event_subtype: String!
-
-  venue: String @deprecated(reason: "Use room instead")
-
-  id: ID!
-
-  resources: [SessionResource!]!
-
-  speakers: [Speaker!]!
-
-  room: Room
-}
-
-type SessionResource {
-  name: String!
-
-  url: String!
-}
-
-type SocialUrl {
-  service: SocialService!
-
-  url: String!
-}
-
-type Speaker {
-  username: String! @deprecated(reason: "Use id instead")
-
-  company: String!
-
-  position: String!
-
-  name: String!
-
-  about: String!
-
-  location: String!
-
-  url: String!
-
-  years: [Int!]!
-
-  socialUrls: [SocialUrl!]!
-
-  id: ID!
-
-  avatar: String!
-
-  sessions: [Session!]!
-}
-
-type Sponsor {
-  name: String!
-
-  url: String!
-
-  logoLight: String!
-
-  logoDark: String!
-}
-
-type SponsorGroup {
-  name: String!
-
-  sponsors: [Sponsor!]!
-}
-
-type TimeHeader implements ScheduleItem {
-  start: LocalDateTime!
-
-  end: LocalDateTime!
-}
-
-interface ScheduleItem {
-  start: LocalDateTime!
-
-  end: LocalDateTime!
-}
-
-input FeedbackInput {
-  userId: String!
-
-  sessionId: String!
-
-  rating: Rating!
-
-  comment: String!
-}
-
 type __Schema {
   description: String
 
@@ -322,12 +142,198 @@ enum __DirectiveLocation {
   INPUT_FIELD_DEFINITION
 }
 
-directive @skip (if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+scalar Boolean
 
-directive @include (if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+scalar ID
 
-directive @deprecated (reason: String! = "No longer supported") on FIELD_DEFINITION|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|ENUM_VALUE
+scalar Int
 
-directive @defer (label: String, if: Boolean! = true) on FRAGMENT_SPREAD|INLINE_FRAGMENT
+scalar LocalDateTime
 
-directive @specifiedBy (url: String!) on SCALAR
+scalar String
+
+enum Rating {
+  Disappointed
+
+  Neutral
+
+  Happy
+}
+
+enum SocialService {
+  Instagram
+
+  Twitter
+
+  LinkedIn
+
+  Facebook
+
+  Other
+}
+
+type DayHeader implements ScheduleItem {
+  start: LocalDateTime!
+
+  end: LocalDateTime!
+
+  title: String!
+}
+
+type Mutation {
+  submitFeedback(feedbackInput: FeedbackInput!): Boolean!
+}
+
+type Query {
+  sessions: [Session!]!
+
+  """
+   null if the session doesn't exist.
+  """
+  session(id: ID!): Session
+
+  """
+   Returns a list of ScheduleItems to be displayed in the UI.
+
+   ScheduleItems introduce day headers as well as time headers.
+   They also make sure the sessions are sorted by start time/room and group them by time slot.
+
+   A time slot is a manually configured time range. It usually corresponds to a 30-minute slot where 3 sessions can happen in parallel.
+   Because some sessions are shorter, several of them may fit into a single time slot.
+
+   ScheduleItems also filter out some
+  """
+  scheduleItems: [ScheduleItem!]!
+
+  speakers: [Speaker!]!
+
+  """
+   null if the speaker doesn't exist.
+  """
+  speaker(id: ID!): Speaker
+
+  sponsorGroups: [SponsorGroup!]!
+
+  timezone: String!
+}
+
+type SponsorGroup {
+  name: String!
+
+  sponsors: [Sponsor!]!
+}
+
+type Sponsor {
+  name: String!
+
+  url: String!
+
+  logoLight: String!
+
+  logoDark: String!
+}
+
+type Room {
+  name: String!
+
+  rank: Int!
+
+  floor: Int!
+}
+
+type Session implements ScheduleItem {
+  title: String!
+
+  description: String!
+
+  start: LocalDateTime!
+
+  end: LocalDateTime!
+
+  event_type: String!
+
+  event_subtype: String!
+
+  venue: String @deprecated(reason: "Use room instead")
+
+  id: ID!
+
+  speakers: [Speaker!]!
+
+  room: Room
+}
+
+type SocialUrl {
+  service: SocialService!
+
+  url: String!
+}
+
+type Speaker {
+  username: String! @deprecated(reason: "Use id instead")
+
+  company: String!
+
+  position: String!
+
+  name: String!
+
+  about: String!
+
+  location: String!
+
+  url: String!
+
+  years: [Int!]!
+
+  socialUrls: [SocialUrl!]!
+
+  id: ID!
+
+  avatar: String!
+
+  sessions: [Session!]!
+}
+
+type TimeHeader implements ScheduleItem {
+  start: LocalDateTime!
+
+  end: LocalDateTime!
+}
+
+interface ScheduleItem {
+  start: LocalDateTime!
+
+  end: LocalDateTime!
+}
+
+input FeedbackInput {
+  userId: String!
+
+  sessionId: String!
+
+  rating: Rating!
+
+  comment: String!
+}
+
+"""
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Float
+
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+directive @deprecated(reason: String! = "No longer supported") on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | ENUM_VALUE
+
+directive @defer(label: String, if: Boolean! = true) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+directive @specifiedBy(url: String!) on SCALAR
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+

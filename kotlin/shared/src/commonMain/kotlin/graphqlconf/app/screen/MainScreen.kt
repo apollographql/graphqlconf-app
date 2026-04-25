@@ -36,15 +36,18 @@ import graphqlconf.app.navigation.SearchResultsScreen
 import graphqlconf.app.navigation.SessionScreen
 import graphqlconf.app.navigation.SpeakerScreen
 import graphqlconf.app.navigation.SpeakersScreen
+import graphqlconf.app.navigation.SponsorsScreen
 import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.shared.generated.resources.Res
 import graphqlconf_app.shared.generated.resources.calendar_today
 import graphqlconf_app.shared.generated.resources.calendar_today_filled
+import graphqlconf_app.shared.generated.resources.heart
 import graphqlconf_app.shared.generated.resources.info_box
 import graphqlconf_app.shared.generated.resources.info_box_filled
 import graphqlconf_app.shared.generated.resources.nav_destination_info
 import graphqlconf_app.shared.generated.resources.nav_destination_schedule
 import graphqlconf_app.shared.generated.resources.nav_destination_speakers
+import graphqlconf_app.shared.generated.resources.sponsors
 import graphqlconf_app.shared.generated.resources.users
 import graphqlconf_app.shared.generated.resources.users_filled
 import org.jetbrains.compose.resources.DrawableResource
@@ -81,6 +84,9 @@ fun MainScreen(rootNavController: NavHostController) {
           onSpeaker = { rootNavController.navigate(SpeakerScreen(it)) },
           onSearch = { rootNavController.navigate(SearchResultsScreen) },
         )
+      }
+      composable<SponsorsScreen> {
+        SponsorsScreen()
       }
       composable<InfoScreen> {
         InfoScreen(
@@ -122,6 +128,12 @@ private fun BottomNavigation(nestedNavController: NavHostController) {
         iconSelected = Res.drawable.users_filled,
         route = SpeakersScreen,
         routeClass = SpeakersScreen::class
+      ),
+      MainNavDestination(
+        label = stringResource(Res.string.sponsors),
+        icon = Res.drawable.heart,
+        route = SponsorsScreen,
+        routeClass = SponsorsScreen::class
       ),
       MainNavDestination(
         label = stringResource(Res.string.nav_destination_info),

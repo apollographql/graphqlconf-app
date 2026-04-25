@@ -9,4 +9,7 @@ class ScheduleScreen(val isBookmarks: Boolean)
 data object SpeakersScreen
 
 @Serializable
+data object SponsorsScreen
+
+@Serializable
 data object InfoScreen
