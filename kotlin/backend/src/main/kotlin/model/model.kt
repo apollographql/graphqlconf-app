@@ -20,6 +20,7 @@ class JsonFile(
   val name: String,
   val path: String
 )
+
 @Serializable
 data class JsonSession(
   val name: String,
@@ -103,7 +104,9 @@ private class Refesher<D>(
 }
 
 private val sessionRefresher = Refesher(
-  initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("schedule-2026.json")!!.toSessionList() },
+  initialValue = {
+    JsonSession::class.java.classLoader.getResourceAsStream("schedule-2026.json")!!.toSessionList()
+  },
   refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/schedule-2026.json").toSessionList() },
 )
 
@@ -113,7 +116,9 @@ private fun getUrl(url: String): InputStream {
 }
 
 private val speakersRefresher = Refesher(
-  initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("speakers.json")!!.toSpeakerList() },
+  initialValue = {
+    JsonSession::class.java.classLoader.getResourceAsStream("speakers.json")!!.toSpeakerList()
+  },
   refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/speakers.json").toSpeakerList() },
 )
 val allSessions: List<JsonSession>
@@ -128,21 +133,14 @@ private fun InputStream.toSessionList(): List<JsonSession> {
 }
 
 private fun List<JsonSession>.sanitize(): List<JsonSession> {
-  return filter { it.venue != "Workspace - 2nd Floor" } // Filter out sessions in the workspace as they seem to be very long
-    .mapNotNull {
-      var session = it
-      if (it.name == "Registration + Badge Pick-up") {
-        // Set the end time to 9:00am to match the schedule even if technically people can still pick up their badges after that
-        session = it.copy(
-          event_end = dateFormat.parse(it.event_end).date.atTime(LocalTime(9, 0)).let { dateFormat.format(it) })
-      }
-      if (it.name == "Cloakroom") {
-        return@mapNotNull null
-      }
-
-      session = session.copy(name = getSessionTitle(it.name))
-      session
+  return map {
+    var session = it
+    session = session.copy(name = getSessionTitle(it.name))
+    if (session.id == "0466574bdb1df2c888e087738a0248f8") {
+      session = session.copy(files = session.files + JsonFile(name = "Golden Path", path = "https://goldenpath.benjie.dev/"))
     }
+    session
+  }
 }
 
 /**
