@@ -16,7 +16,7 @@ apollo-kotlin-compiler-plugin = "2.2.20-RC-0.0.0-SNAPSHOT"
 minSdk = "26"
 targetSdk = "37"
 androidx-preference = "1.2.1"
-ktor = "3.4.2"
+ktor = "3.4.3"
 apollo-cache = "1.0.1"
 
 [libraries]
@@ -76,7 +76,7 @@ zoomable-image = "me.saket.telephoto:zoomable-image-coil3:0.19.0"
 kotlinx-serialization = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.4.0-Beta1"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0"
 ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-ktor-server-netty = "io.ktor:ktor-server-netty:3.4.2"
+ktor-server-netty = "io.ktor:ktor-server-netty:3.4.3"
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
