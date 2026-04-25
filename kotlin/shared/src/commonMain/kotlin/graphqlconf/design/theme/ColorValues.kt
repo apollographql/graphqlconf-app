@@ -81,6 +81,14 @@ private val eventTypeColors = mapOf(
   "security" to Color(0xff6495ED),
   "case studies" to Color(0xff894545),
   "federation and distributed systems" to Color(0xffFC8251),
+  "servers" to Color(0xffCC6BB0),
+  "ai and llms" to Color(0xff6B73CC),
+  "federation + distributed systems" to Color(0xffFC8251),
+  "production insights" to Color(0xff8D8D8D),
+  "clients" to Color(0xff7F00FF),
+  "performance" to Color(0xffFA8072),
+  "schema design + evolution + governance" to Color(0xff6495ED),
+  "case studies" to Color(0xff894545),
 )
 
 internal fun eventColor(eventType: String): Color? {

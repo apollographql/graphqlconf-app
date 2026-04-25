@@ -30,6 +30,7 @@ import graphqlconf.design.component.NowButton
 import graphqlconf.design.component.NowButtonState
 import graphqlconf.design.component.TopMenuButton
 import graphqlconf_app.shared.generated.resources.Res
+import graphqlconf_app.shared.generated.resources.bookmark
 import graphqlconf_app.shared.generated.resources.bookmark_filled
 import graphqlconf_app.shared.generated.resources.nav_destination_schedule
 import kotlinx.coroutines.flow.Flow
@@ -100,7 +101,7 @@ fun ScheduleScreen(
           },
           endContent = {
             TopMenuButton(
-              icon = Res.drawable.bookmark_filled,
+              icon = if (filterBookmarked) Res.drawable.bookmark_filled else Res.drawable.bookmark,
               selected = filterBookmarked,
               onToggle = onFilterBookmarks,
             )

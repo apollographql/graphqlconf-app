@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import graphqlconf.design.theme.GraphqlConfTheme
@@ -17,18 +18,16 @@ import graphqlconf.design.theme.eventColor
 fun Badges(eventTypes: List<String>, modifier: Modifier = Modifier) {
   FlowRow(modifier = modifier) {
     eventTypes.distinct().forEach { eventType ->
-      val color = eventColor(eventType)
-      if (color != null) {
-        Text(
-          text =  eventType.uppercase(),
-          color = GraphqlConfTheme.colors.text,
-          style = GraphqlConfTheme.typography.badge,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
-        )
-        Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-      }
+      val color = eventColor(eventType) ?: Color(0xffD8BFD8)
+      Text(
+        text =  eventType.uppercase(),
+        color = GraphqlConfTheme.colors.text,
+        style = GraphqlConfTheme.typography.badge,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.border(1.dp, color = color).background(color.copy(alpha = 0.3f)).padding(4.dp)
+      )
+      Spacer(modifier = Modifier.padding(horizontal = 4.dp))
     }
   }
 }
