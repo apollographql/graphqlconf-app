@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -38,6 +39,7 @@ fun App() {
         .background(GraphqlConfTheme.colors.surface)
         .windowInsetsPadding(WindowInsets.statusBars)
         .windowInsetsPadding(WindowInsets.navigationBars)
+        .imePadding()
         .fillMaxSize(),
     ) {
       val navController = rememberNavController()

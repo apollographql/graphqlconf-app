@@ -63,6 +63,7 @@ import graphqlconf_app.shared.generated.resources.feedback_thanks
 import graphqlconf_app.shared.generated.resources.feedback_title
 import graphqlconf_app.shared.generated.resources.location
 import graphqlconf_app.shared.generated.resources.nav_destination_session
+import graphqlconf_app.shared.generated.resources.oh_no
 import graphqlconf_app.shared.generated.resources.session_description
 import graphqlconf_app.shared.generated.resources.session_speakers
 import kotlinx.coroutines.launch
@@ -183,34 +184,35 @@ fun SessionScreen(id: String, onBack: () -> Unit, onSpeaker: (String) -> Unit) {
               }
             }
           }
-          HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
-          PaddingRow(Modifier.height(IntrinsicSize.Min)) {
-            Column(modifier = Modifier.weight(1f)) {
-              Text(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp),
-                text = stringResource(Res.string.session_speakers),
-                color = GraphqlConfTheme.colors.text,
-                style = GraphqlConfTheme.typography.h2,
-              )
-
-              session.speakers.forEachIndexed { index, speaker ->
-                HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
-                SpeakerCardContent(
-                  name = speaker.speakerSummary.name,
-                  position = speaker.speakerSummary.position,
-                  company = speaker.speakerSummary.company,
-                  about = speaker.speakerSummary.about,
-                  avatar = speaker.speakerSummary.avatar,
-                  eventTypes = speaker.speakerSummary.sessions.map { it.event_subtype },
-                  index = index,
-                  modifier = Modifier.padding(horizontal = 8.dp).clickable {
-                    onSpeaker(speaker.speakerSummary.id)
-                  },
+          if (session.speakers.isNotEmpty()) {
+            HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+            PaddingRow(Modifier.height(IntrinsicSize.Min)) {
+              Column(modifier = Modifier.weight(1f)) {
+                Text(
+                  modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+                  text = stringResource(Res.string.session_speakers),
+                  color = GraphqlConfTheme.colors.text,
+                  style = GraphqlConfTheme.typography.h2,
                 )
+
+                session.speakers.forEachIndexed { index, speaker ->
+                  HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+                  SpeakerCardContent(
+                    name = speaker.speakerSummary.name,
+                    position = speaker.speakerSummary.position,
+                    company = speaker.speakerSummary.company,
+                    about = speaker.speakerSummary.about,
+                    avatar = speaker.speakerSummary.avatar,
+                    eventTypes = speaker.speakerSummary.sessions.map { it.event_subtype },
+                    index = index,
+                    modifier = Modifier.padding(horizontal = 8.dp).clickable {
+                      onSpeaker(speaker.speakerSummary.id)
+                    },
+                  )
+                }
               }
             }
-          }
-          if (session.speakers.isNotEmpty()) {
+
             HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
             FeedbackSection(sessionId = session.id)
           }
@@ -229,7 +231,7 @@ private fun FeedbackSection(sessionId: String) {
   var comment by remember(sessionId) { mutableStateOf("") }
   var submitting by remember(sessionId) { mutableStateOf(false) }
   var submitted by remember(sessionId) { mutableStateOf(false) }
-  var error by remember(sessionId) { mutableStateOf<String?>(null) }
+  var error by remember(sessionId) { mutableStateOf<Boolean>(false) }
   val scope = rememberCoroutineScope()
   val textColor = GraphqlConfTheme.colors.text
 
@@ -306,10 +308,10 @@ private fun FeedbackSection(sessionId: String) {
         )
       }
 
-      error?.let {
+      if (error) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-          text = it,
+          text = stringResource(Res.string.oh_no),
           color = ColorValues.primaryBase,
           style = GraphqlConfTheme.typography.bodySmall,
         )
@@ -327,7 +329,7 @@ private fun FeedbackSection(sessionId: String) {
           .clickable(enabled = submitEnabled) {
             val selected = rating ?: return@clickable
             submitting = true
-            error = null
+            error = false
             scope.launch {
               val response = apolloClient.mutation(
                 SubmitFeedbackMutation(
@@ -343,8 +345,7 @@ private fun FeedbackSection(sessionId: String) {
               if (response.data?.submitFeedback == true) {
                 submitted = true
               } else {
-                error = response.exception?.message
-                  ?: response.errors?.firstOrNull()?.message
+                error = true
               }
             }
           }
