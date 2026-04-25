@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -43,7 +44,11 @@ var firstLaunch: Boolean = true
 
 @Suppress("UnrememberedMutableState")
 @Composable
-fun ScheduleScreen(filterBookmarked: Boolean, onSession: (String) -> Unit, onFilterBookmarks: (Boolean) -> Unit) {
+fun ScheduleScreen(
+  filterBookmarked: Boolean,
+  onSession: (String) -> Unit,
+  onFilterBookmarks: (Boolean) -> Unit
+) {
   var headerState by rememberSaveable { mutableStateOf(MainHeaderContainerState.Title) }
 
   Column {
@@ -73,12 +78,9 @@ fun ScheduleScreen(filterBookmarked: Boolean, onSession: (String) -> Unit, onFil
             if (nowButtonState != null) {
               NowButton(
                 state = nowButtonState,
-                onClick = {
+                onClick = { scrollIndex ->
                   scope.launch {
-                    val index = computeNowIndex(responseState)
-                    if (index != null) {
-                      listState.animateScrollToItem(index)
-                    }
+                    listState.animateScrollToItem(scrollIndex)
                   }
                 }
               )
@@ -106,11 +108,7 @@ fun ScheduleScreen(filterBookmarked: Boolean, onSession: (String) -> Unit, onFil
 
 private fun Flow<ApolloResponse<GetScheduleItemsQuery.Data>>.removeNetworkErrors(): Flow<ApolloResponse<GetScheduleItemsQuery.Data>> {
   return this.filter {
-    if (!it.isFromCache && it.data == null) {
-      false
-    } else {
-      true
-    }
+    !(!it.isFromCache && it.data == null)
   }
 }
 
@@ -119,10 +117,15 @@ private fun computeNowButtonState(
   responseState: State<ApolloResponse<GetScheduleItemsQuery.Data>?>,
   listState: LazyListState
 ): NowButtonState? {
-  val response = responseState.value ?: return null
-  if (response.data == null) return null
-
-  val items = response.data!!.scheduleItems
+  val response = responseState.value
+  if (response == null) {
+    // still loading
+    return null
+  }
+  if (response.data == null) {
+    // error fetching data
+    return null
+  }
 
   val firstVisibleItemIndex = listState.firstVisibleItemIndex
   if (firstVisibleItemIndex == -1) {
@@ -130,32 +133,54 @@ private fun computeNowButtonState(
     return null
   }
 
-  val now = now()
+  val items = response.data!!.scheduleItems
+  val nowInstant = now()
+  val now = nowInstant.toLocalDateTime(timeZone)
 
-  val first = items.first()
-  if (first.start.toInstant(timeZone) > now) {
-    // The conference has not started yet.
-    return null
-  }
-  val last = items.last()
-  if (last.end.toInstant(timeZone) < now) {
-    // The conference is over.
-    return null
-  }
-
-  val firstVisible = items.get(firstVisibleItemIndex)
-
-  val visibleStart = firstVisible.start.toInstant(timeZone)
-  val visibleEnd = firstVisible.end.toInstant(timeZone)
+  val conferenceStart = items.first().start
+  val conferenceEnd = items.last().end
   return when {
-    now < visibleStart -> {
-      NowButtonState.After
+    now < conferenceStart -> {
+      // The conference has not started yet, scroll to the beginning
+      NowButtonState.Disabled(0, (conferenceStart.toInstant(timeZone) - nowInstant).inWholeDays.toInt())
     }
-    now in visibleStart..<visibleEnd -> {
-      NowButtonState.Current
+
+    now > conferenceEnd -> {
+      // The conference has not started yet, scroll to the beginning
+      NowButtonState.ScrollUp(0, true)
     }
+
     else -> {
-      NowButtonState.Before
+      // Lookup the first item to display. This is the  index whose start
+      var index = 1
+      var scrollIndex = 0
+      var scrollStart = items.first().start
+
+      while (index <= items.lastIndex) {
+        val itemStart = items.get(index).start
+
+        if (itemStart > now){
+          break
+        }
+
+        if (itemStart > scrollStart) {
+          scrollIndex = index
+          scrollStart = itemStart
+        }
+
+        index++
+      }
+
+      val firstVisible = items.get(firstVisibleItemIndex)
+
+      if (firstVisible.start == scrollStart){
+        // Note the scrollIndex isn't used here because the button is disabled
+        NowButtonState.Disabled(firstVisibleItemIndex)
+      } else if (scrollIndex < firstVisibleItemIndex) {
+        NowButtonState.ScrollUp(scrollIndex)
+      } else {
+        NowButtonState.ScrollDown(scrollIndex)
+      }
     }
   }
 }
@@ -163,24 +188,6 @@ private fun computeNowButtonState(
 fun now(): Instant {
   return Clock.System.now()
 //  return kotlinx.datetime.LocalDateTime(2026, 5, 19, 11, 0).toInstant(timeZone)
-}
-
-private fun computeNowIndex(
-  responseState: State<ApolloResponse<GetScheduleItemsQuery.Data>?>,
-): Int? {
-  val response = responseState.value ?: return null
-  if (response.data == null) return null
-
-  val now = now()
-  val ret = response.data!!.scheduleItems.indexOfFirst {
-    it.onTimeHeader != null && (it.end.toInstant(timeZone) >= now || it.start.toInstant(timeZone) >= now)
-  }
-
-  if (ret == -1) {
-    return null
-  } else {
-    return ret
-  }
 }
 
 val timeZone = TimeZone.of("US/Pacific")

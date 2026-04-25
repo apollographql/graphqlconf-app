@@ -8,7 +8,8 @@
   <string name="nav_licenses">Licenses</string>
   <string name="licenses">Licenses</string>
   <string name="floor_plan">Floor plan</string>
-  <string name="now">Now</string>
+  <string name="now">NOW</string>
+  <string name="rewind">REWIND</string>
   <string name="back">Back</string>
   <string name="speaker_photo">Speaker photo</string>
   <string name="session_description">Session description</string>
