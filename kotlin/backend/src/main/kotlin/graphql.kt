@@ -387,10 +387,15 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
   return items
 }
 
+enum class Rating {
+  Disappointed,
+  Neutral,
+  Happy
+}
 class FeedbackInput(
   val userId: String,
   val sessionId: String,
-  val rating: Int,
+  val rating: Rating,
   val comment: String,
 )
 
@@ -406,7 +411,7 @@ class Mutation {
     val response = apolloClient.mutation(SubmitFeedbackMutation(
       feedbackInput.userId,
       feedbackInput.sessionId,
-      feedbackInput.rating,
+      feedbackInput.rating.ordinal,
       feedbackInput.comment
     )).execute()
 

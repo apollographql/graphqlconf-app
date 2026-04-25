@@ -5,6 +5,14 @@ schema {
 
 scalar LocalDateTime
 
+enum Rating {
+  Disappointed
+
+  Neutral
+
+  Happy
+}
+
 enum SocialService {
   Instagram
 
@@ -26,9 +34,7 @@ type DayHeader implements ScheduleItem {
 }
 
 type Mutation {
-  setVote(input: VoteInput!): Boolean!
-
-  setComment(input: CommentInput!): Boolean!
+  submitFeedback(feedbackInput: FeedbackInput!): Boolean!
 }
 
 type Query {
@@ -136,20 +142,14 @@ interface ScheduleItem {
   end: LocalDateTime!
 }
 
-input CommentInput {
+input FeedbackInput {
   userId: String!
 
   sessionId: String!
+
+  rating: Rating!
 
   comment: String!
-}
-
-input VoteInput {
-  userId: String!
-
-  sessionId: String!
-
-  vote: Int!
 }
 
 type __Schema {
