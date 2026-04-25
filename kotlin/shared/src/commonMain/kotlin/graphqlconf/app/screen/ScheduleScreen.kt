@@ -33,6 +33,7 @@ import graphqlconf_app.shared.generated.resources.Res
 import graphqlconf_app.shared.generated.resources.bookmark
 import graphqlconf_app.shared.generated.resources.bookmark_filled
 import graphqlconf_app.shared.generated.resources.nav_destination_schedule
+import graphqlconf_app.shared.generated.resources.search
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
@@ -100,6 +101,10 @@ fun ScheduleScreen(
             }
           },
           endContent = {
+            TopMenuButton(
+              icon = Res.drawable.search,
+              onClick = {},
+            )
             TopMenuButton(
               icon = if (filterBookmarked) Res.drawable.bookmark_filled else Res.drawable.bookmark,
               selected = filterBookmarked,
