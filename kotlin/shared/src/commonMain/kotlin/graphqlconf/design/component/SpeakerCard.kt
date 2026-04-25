@@ -98,7 +98,9 @@ fun SpeakerCardContent(
       Text(
         text = name,
         style = GraphqlConfTheme.typography.bodyLarge,
-        color = textColor
+        color = textColor,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis
       )
       Text(
         text = listOf(position, company).filter { it.isNotEmpty() }.joinToString(", "),
