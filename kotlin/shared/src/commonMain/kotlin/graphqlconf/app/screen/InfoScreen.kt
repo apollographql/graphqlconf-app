@@ -175,7 +175,7 @@ fun IconCard(painter: Painter, url: String) {
 
   Image(
     painter = painter,
-    contentDescription = "Open link",
+    contentDescription = stringResource(Res.string.open_resource),
     modifier = Modifier.size(64.dp).padding(16.dp).clickable {
       uriHandler.openUri(url)
     },
@@ -204,7 +204,7 @@ fun LinkCard(title: String, url: String) {
     )
     Image(
       painter = painterResource(Res.drawable.arrow_left),
-      contentDescription = "Open link",
+      contentDescription = stringResource(Res.string.open_resource),
       modifier = Modifier.size(24.dp).rotate(180f),
       colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.text)
     )

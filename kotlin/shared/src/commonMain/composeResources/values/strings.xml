@@ -25,6 +25,8 @@
   <string name="speaker_photo">Speaker photo</string>
   <string name="session_description">Session description</string>
   <string name="session_speakers">Session speakers</string>
+  <string name="session_resources">Resources</string>
+  <string name="open_resource">Open link</string>
   <string name="meet_the_speaker">Meet the speaker</string>
   <string name="sessions">Sessions</string>
   <string name="graphqlconf">GraphQLConf</string>

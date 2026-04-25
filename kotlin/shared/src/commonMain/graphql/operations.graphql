@@ -58,6 +58,10 @@ query GetSession($id: ID!) {
     speakers {
       ...speakerSummary
     }
+    resources {
+      name
+      url
+    }
   }
 }
 

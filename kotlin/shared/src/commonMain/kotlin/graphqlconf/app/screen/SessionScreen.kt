@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
@@ -29,8 +30,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import graphqlconf.api.GetSessionQuery
@@ -53,6 +56,7 @@ import graphqlconf.design.theme.GraphqlConfTheme
 import graphqlconf_app.shared.generated.resources.Res
 import graphqlconf_app.shared.generated.resources.arrow_left
 import graphqlconf_app.shared.generated.resources.calendar_today
+import graphqlconf_app.shared.generated.resources.download
 import graphqlconf_app.shared.generated.resources.feedback_comment_placeholder
 import graphqlconf_app.shared.generated.resources.feedback_rating_disappointed
 import graphqlconf_app.shared.generated.resources.feedback_rating_happy
@@ -64,7 +68,9 @@ import graphqlconf_app.shared.generated.resources.feedback_title
 import graphqlconf_app.shared.generated.resources.location
 import graphqlconf_app.shared.generated.resources.nav_destination_session
 import graphqlconf_app.shared.generated.resources.oh_no
+import graphqlconf_app.shared.generated.resources.open_resource
 import graphqlconf_app.shared.generated.resources.session_description
+import graphqlconf_app.shared.generated.resources.session_resources
 import graphqlconf_app.shared.generated.resources.session_speakers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -212,8 +218,45 @@ fun SessionScreen(id: String, onBack: () -> Unit, onSpeaker: (String) -> Unit) {
                 }
               }
             }
-
             HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+          }
+          if (session.resources.isNotEmpty()) {
+            val uriHandler = LocalUriHandler.current
+            PaddingRow(Modifier.height(IntrinsicSize.Min)) {
+              Column(modifier = Modifier.weight(1f).padding(horizontal = 8.dp, vertical = 16.dp)) {
+                Text(
+                  text = stringResource(Res.string.session_resources),
+                  color = GraphqlConfTheme.colors.text,
+                  style = GraphqlConfTheme.typography.h2,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                session.resources.forEach { resource ->
+                  Row(
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .clickable { uriHandler.openUri(resource.url) }
+                      .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                  ) {
+                    Text(
+                      text = resource.name,
+                      color = GraphqlConfTheme.colors.text,
+                      style = GraphqlConfTheme.typography.bodyMedium,
+                      modifier = Modifier.weight(1f),
+                    )
+                    Image(
+                      painter = painterResource(Res.drawable.arrow_left),
+                      contentDescription = stringResource(Res.string.open_resource),
+                      modifier = Modifier.size(24.dp).rotate(180f),
+                      colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.text),
+                    )
+                  }
+                }
+              }
+            }
+            HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
+          }
+          if (session.speakers.isNotEmpty()) {
             FeedbackSection(sessionId = session.id)
           }
         }
