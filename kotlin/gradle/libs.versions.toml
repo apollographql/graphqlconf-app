@@ -51,7 +51,7 @@ foundation = { module = "org.jetbrains.compose.foundation:foundation", version.r
 #noinspection NewerVersionAvailable, crashes on some weird grpc-java/protobuf exeption
 google-cloud-bom = "com.google.cloud:libraries-bom:26.64.0"
 #noinspection NewerVersionAvailable, crashes on some weird grpc-java/protobuf exeption
-google-cloud-run = "com.google.cloud:google-cloud-run:0.68.0"
+google-cloud-run = "com.google.cloud:google-cloud-run:0.91.0"
 google-cloud-storage = { module = "com.google.cloud:google-cloud-storage" }
 gradle-api = "dev.gradleplugins:gradle-api:8.11.1"
 gratatouille = { module = "com.gradleup.gratatouille:gratatouille-gradle-plugin", version.ref = "gratatouille" }
