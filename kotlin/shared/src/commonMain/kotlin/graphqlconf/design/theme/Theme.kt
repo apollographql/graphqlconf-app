@@ -1,6 +1,7 @@
 package graphqlconf.design.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
@@ -35,6 +36,8 @@ fun GraphqlConfTheme(
     LocalColors provides if (darkTheme) GraphqlConfDarkColors else GraphqlConfLightColors,
     LocalTypography provides GraphqlConfTypography,
   ) {
-    content()
+    SelectionContainer {
+      content()
+    }
   }
 }
