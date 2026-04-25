@@ -19,10 +19,13 @@ import com.apollographql.cache.normalized.fetchPolicy
 import com.apollographql.cache.normalized.isFromCache
 import graphqlconf.api.GetScheduleItemsQuery
 import graphqlconf.app.apolloClient
+import graphqlconf.app.bookmarks
+import graphqlconf.app.misc.ApolloWrapper
 import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
 import graphqlconf.app.misc.MainHeaderTitleBar
 import graphqlconf.app.misc.Schedule
+import graphqlconf.app.misc.filterScheduleItems
 import graphqlconf.design.component.NowButton
 import graphqlconf.design.component.NowButtonState
 import graphqlconf.design.component.TopMenuButton
@@ -65,8 +68,17 @@ fun ScheduleScreen(
         .toFlow()
         .removeNetworkErrors()
     }.collectAsStateWithLifecycle(null)
-    val nowButtonState = derivedStateOf { computeNowButtonState(responseState, listState) }.value
+    val bookmarkState = remember {
+      bookmarks()
+    }.collectAsStateWithLifecycle(emptySet())
+
+    val bookmarks = bookmarkState.value
+
     val response = responseState.value
+    val filteredItems = response?.data?.scheduleItems?.let {
+      filterScheduleItems(it, filterBookmarked, bookmarks)
+    }
+    val nowButtonState = derivedStateOf { computeNowButtonState(filteredItems, listState) }.value
     Header(
       state = headerState,
       titleContent = {
@@ -97,12 +109,15 @@ fun ScheduleScreen(
       },
     )
 
-    Schedule(
-      listState = listState,
-      response = response,
-      onSession = onSession,
-      filterBookmarked = filterBookmarked
-    )
+    ApolloWrapper(response) {
+      Schedule(
+        listState = listState,
+        scheduleItems = filteredItems!!,
+        bookmarks = bookmarks,
+        onSession = onSession,
+        filterBookmarked = filterBookmarked
+      )
+    }
   }
 }
 
@@ -114,16 +129,11 @@ private fun Flow<ApolloResponse<GetScheduleItemsQuery.Data>>.removeNetworkErrors
 
 @OptIn(ExperimentalTime::class)
 private fun computeNowButtonState(
-  responseState: State<ApolloResponse<GetScheduleItemsQuery.Data>?>,
+  items: List<GetScheduleItemsQuery.ScheduleItem>?,
   listState: LazyListState
 ): NowButtonState? {
-  val response = responseState.value
-  if (response == null) {
-    // still loading
-    return null
-  }
-  if (response.data == null) {
-    // error fetching data
+  if (items == null) {
+    // still loading or error fetching data
     return null
   }
 
@@ -133,7 +143,6 @@ private fun computeNowButtonState(
     return null
   }
 
-  val items = response.data!!.scheduleItems
   val nowInstant = now()
   val now = nowInstant.toLocalDateTime(timeZone)
 

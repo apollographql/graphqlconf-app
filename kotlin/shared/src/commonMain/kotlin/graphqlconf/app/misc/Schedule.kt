@@ -37,86 +37,80 @@ import kotlin.time.Duration.Companion.minutes
 @Composable
 fun Schedule(
   listState: LazyListState,
-  response: ApolloResponse<GetScheduleItemsQuery.Data>?,
+  scheduleItems: List<GetScheduleItemsQuery.ScheduleItem>,
+  bookmarks: Set<SessionId>,
   onSession: (String) -> Unit,
   filterBookmarked: Boolean
 ) {
   val now = now()
-  val bookmarkState = remember {
-    bookmarks()
-  }.collectAsStateWithLifecycle(emptySet())
 
-  ApolloWrapper(
-    response
-  ) {
-
-    val bookmarks = bookmarkState.value
-    val scheduleItems = filterScheduleItems(it.scheduleItems, filterBookmarked, bookmarks)
-
-    if (scheduleItems.isEmpty() && filterBookmarked) {
-      Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        contentAlignment = Alignment.Center,
-      ) {
-        Text(
-          modifier = Modifier.padding(horizontal = 16.dp),
-          color = GraphqlConfTheme.colors.text,
-          style = GraphqlConfTheme.typography.h2,
-          text = stringResource(Res.string.no_bookmarks),
-        )
-      }
+  if (scheduleItems.isEmpty() && filterBookmarked) {
+    Box(
+      modifier = Modifier.fillMaxSize().padding(16.dp),
+      contentAlignment = Alignment.Center,
+    ) {
+      Text(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        color = GraphqlConfTheme.colors.text,
+        style = GraphqlConfTheme.typography.h2,
+        text = stringResource(Res.string.no_bookmarks),
+      )
     }
+  }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
-      this.items(scheduleItems) { scheduleItem ->
-        val alpha = if (now > scheduleItem.end.toInstant(timeZone)) {
-          0.5f
-        } else {
-          1f
+  LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
+    this.items(scheduleItems) { scheduleItem ->
+      val alpha = if (now > scheduleItem.end.toInstant(timeZone)) {
+        0.5f
+      } else {
+        1f
+      }
+      when {
+        scheduleItem.onDayHeader != null -> {
+          DayHeader(
+            modifier = Modifier.alpha(alpha),
+            scheduleItem.start.date,
+            scheduleItem.onDayHeader.title
+          )
         }
-        when {
-          scheduleItem.onDayHeader != null -> {
-            DayHeader(modifier = Modifier.alpha(alpha), scheduleItem.start.date, scheduleItem.onDayHeader.title)
-          }
 
-          scheduleItem.onTimeHeader != null -> {
-            Text(
-              modifier = Modifier.padding(horizontal = 16.dp).alpha(alpha),
-              text = DateTimeFormatting.time(scheduleItem.start.time),
-              color = GraphqlConfTheme.colors.text,
-              style = GraphqlConfTheme.typography.h3,
-            )
-          }
+        scheduleItem.onTimeHeader != null -> {
+          Text(
+            modifier = Modifier.padding(horizontal = 16.dp).alpha(alpha),
+            text = DateTimeFormatting.time(scheduleItem.start.time),
+            color = GraphqlConfTheme.colors.text,
+            style = GraphqlConfTheme.typography.h3,
+          )
+        }
 
-          scheduleItem.onSession != null -> {
-            val context = LocalPlatformContext.current
-            val session = scheduleItem.onSession
-            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(alpha)) {
-              SessionCard(
-                title = session.title,
-                eventType = session.event_type,
-                speakers = session.speakers.map { it.name },
-                venue = session.room?.name ?: "",
-                time = DateTimeFormatting.timeToTime(scheduleItem.start.time, scheduleItem.end.time),
-                onClick = { onSession(session.id) },
-                bookmarked = SessionId(session.id) in bookmarks,
-                onBookmarkChanged = {
-                  val newBookmarks = if (it) {
-                    context.scheduleNotification(
-                      sessionId = session.id,
-                      scheduleAt = scheduleItem.start.toInstant(timeZone) - 10.minutes,
-                      title = session.title,
-                      room = session.room?.name ?: ""
-                    )
-                    bookmarks + SessionId(session.id)
-                  } else {
-                    context.cancelNotification(session.id)
-                    bookmarks - SessionId(session.id)
-                  }
-                  setBookmarks(newBookmarks)
+        scheduleItem.onSession != null -> {
+          val context = LocalPlatformContext.current
+          val session = scheduleItem.onSession
+          Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).alpha(alpha)) {
+            SessionCard(
+              title = session.title,
+              eventType = session.event_type,
+              speakers = session.speakers.map { it.name },
+              venue = session.room?.name ?: "",
+              time = DateTimeFormatting.timeToTime(scheduleItem.start.time, scheduleItem.end.time),
+              onClick = { onSession(session.id) },
+              bookmarked = SessionId(session.id) in bookmarks,
+              onBookmarkChanged = {
+                val newBookmarks = if (it) {
+                  context.scheduleNotification(
+                    sessionId = session.id,
+                    scheduleAt = scheduleItem.start.toInstant(timeZone) - 10.minutes,
+                    title = session.title,
+                    room = session.room?.name ?: ""
+                  )
+                  bookmarks + SessionId(session.id)
+                } else {
+                  context.cancelNotification(session.id)
+                  bookmarks - SessionId(session.id)
                 }
-              )
-            }
+                setBookmarks(newBookmarks)
+              }
+            )
           }
         }
       }
@@ -124,7 +118,11 @@ fun Schedule(
   }
 }
 
-private fun filterScheduleItems(scheduleItems: List<GetScheduleItemsQuery.ScheduleItem>, filterBookmarked: Boolean, bookmarks: Set<SessionId>): List<GetScheduleItemsQuery.ScheduleItem> {
+internal fun filterScheduleItems(
+  scheduleItems: List<GetScheduleItemsQuery.ScheduleItem>,
+  filterBookmarked: Boolean,
+  bookmarks: Set<SessionId>
+): List<GetScheduleItemsQuery.ScheduleItem> {
   if (!filterBookmarked) return scheduleItems
 
   var lastDayHeader: GetScheduleItemsQuery.ScheduleItem? = null
