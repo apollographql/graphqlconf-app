@@ -184,8 +184,8 @@ fun SessionScreen(id: String, onBack: () -> Unit, onSpeaker: (String) -> Unit) {
               }
             }
           }
+          HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
           if (session.speakers.isNotEmpty()) {
-            HorizontalDivider(color = GraphqlConfTheme.colors.secondaryDimmed, thickness = 1.dp)
             PaddingRow(Modifier.height(IntrinsicSize.Min)) {
               Column(modifier = Modifier.weight(1f)) {
                 Text(
