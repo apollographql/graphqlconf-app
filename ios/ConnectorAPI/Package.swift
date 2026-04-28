@@ -11,7 +11,7 @@ let package = Package(
     .library(name: "ConnectorAPI", targets: ["ConnectorAPI"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/apollographql/apollo-ios", exact: "2.1.0"),
+    .package(url: "https://github.com/apollographql/apollo-ios", exact: "2.1.1"),
   ],
   targets: [
     .target(
