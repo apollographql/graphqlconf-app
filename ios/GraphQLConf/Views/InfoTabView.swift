@@ -7,8 +7,8 @@ struct InfoTabView: View {
     case privacyPolicy
     case healthAndSafety
     case inclusionAndAccessibility
-    case eventResources
-    case venueMap
+//    case eventResources
+//    case venueMap
     case graphqlOrg
 
     var title: String {
@@ -17,20 +17,20 @@ struct InfoTabView: View {
       case .privacyPolicy: "Privacy Policy"
       case .healthAndSafety: "Health & Safety"
       case .inclusionAndAccessibility: "Inclusion & Accessibility"
-      case .eventResources: "Event Resources"
-      case .venueMap: "Venue Map"
+//      case .eventResources: "Event Resources"
+//      case .venueMap: "Venue Map"
       case .graphqlOrg: "graphql.org"
       }
     }
 
     var url: URL {
       switch self {
-      case .codeOfConduct: URL(string: "https://graphql.org/conf/2025/resources/#code-of-conduct")!
+      case .codeOfConduct: URL(string: "https://graphql.org/conf/2026/resources/#code-of-conduct")!
       case .privacyPolicy: URL(string: "https://lfprojects.org/policies/privacy-policy/")!
-      case .healthAndSafety: URL(string: "https://graphql.org/conf/2025/resources/#health--safety")!
-      case .inclusionAndAccessibility: URL(string: "https://graphql.org/conf/2025/resources/#inclusion--accessibility")!
-      case .eventResources: URL(string: "http://bit.ly/graphqlconf2025")!
-      case .venueMap: Bundle.main.venueMapURL
+      case .healthAndSafety: URL(string: "https://graphql.org/conf/2026/resources/#health--safety")!
+      case .inclusionAndAccessibility: URL(string: "https://graphql.org/conf/2026/resources/#inclusion--accessibility")!
+//      case .eventResources: URL(string: "http://bit.ly/graphqlconf2026")!
+//      case .venueMap: Bundle.main.venueMapURL
       case .graphqlOrg: URL(string: "https://graphql.org")!
       }
     }
@@ -104,14 +104,14 @@ struct InfoTabView: View {
               .onTapGesture {
                 isInclusionAndAccessibilityPresented.toggle()
               }
-            InfoCellView(title: InfoLink.eventResources.title)
-              .onTapGesture {
-                isEventResourcesPresented.toggle()
-              }
-            InfoCellView(title: InfoLink.venueMap.title)
-              .onTapGesture {
-                isVenueMapPresented.toggle()
-              }
+//            InfoCellView(title: InfoLink.eventResources.title)
+//              .onTapGesture {
+//                isEventResourcesPresented.toggle()
+//              }
+//            InfoCellView(title: InfoLink.venueMap.title)
+//              .onTapGesture {
+//                isVenueMapPresented.toggle()
+//              }
             InfoCellView(title: InfoLink.graphqlOrg.title)
               .onTapGesture {
                 isGraphqlOrgPresented.toggle()
@@ -184,22 +184,22 @@ struct InfoTabView: View {
           .presentationDragIndicator(.visible)
       }
     }
-    .sheet(isPresented: $isEventResourcesPresented) {
-      NavigationStack {
-        WebViewRepresentable(url: InfoLink.eventResources.url)
-          .navigationTitle(InfoLink.eventResources.title)
-          .navigationBarTitleDisplayMode(.inline)
-          .presentationDragIndicator(.visible)
-      }
-    }
-    .sheet(isPresented: $isVenueMapPresented) {
-      NavigationStack {
-        WebViewRepresentable(url: InfoLink.venueMap.url)
-          .navigationTitle(InfoLink.venueMap.title)
-          .navigationBarTitleDisplayMode(.inline)
-          .presentationDragIndicator(.visible)
-      }
-    }
+//    .sheet(isPresented: $isEventResourcesPresented) {
+//      NavigationStack {
+//        WebViewRepresentable(url: InfoLink.eventResources.url)
+//          .navigationTitle(InfoLink.eventResources.title)
+//          .navigationBarTitleDisplayMode(.inline)
+//          .presentationDragIndicator(.visible)
+//      }
+//    }
+//    .sheet(isPresented: $isVenueMapPresented) {
+//      NavigationStack {
+//        WebViewRepresentable(url: InfoLink.venueMap.url)
+//          .navigationTitle(InfoLink.venueMap.title)
+//          .navigationBarTitleDisplayMode(.inline)
+//          .presentationDragIndicator(.visible)
+//      }
+//    }
     .sheet(isPresented: $isGraphqlOrgPresented) {
       NavigationStack {
         WebViewRepresentable(url: InfoLink.graphqlOrg.url)
