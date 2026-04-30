@@ -70,7 +70,7 @@ val json = Json {
   ignoreUnknownKeys = true
 }
 
-private class Refesher<D>(
+internal class Refesher<D>(
   val initialValue: () -> D,
   val refreshValue: () -> D,
 ) {
@@ -110,8 +110,8 @@ private val sessionRefresher = Refesher(
   refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/schedule-2026.json").toSessionList() },
 )
 
-private val client = OkHttpClient()
-private fun getUrl(url: String): InputStream {
+internal val client = OkHttpClient()
+internal fun getUrl(url: String): InputStream {
   return client.newCall(Request.Builder().url(url).build()).execute().body.byteStream()
 }
 
