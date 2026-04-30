@@ -59,13 +59,19 @@ loud {
     service.set("us")
   }
 }
-registerDownloadResourcesTask()
 
 tasks.register("run", JavaExec::class.java) {
   classpath(java.sourceSets.main.get().output)
   classpath(configurations.getByName("runtimeClasspath"))
   mainClass.set("MainKt")
 }
+
+tasks.register("updateResources", JavaExec::class.java) {
+  classpath(java.sourceSets.main.get().output)
+  classpath(configurations.getByName("runtimeClasspath"))
+  mainClass.set("InitialKt")
+}
+
 
 apollo {
   service("supabase") {

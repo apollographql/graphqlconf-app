@@ -1,20 +1,15 @@
 package model
 
-import dateFormat
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.atTime
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.InputStream
-import kotlin.math.pow
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 
 @Serializable
 class JsonFile(
@@ -41,11 +36,6 @@ data class JsonSession(
     val id: String,
   )
 }
-
-@Serializable
-class JsonSpeakers(
-  val speakers: List<JsonSpeaker>
-)
 
 @Serializable
 class JsonSpeaker(
@@ -106,38 +96,18 @@ internal class Refesher<D>(
   }
 }
 
-private val sessionRefresher = Refesher(
-  pollingDelay = 5.minutes,
-  initialValue = {
-    JsonSession::class.java.classLoader.getResourceAsStream("schedule-2026.json")!!.toSessionList()
-  },
-  refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/schedule-2026.json").toSessionList() },
-)
-
 internal val client = OkHttpClient()
 internal fun getUrl(url: String): InputStream {
   return client.newCall(Request.Builder().url(url).build()).execute().body.byteStream()
 }
 
-private val speakersRefresher = Refesher(
-  pollingDelay = 30.minutes,
-  initialValue = {
-    JsonSession::class.java.classLoader.getResourceAsStream("speakers.json")!!.toSpeakerList()
-  },
-  refreshValue = { getUrl("https://raw.githubusercontent.com/graphql/graphql.github.io/refs/heads/source/scripts/sync-sched/speakers.json").toSpeakerList() },
-)
-val allSessions: List<JsonSession>
-  get() {
-    return sessionRefresher.data()
-  }
-
-private fun InputStream.toSessionList(): List<JsonSession> {
+internal fun InputStream.toSessionList(): List<JsonSession> {
   return use {
     json.decodeFromStream<List<JsonSession>>(it)
   }.sanitize()
 }
 
-private fun List<JsonSession>.sanitize(): List<JsonSession> {
+internal fun List<JsonSession>.sanitize(): List<JsonSession> {
   return map {
     var session = it
     session = session.copy(name = getSessionTitle(it.name))
@@ -159,13 +129,9 @@ private fun getSessionTitle(title: String): String {
   return t.substringBefore(" -")
 }
 
-private fun InputStream.toSpeakerList(): List<JsonSpeaker> {
+internal fun InputStream.toSpeakerList(): List<JsonSpeaker> {
   return use {
-    json.decodeFromStream<JsonSpeakers>(it).speakers
+    json.decodeFromStream<List<JsonSpeaker>>(it)
   }
 }
 
-val allSpeakers: List<JsonSpeaker>
-  get() {
-    return speakersRefresher.data()
-  }

@@ -36,6 +36,13 @@ class SchedSessionSpeaker(
 )
 
 @Serializable
+open class SchedSpeakerSmall(
+  val id: String? = null,
+  val username: String,
+  val role: String? = null,
+)
+
+@Serializable
 class SchedSpeaker(
   val id: String? = null,
   val username: String,
@@ -74,42 +81,42 @@ private fun fetchSchedSpeakerDetails(username: String): SchedSpeaker {
   }
 }
 
-private val schedSessionsRefresher = Refesher(
+internal val schedSessionsRefresher = Refesher(
   pollingDelay = 5.minutes,
-  initialValue = { emptyList<SchedSession>() },
+  initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("sessions.json")!!.toSessionList() },
   refreshValue = {
     getUrl("$SCHED_BASE_URL/api/session/export?api_key=${schedApiKey()}&format=json").use {
       json.decodeFromStream<List<SchedSession>>(it)
+    }.map {
+      it.toJsonSession()
     }
   },
 )
 
-private val schedSpeakersRefresher = Refesher(
+internal val schedSpeakersRefresher = Refesher(
   pollingDelay = 30.minutes,
-  initialValue = { emptyList<SchedSpeaker>() },
+  initialValue = { JsonSpeaker::class.java.classLoader.getResourceAsStream("speakers.json")!!.toSpeakerList() },
   refreshValue = {
     val basics = getUrl(
       "$SCHED_BASE_URL/api/user/list?api_key=${schedApiKey()}&format=json&fields=$SCHED_SPEAKER_FIELDS"
     ).use {
-      json.decodeFromStream<List<SchedSpeaker>>(it)
+      json.decodeFromStream<List<SchedSpeakerSmall>>(it)
     }.filter { it.role?.contains("speaker", ignoreCase = true) == true }
 
     basics.map { speaker ->
       // /user/list does not return socialurls; /user/get does. Sched rate-limits at 30 req/min.
       Thread.sleep(2_500)
-      runCatching { fetchSchedSpeakerDetails(speaker.username) }
-        .getOrElse {
-          it.printStackTrace()
-          speaker
-        }
+      runCatching { fetchSchedSpeakerDetails(speaker.username) }.getOrThrow()
+    }.map {
+      it.toJsonSpeaker()
     }
   },
 )
 
-val allSchedSessions: List<SchedSession>
+val allSessions: List<JsonSession>
   get() = schedSessionsRefresher.data()
 
-val allSchedSpeakers: List<SchedSpeaker>
+val allSpeakers: List<JsonSpeaker>
   get() = schedSpeakersRefresher.data()
 
 fun SchedSession.toJsonSession(): JsonSession {
