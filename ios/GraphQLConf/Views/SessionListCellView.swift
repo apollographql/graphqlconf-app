@@ -22,6 +22,8 @@ struct SessionListCellView: View {
       HStack {
         Text(session.sessionFragment.title)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+          .fixedSize(horizontal: false, vertical: true)
+          .lineLimit(3)
           .multilineTextAlignment(.leading)
           .font(.HostGrotesk.xlarge)
           .foregroundStyle(Theme.primaryText)
@@ -36,6 +38,8 @@ struct SessionListCellView: View {
         Text(session.joinedSpeakers)
           .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
           .multilineTextAlignment(.leading)
+          .fixedSize(horizontal: false, vertical: true)
+          .lineLimit(2)
           .font(.HostGrotesk.large)
           .foregroundStyle(Theme.primaryText)
       }
