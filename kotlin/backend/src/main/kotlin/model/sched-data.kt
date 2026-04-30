@@ -2,6 +2,8 @@ package model
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.decodeFromStream
+import java.net.URLEncoder
+import kotlin.time.Duration.Companion.minutes
 
 @Serializable
 class SchedSession(
@@ -35,7 +37,7 @@ class SchedSessionSpeaker(
 
 @Serializable
 class SchedSpeaker(
-  val id: String,
+  val id: String? = null,
   val username: String,
   val name: String,
   val email: String? = null,
@@ -48,9 +50,14 @@ class SchedSpeaker(
   val company: String? = null,
   val position: String? = null,
   val location: String? = null,
+  val url: String? = null,
+  val socialurls: List<JsonSocialUrl> = emptyList(),
 )
 
 private const val SCHED_BASE_URL = "https://graphqlconf2026.sched.com"
+
+private const val SCHED_SPEAKER_FIELDS =
+  "id,username,name,phone,email,about,role,joined,lastactive,avatar,company,position,location,url,socialurls"
 
 private fun schedApiKey(): String {
   return requireNotNull(System.getenv("SCHED_API_TOKEN")) {
@@ -58,7 +65,17 @@ private fun schedApiKey(): String {
   }
 }
 
+private fun fetchSchedSpeakerDetails(username: String): SchedSpeaker {
+  val term = URLEncoder.encode(username, Charsets.UTF_8)
+  return getUrl(
+    "$SCHED_BASE_URL/api/user/get?api_key=${schedApiKey()}&by=username&term=$term&fields=$SCHED_SPEAKER_FIELDS&format=json"
+  ).use {
+    json.decodeFromStream<SchedSpeaker>(it)
+  }
+}
+
 private val schedSessionsRefresher = Refesher(
+  pollingDelay = 5.minutes,
   initialValue = { emptyList<SchedSession>() },
   refreshValue = {
     getUrl("$SCHED_BASE_URL/api/session/export?api_key=${schedApiKey()}&format=json").use {
@@ -68,12 +85,24 @@ private val schedSessionsRefresher = Refesher(
 )
 
 private val schedSpeakersRefresher = Refesher(
+  pollingDelay = 30.minutes,
   initialValue = { emptyList<SchedSpeaker>() },
   refreshValue = {
-    val fields = "id,username,name,phone,email,about,role,joined,lastactive,avatar,company,position,location"
-    getUrl("$SCHED_BASE_URL/api/user/list?api_key=${schedApiKey()}&format=json&fields=$fields").use {
+    val basics = getUrl(
+      "$SCHED_BASE_URL/api/user/list?api_key=${schedApiKey()}&format=json&fields=$SCHED_SPEAKER_FIELDS"
+    ).use {
       json.decodeFromStream<List<SchedSpeaker>>(it)
     }.filter { it.role?.contains("speaker", ignoreCase = true) == true }
+
+    basics.map { speaker ->
+      // /user/list does not return socialurls; /user/get does. Sched rate-limits at 30 req/min.
+      Thread.sleep(2_500)
+      runCatching { fetchSchedSpeakerDetails(speaker.username) }
+        .getOrElse {
+          it.printStackTrace()
+          speaker
+        }
+    }
   },
 )
 
@@ -107,8 +136,8 @@ fun SchedSpeaker.toJsonSpeaker(): JsonSpeaker {
     about = about.orEmpty(),
     location = location.orEmpty(),
     avatar = avatar.orEmpty(),
-    url = "",
+    url = url.orEmpty(),
     years = emptyList(),
-    socialurls = emptyList(),
+    socialurls = socialurls,
   )
 }

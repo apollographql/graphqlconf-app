@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.InputStream
 import kotlin.math.pow
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 @Serializable
@@ -71,28 +72,30 @@ val json = Json {
 }
 
 internal class Refesher<D>(
+  val pollingDelay: Duration,
   val initialValue: () -> D,
   val refreshValue: () -> D,
 ) {
   private var data = initialValue()
   private var lastTime = 0L
   private var job: Job? = null
-  private var tryCount = 0
   private val lock = Any()
 
   fun data(): D {
     synchronized(lock) {
-      if (job == null && System.nanoTime() - lastTime > 2.0.pow(tryCount) * 1.minutes.inWholeNanoseconds) {
+      if (job == null && System.nanoTime() - lastTime > pollingDelay.inWholeNanoseconds) {
         job = GlobalScope.launch {
           try {
-            tryCount = 0
+            val newData = refreshValue()
             synchronized(lock) {
-              data = refreshValue()
+              data = newData
               job = null
             }
           } catch (e: Exception) {
-            tryCount++
             e.printStackTrace()
+            synchronized(lock) {
+              job = null
+            }
           } finally {
             lastTime = System.nanoTime()
           }
@@ -104,6 +107,7 @@ internal class Refesher<D>(
 }
 
 private val sessionRefresher = Refesher(
+  pollingDelay = 5.minutes,
   initialValue = {
     JsonSession::class.java.classLoader.getResourceAsStream("schedule-2026.json")!!.toSessionList()
   },
@@ -116,6 +120,7 @@ internal fun getUrl(url: String): InputStream {
 }
 
 private val speakersRefresher = Refesher(
+  pollingDelay = 30.minutes,
   initialValue = {
     JsonSession::class.java.classLoader.getResourceAsStream("speakers.json")!!.toSpeakerList()
   },
