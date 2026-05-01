@@ -93,7 +93,7 @@ settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "mul
 settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
 settings-observable = { module = "com.russhwolf:multiplatform-settings-make-observable", version.ref = "multiplatform-settings" }
 settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatform-settings" }
-supabase-bom = "io.github.jan-tennert.supabase:bom:3.5.0"
+supabase-bom = "io.github.jan-tennert.supabase:bom:3.6.0"
 supabase-postgre = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt" }
 
