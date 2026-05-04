@@ -10,6 +10,12 @@ enum SocialService {
   Other
 }
 
+enum Rating {
+  Disappointed
+  Neutral
+  Happy
+}
+
 type DayHeader implements ScheduleItem {
   start: LocalDateTime!
   end: LocalDateTime!
@@ -19,6 +25,7 @@ type DayHeader implements ScheduleItem {
 type Mutation {
   setVote(input: VoteInput!): Boolean!
   setComment(input: CommentInput!): Boolean!
+  submitFeedback(feedbackInput: FeedbackInput!): Boolean!
 }
 
 type Query {
@@ -105,6 +112,13 @@ input VoteInput {
   userId: String!
   sessionId: String!
   vote: Int!
+}
+
+input FeedbackInput {
+  userId: String!
+  sessionId: String!
+  rating: Rating!
+  comment: String!
 }
 
 extend type Session @typePolicy(keyFields: "id")
