@@ -9,6 +9,7 @@ import kotlinx.serialization.json.decodeFromStream
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.InputStream
+import kotlin.time.Clock
 import kotlin.time.Duration
 
 @Serializable
@@ -62,6 +63,7 @@ val json = Json {
 }
 
 internal class Refesher<D>(
+  val name: String,
   val pollingDelay: Duration,
   val initialValue: () -> D,
   val refreshValue: () -> D,
@@ -76,7 +78,9 @@ internal class Refesher<D>(
       if (job == null && System.nanoTime() - lastTime > pollingDelay.inWholeNanoseconds) {
         job = GlobalScope.launch {
           try {
+            println("${Clock.System.now()}: Refreshing $name...")
             val newData = refreshValue()
+            println("${Clock.System.now()}: $name refreshed.")
             synchronized(lock) {
               data = newData
               job = null

@@ -82,6 +82,7 @@ private fun fetchSchedSpeakerDetails(username: String): SchedSpeaker {
 }
 
 internal val schedSessionsRefresher = Refesher(
+  "sessions",
   pollingDelay = 5.minutes,
   initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("sessions.json")!!.toSessionList() },
   refreshValue = {
@@ -94,6 +95,7 @@ internal val schedSessionsRefresher = Refesher(
 )
 
 internal val schedSpeakersRefresher = Refesher(
+  "speakers",
   pollingDelay = 30.minutes,
   initialValue = { JsonSpeaker::class.java.classLoader.getResourceAsStream("speakers.json")!!.toSpeakerList() },
   refreshValue = {

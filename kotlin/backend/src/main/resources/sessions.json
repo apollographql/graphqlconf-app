@@ -346,8 +346,8 @@
     "description": "In a world where context is limited, what do we need from GraphQL to build composable, type safe products?",
     "speakers": [
       {
-        "username": "matt_mahoney.29fjqfma",
-        "id": "24421625"
+        "username": "mahoney.mattj",
+        "id": "19314398"
       }
     ]
   },
@@ -964,6 +964,22 @@
     ]
   },
   {
+    "name": "Observability for a Multi-Tenant GraphQL Gateway at Scale - Vickey Yeh, Airbnb",
+    "event_start": "2026-05-20 13:55",
+    "event_end": "2026-05-20 14:20",
+    "event_type": "Observability + Telemetry + Tracing",
+    "event_subtype": "",
+    "venue": "Humor",
+    "id": "d1bdf1a3eb90cb599c172cbdfa7fdd1c",
+    "description": "Viaduct, Airbnb's unified data access layer, hosts over 1.5M lines of application code from 500+ tenants, with 200+ changes merged daily—all operating as a single service. At this scale, enabling teams to independently monitor and troubleshoot their code is essential. <br> This talk describes how we approach observability with multitenancy at the core: <br> - Establishing clear ownership of modules and attributing metrics, spans, and errors to those owners <br> - Providing alerts and dashboards at multiple levels: system, operation, tenant, and field<br> - Enabling schema-driven alerting, where tenants declaratively specify monitoring requirements directly in the schema and the platform implements them automatically<br> - Using execution traces to visualize query execution and core-tenant interactions, tackling challenges like:<br> - Representing batched dataloader calls (where N field requests become 1 RPC)<br> - Instrumenting downstream service clients across all data-fetching code<br> - Managing observability costs via selective sampling and cardinality-aware metrics <br> <br> Our goal: empower tenants to manage their portion of Viaduct as a standalone service—without bottlenecking on the platform team.",
+    "speakers": [
+      {
+        "username": "vickey.yeh",
+        "id": "24421604"
+      }
+    ]
+  },
+  {
     "name": "Grafast: A Declarative Solution To GraphQL's Execution Woes - Benjie Gillam, Graphile",
     "event_start": "2026-05-20 13:55",
     "event_end": "2026-05-20 14:20",
@@ -976,22 +992,6 @@
       {
         "username": "benjie3",
         "id": "18743846"
-      }
-    ]
-  },
-  {
-    "name": "Brute Force Correctness - James Bellenger, Airbnb",
-    "event_start": "2026-05-20 13:55",
-    "event_end": "2026-05-20 14:20",
-    "event_type": "Tooling + DX + Testing + Documentation",
-    "event_subtype": "",
-    "venue": "Humor",
-    "id": "0a67525d56d469af7df6fc4763e3f75e",
-    "description": "So you’re a maintainer of a GraphQL system. Whether it’s a federation gateway, a complex client library, or a custom executor—how do you know that it’s capital-C Correct?<br> <br> Your tests are decent, and they seem to pass, but what about the test cases that you didn’t think of? Did you remember to handle @skip directives on fragment spreads? What about when those directives use variables? Or when you spread an abstract type in an abstract scope?<br> <br> Would you trust your system to serve million-dollar transactions?<br> <br> This session will cover how probabilistic testing can be applied to complex GraphQL systems to find bugs in places we wouldn’t have thought to look. We’ll discuss how Airbnb leveraged this approach to launch a novel GraphQL engine with 0 spec conformance bugs, and how you can apply these same techniques to build unshakable confidence in your own systems.",
-    "speakers": [
-      {
-        "username": "jbellenger",
-        "id": "24421556"
       }
     ]
   },
@@ -1102,18 +1102,18 @@
     ]
   },
   {
-    "name": "Observability for a Multi-Tenant GraphQL Gateway at Scale - Vickey Yeh, Airbnb",
+    "name": "Brute Force Correctness - James Bellenger, Airbnb",
     "event_start": "2026-05-20 15:50",
     "event_end": "2026-05-20 16:15",
-    "event_type": "Observability + Telemetry + Tracing",
+    "event_type": "Tooling + DX + Testing + Documentation",
     "event_subtype": "",
     "venue": "Mission Peak",
-    "id": "d1bdf1a3eb90cb599c172cbdfa7fdd1c",
-    "description": "Viaduct, Airbnb's unified data access layer, hosts over 1.5M lines of application code from 500+ tenants, with 200+ changes merged daily—all operating as a single service. At this scale, enabling teams to independently monitor and troubleshoot their code is essential. <br> This talk describes how we approach observability with multitenancy at the core: <br> - Establishing clear ownership of modules and attributing metrics, spans, and errors to those owners <br> - Providing alerts and dashboards at multiple levels: system, operation, tenant, and field<br> - Enabling schema-driven alerting, where tenants declaratively specify monitoring requirements directly in the schema and the platform implements them automatically<br> - Using execution traces to visualize query execution and core-tenant interactions, tackling challenges like:<br> - Representing batched dataloader calls (where N field requests become 1 RPC)<br> - Instrumenting downstream service clients across all data-fetching code<br> - Managing observability costs via selective sampling and cardinality-aware metrics <br> <br> Our goal: empower tenants to manage their portion of Viaduct as a standalone service—without bottlenecking on the platform team.",
+    "id": "0a67525d56d469af7df6fc4763e3f75e",
+    "description": "So you’re a maintainer of a GraphQL system. Whether it’s a federation gateway, a complex client library, or a custom executor—how do you know that it’s capital-C Correct?<br> <br> Your tests are decent, and they seem to pass, but what about the test cases that you didn’t think of? Did you remember to handle @skip directives on fragment spreads? What about when those directives use variables? Or when you spread an abstract type in an abstract scope?<br> <br> Would you trust your system to serve million-dollar transactions?<br> <br> This session will cover how probabilistic testing can be applied to complex GraphQL systems to find bugs in places we wouldn’t have thought to look. We’ll discuss how Airbnb leveraged this approach to launch a novel GraphQL engine with 0 spec conformance bugs, and how you can apply these same techniques to build unshakable confidence in your own systems.",
     "speakers": [
       {
-        "username": "vickey.yeh",
-        "id": "24421604"
+        "username": "jbellenger",
+        "id": "24421556"
       }
     ]
   },
