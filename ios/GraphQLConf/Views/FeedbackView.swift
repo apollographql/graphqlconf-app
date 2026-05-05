@@ -27,66 +27,69 @@ struct FeedbackView: View {
           .font(.HostGrotesk.large)
           .foregroundStyle(Theme.primaryText)
       } else {
-        Spacer(minLength: 16)
-        HStack(spacing: 8) {
-          RatingChip(label: "😞", selected: rating == .disappointed) {
-            rating = .disappointed
+        VStack(alignment: .leading, spacing: 0) {
+          Spacer(minLength: 16)
+          HStack(spacing: 8) {
+            RatingChip(label: "😞", selected: rating == .disappointed) {
+              rating = .disappointed
+            }
+            RatingChip(label: "😐", selected: rating == .neutral) {
+              rating = .neutral
+            }
+            RatingChip(label: "😊", selected: rating == .happy) {
+              rating = .happy
+            }
           }
-          RatingChip(label: "😐", selected: rating == .neutral) {
-            rating = .neutral
-          }
-          RatingChip(label: "😊", selected: rating == .happy) {
-            rating = .happy
-          }
-        }
-        .disabled(submitting)
+          .disabled(submitting)
 
-        Spacer(minLength: 16)
-        ZStack(alignment: .topLeading) {
-          if comment.isEmpty {
-            Text("Leave a comment (optional)")
+          Spacer(minLength: 16)
+          ZStack(alignment: .topLeading) {
+            if comment.isEmpty {
+              Text("Leave a comment (optional)")
+                .font(.HostGrotesk.large)
+                .foregroundStyle(AnyShapeStyle(Theme.primaryText).opacity(0.5))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 12)
+            }
+            TextEditor(text: $comment)
               .font(.HostGrotesk.large)
-              .foregroundStyle(AnyShapeStyle(Theme.primaryText).opacity(0.5))
-              .padding(.horizontal, 12)
-              .padding(.vertical, 12)
+              .foregroundStyle(Theme.primaryText)
+              .scrollContentBackground(.hidden)
+              .padding(.horizontal, 8)
+              .padding(.vertical, 4)
+              .frame(minHeight: 96)
+              .disabled(submitting)
           }
-          TextEditor(text: $comment)
-            .font(.HostGrotesk.large)
-            .foregroundStyle(Theme.primaryText)
-            .scrollContentBackground(.hidden)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .frame(minHeight: 96)
-            .disabled(submitting)
-        }
-        .overlay(
-          Rectangle()
-            .stroke(AnyShapeStyle(Theme.primaryText).opacity(0.5), lineWidth: 1)
-        )
+          .overlay(
+            Rectangle()
+              .stroke(AnyShapeStyle(Theme.primaryText).opacity(0.5), lineWidth: 1)
+          )
 
-        if error {
-          Spacer(minLength: 8)
-          Text("Oh no, something went wrong. Please try again.")
-            .font(.HostGrotesk.medium)
-            .foregroundStyle(Theme.tint)
-        }
+          if error {
+            Spacer(minLength: 8)
+            Text("Oh no, something went wrong. Please try again.")
+              .font(.HostGrotesk.medium)
+              .foregroundStyle(Theme.tint)
+          }
 
-        Spacer(minLength: 16)
-        Button(action: submit) {
-          Text(submitting ? "Submitting…" : "Submit")
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .font(.HostGrotesk.large)
-            .foregroundStyle(AnyShapeStyle(Theme.primaryText).opacity(submitEnabled ? 1.0 : 0.5))
-            .overlay(
-              Rectangle()
-                .stroke(
-                  AnyShapeStyle(Theme.primaryText).opacity(submitEnabled ? 1.0 : 0.5),
-                  lineWidth: 1
-                )
-            )
+          Spacer(minLength: 16)
+          Button(action: submit) {
+            Text(submitting ? "Submitting…" : "Submit")
+              .frame(maxWidth: .infinity)
+              .padding(.vertical, 12)
+              .font(.HostGrotesk.large)
+              .foregroundStyle(AnyShapeStyle(Theme.primaryText).opacity(submitEnabled ? 1.0 : 0.5))
+              .overlay(
+                Rectangle()
+                  .stroke(
+                    AnyShapeStyle(Theme.primaryText).opacity(submitEnabled ? 1.0 : 0.5),
+                    lineWidth: 1
+                  )
+              )
+          }
+          .disabled(!submitEnabled)
         }
-        .disabled(!submitEnabled)
+        .padding(EdgeInsets(top: 0, leading: 2, bottom: 8, trailing: 2))
       }
     }
   }
