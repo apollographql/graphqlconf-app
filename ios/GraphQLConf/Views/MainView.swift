@@ -6,6 +6,14 @@ struct MainView: View {
     case schedule
     case speakers
     case info
+
+    var title: String {
+      switch self {
+      case .schedule: "Schedule"
+      case .speakers: "Speakers"
+      case .info: "Info"
+      }
+    }
   }
 
   @State private var selectedTab: TabIdentifier = .schedule
@@ -37,7 +45,7 @@ struct MainView: View {
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .principal) {
-          Text("GraphQLConf 2026")
+          Text(selectedTab.title)
             .foregroundStyle(Theme.tintReverse)
             .font(.HostGrotesk.navigationTitle)
         }

@@ -68,6 +68,14 @@ struct SpeakerDetailView: View {
     .scrollIndicators(.never)
     .padding(.all, 16)
     .background(Theme.mainBackground)
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .principal) {
+        Text("Speaker")
+          .foregroundStyle(Theme.tintReverse)
+          .font(.HostGrotesk.navigationTitle)
+      }
+    }
     .toolbarBackground(.visible, for: .navigationBar)
     .toolbarBackground(Theme.navigationBarReverse, for: .navigationBar)
   }

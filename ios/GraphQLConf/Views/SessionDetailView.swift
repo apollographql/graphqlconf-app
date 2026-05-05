@@ -72,6 +72,14 @@ struct SessionDetailView: View {
     .scrollIndicators(.never)
     .padding(.all, 16)
     .background(Theme.mainBackground)
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .principal) {
+        Text("Session")
+          .foregroundStyle(Theme.tintReverse)
+          .font(.HostGrotesk.navigationTitle)
+      }
+    }
     .toolbarBackground(.visible, for: .navigationBar)
     .toolbarBackground(Theme.navigationBarReverse, for: .navigationBar)
   }
