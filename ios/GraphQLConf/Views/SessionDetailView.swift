@@ -62,6 +62,9 @@ struct SessionDetailView: View {
               }
             }
           }
+
+          Spacer(minLength: 20)
+          FeedbackView(sessionId: session.sessionFragment.id)
         }
       }
       .toolbarRole(.editor)

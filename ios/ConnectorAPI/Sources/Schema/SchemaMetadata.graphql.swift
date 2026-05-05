@@ -19,6 +19,7 @@ nonisolated public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static let configuration: any ApolloAPI.SchemaConfiguration.Type = SchemaConfiguration.self
 
   private static let objectTypeMap: [String: ApolloAPI.Object] = [
+    "Mutation": ConnectorAPI.Objects.Mutation,
     "Query": ConnectorAPI.Objects.Query,
     "Room": ConnectorAPI.Objects.Room,
     "Session": ConnectorAPI.Objects.Session,

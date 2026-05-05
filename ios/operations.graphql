@@ -42,3 +42,9 @@ fragment SpeakerFragment on Speaker {
     url
   }
 }
+
+### Feedback
+
+mutation SubmitFeedback($input: FeedbackInput!) {
+  submitFeedback(feedbackInput: $input)
+}
