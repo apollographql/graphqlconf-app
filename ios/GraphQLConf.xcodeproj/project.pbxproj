@@ -32,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E66731B52FAD5A6F0021F6BB /* schema-extensions.graphqls */ = {isa = PBXFileReference; lastKnownFileType = text; path = "schema-extensions.graphqls"; sourceTree = "<group>"; };
 		E699EB7F2E2ED0550005A499 /* GraphQLConf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphQLConf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E699EB8C2E2ED0570005A499 /* GraphQLConfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphQLConfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E699EB962E2ED0570005A499 /* GraphQLConfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphQLConfUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +123,7 @@
 				E69D9E012E416B57005A5E3B /* apollo-codegen-config.json */,
 				E69D9E022E416B57005A5E3B /* operations.graphql */,
 				E69D9E032E416B57005A5E3B /* schema.graphqls */,
+				E66731B52FAD5A6F0021F6BB /* schema-extensions.graphqls */,
 				E6BDF99E2E3C331000F6637D /* Fonts */,
 				E699EB812E2ED0550005A499 /* GraphQLConf */,
 				E699EB8F2E2ED0570005A499 /* GraphQLConfTests */,

@@ -120,6 +120,3 @@ input FeedbackInput {
   rating: Rating!
   comment: String!
 }
-
-extend type Session @typePolicy(keyFields: "id")
-extend type Speaker @typePolicy(keyFields: "id")
