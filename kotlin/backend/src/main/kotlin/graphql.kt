@@ -160,6 +160,17 @@ private val allSponsorGroups = listOf(
     ),
   ),
   SponsorGroup(
+    name = "Open source community",
+    sponsors = listOf(
+      Sponsor(
+        name = "Airbnb",
+        url = "https://www.airbnb.com/",
+        logoLight = "$SPONSOR_LOGO_BASE/airbnb-light.png",
+        logoDark = "$SPONSOR_LOGO_BASE/airbnb-dark.png",
+      ),
+    ),
+  ),
+  SponsorGroup(
     name = "Bronze",
     sponsors = listOf(
       Sponsor(
