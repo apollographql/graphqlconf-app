@@ -116,7 +116,11 @@ internal fun List<JsonSession>.sanitize(): List<JsonSession> {
     var session = it
     session = session.copy(name = getSessionTitle(it.name))
     if (session.id == "0466574bdb1df2c888e087738a0248f8") {
-      session = session.copy(files = session.files + JsonFile(name = "Golden Path", path = "https://goldenpath.benjie.dev/"))
+      session = session.copy(
+        files = session.files
+            + JsonFile(name = "Golden Path Website", path = "https://goldenpath.graphql.org/")
+            + JsonFile(name = "Golden Path Repository", path = "https://github.com/graphql/golden-path")
+      )
     }
     session
   }
