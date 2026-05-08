@@ -23,6 +23,7 @@ nonisolated public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     "Query": ConnectorAPI.Objects.Query,
     "Room": ConnectorAPI.Objects.Room,
     "Session": ConnectorAPI.Objects.Session,
+    "SessionResource": ConnectorAPI.Objects.SessionResource,
     "SocialUrl": ConnectorAPI.Objects.SocialUrl,
     "Speaker": ConnectorAPI.Objects.Speaker
   ]

@@ -62,6 +62,7 @@ nonisolated public struct AllSessionsQuery: GraphQLQuery {
       public var event_type: String { __data["event_type"] }
       public var room: Room? { __data["room"] }
       public var speakers: [Speaker] { __data["speakers"] }
+      public var resources: [Resource] { __data["resources"] }
 
       public struct Fragments: FragmentContainer {
         @_spi(Unsafe) public let __data: DataDict
@@ -78,7 +79,8 @@ nonisolated public struct AllSessionsQuery: GraphQLQuery {
         end: ConnectorAPI.LocalDateTime,
         event_type: String,
         room: Room? = nil,
-        speakers: [Speaker]
+        speakers: [Speaker],
+        resources: [Resource]
       ) {
         self.init(unsafelyWithData: [
           "__typename": ConnectorAPI.Objects.Session.typename,
@@ -90,12 +92,15 @@ nonisolated public struct AllSessionsQuery: GraphQLQuery {
           "event_type": event_type,
           "room": room._fieldData,
           "speakers": speakers._fieldData,
+          "resources": resources._fieldData,
         ])
       }
 
       public typealias Room = SessionFragment.Room
 
       public typealias Speaker = SessionFragment.Speaker
+
+      public typealias Resource = SessionFragment.Resource
     }
   }
 }

@@ -2,18 +2,18 @@ directive @defer(label: String, if: Boolean! = true) on FRAGMENT_SPREAD | INLINE
 
 scalar LocalDateTime
 
+enum Rating {
+  Disappointed
+  Neutral
+  Happy
+}
+
 enum SocialService {
   Instagram
   Twitter
   LinkedIn
   Facebook
   Other
-}
-
-enum Rating {
-  Disappointed
-  Neutral
-  Happy
 }
 
 type DayHeader implements ScheduleItem {
@@ -23,13 +23,12 @@ type DayHeader implements ScheduleItem {
 }
 
 type Mutation {
-  setVote(input: VoteInput!): Boolean!
-  setComment(input: CommentInput!): Boolean!
   submitFeedback(feedbackInput: FeedbackInput!): Boolean!
 }
 
 type Query {
   sessions: [Session!]!
+  sponsorGroups: [SponsorGroup!]!
 
   """null if the session doesn't exist."""
   session(id: ID!): Session
@@ -68,8 +67,14 @@ type Session implements ScheduleItem {
   event_subtype: String!
   venue: String @deprecated(reason: "Use room instead")
   id: ID!
+  resources: [SessionResource!]!
   speakers: [Speaker!]!
   room: Room
+}
+
+type SessionResource {
+  name: String!
+  url: String!
 }
 
 type SocialUrl {
@@ -92,6 +97,18 @@ type Speaker {
   sessions: [Session!]!
 }
 
+type Sponsor {
+  name: String!
+  url: String!
+  logoLight: String!
+  logoDark: String!
+}
+
+type SponsorGroup {
+  name: String!
+  sponsors: [Sponsor!]!
+}
+
 type TimeHeader implements ScheduleItem {
   start: LocalDateTime!
   end: LocalDateTime!
@@ -100,18 +117,6 @@ type TimeHeader implements ScheduleItem {
 interface ScheduleItem {
   start: LocalDateTime!
   end: LocalDateTime!
-}
-
-input CommentInput {
-  userId: String!
-  sessionId: String!
-  comment: String!
-}
-
-input VoteInput {
-  userId: String!
-  sessionId: String!
-  vote: Int!
 }
 
 input FeedbackInput {

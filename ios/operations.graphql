@@ -20,6 +20,10 @@ fragment SessionFragment on Session {
   speakers {
     ...SpeakerFragment
   }
+  resources {
+    name
+    url
+  }
 }
 
 ### Speakers

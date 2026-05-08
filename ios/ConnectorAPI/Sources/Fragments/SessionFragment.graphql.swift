@@ -6,7 +6,7 @@
 
 nonisolated public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, Identifiable {
   public static var fragmentDefinition: StaticString {
-    #"fragment SessionFragment on Session { __typename id title description start end event_type room { __typename name floor } speakers { __typename ...SpeakerFragment } }"#
+    #"fragment SessionFragment on Session { __typename id title description start end event_type room { __typename name floor } speakers { __typename ...SpeakerFragment } resources { __typename name url } }"#
   }
 
   @_spi(Unsafe) public let __data: DataDict
@@ -23,6 +23,7 @@ nonisolated public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, 
     .field("event_type", String.self),
     .field("room", Room?.self),
     .field("speakers", [Speaker].self),
+    .field("resources", [Resource].self),
   ] }
   @_spi(Execution) public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
     SessionFragment.self
@@ -36,6 +37,7 @@ nonisolated public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, 
   public var event_type: String { __data["event_type"] }
   public var room: Room? { __data["room"] }
   public var speakers: [Speaker] { __data["speakers"] }
+  public var resources: [Resource] { __data["resources"] }
 
   public init(
     id: ConnectorAPI.ID,
@@ -45,7 +47,8 @@ nonisolated public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, 
     end: ConnectorAPI.LocalDateTime,
     event_type: String,
     room: Room? = nil,
-    speakers: [Speaker]
+    speakers: [Speaker],
+    resources: [Resource]
   ) {
     self.init(unsafelyWithData: [
       "__typename": ConnectorAPI.Objects.Session.typename,
@@ -57,6 +60,7 @@ nonisolated public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, 
       "event_type": event_type,
       "room": room._fieldData,
       "speakers": speakers._fieldData,
+      "resources": resources._fieldData,
     ])
   }
 
@@ -146,5 +150,37 @@ nonisolated public struct SessionFragment: ConnectorAPI.SelectionSet, Fragment, 
     }
 
     public typealias SocialUrl = SpeakerFragment.SocialUrl
+  }
+
+  /// Resource
+  ///
+  /// Parent Type: `SessionResource`
+  nonisolated public struct Resource: ConnectorAPI.SelectionSet {
+    @_spi(Unsafe) public let __data: DataDict
+    @_spi(Unsafe) public init(_dataDict: DataDict) { __data = _dataDict }
+
+    @_spi(Execution) public static var __parentType: any ApolloAPI.ParentType { ConnectorAPI.Objects.SessionResource }
+    @_spi(Execution) public static var __selections: [ApolloAPI.Selection] { [
+      .field("__typename", String.self),
+      .field("name", String.self),
+      .field("url", String.self),
+    ] }
+    @_spi(Execution) public static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+      SessionFragment.Resource.self
+    ] }
+
+    public var name: String { __data["name"] }
+    public var url: String { __data["url"] }
+
+    public init(
+      name: String,
+      url: String
+    ) {
+      self.init(unsafelyWithData: [
+        "__typename": ConnectorAPI.Objects.SessionResource.typename,
+        "name": name,
+        "url": url,
+      ])
+    }
   }
 }

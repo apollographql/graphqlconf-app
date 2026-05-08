@@ -3,7 +3,15 @@ import ConnectorAPI
 
 struct SessionDetailView: View {
 
+  private struct PresentedResource: Identifiable {
+    let id = UUID()
+    let title: String
+    let url: URL
+  }
+
   let session: AugmentedSessionFragment
+
+  @State private var presentedResource: PresentedResource?
 
   var body: some View {
     ScrollView {
@@ -49,6 +57,24 @@ struct SessionDetailView: View {
             .foregroundStyle(Theme.primaryText)
         }
 
+        if !session.sessionFragment.resources.isEmpty {
+          Spacer(minLength: 20)
+          Text("Resources")
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .font(.HostGrotesk.h3)
+            .foregroundStyle(Theme.primaryText)
+          LazyVStack(spacing: 0) {
+            ForEach(session.sessionFragment.resources, id: \.name) { resource in
+              InfoCellView(title: resource.name)
+              .onTapGesture {
+                if let url = URL(string: resource.url) {
+                  presentedResource = PresentedResource(title: resource.name, url: url)
+                }
+              }
+            }
+          }
+        }
+
         if !session.sessionFragment.speakers.isEmpty {
           Spacer(minLength: 20)
           Text("Speakers")
@@ -82,5 +108,14 @@ struct SessionDetailView: View {
     }
     .toolbarBackground(.visible, for: .navigationBar)
     .toolbarBackground(Theme.navigationBarReverse, for: .navigationBar)
+
+    .sheet(item: $presentedResource) { resource in
+      NavigationStack {
+        WebViewRepresentable(url: resource.url)
+          .navigationTitle(resource.title)
+          .navigationBarTitleDisplayMode(.inline)
+          .presentationDragIndicator(.visible)
+      }
+    }
   }
 }
