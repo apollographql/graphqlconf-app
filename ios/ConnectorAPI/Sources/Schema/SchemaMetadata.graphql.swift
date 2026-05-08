@@ -25,7 +25,9 @@ nonisolated public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     "Session": ConnectorAPI.Objects.Session,
     "SessionResource": ConnectorAPI.Objects.SessionResource,
     "SocialUrl": ConnectorAPI.Objects.SocialUrl,
-    "Speaker": ConnectorAPI.Objects.Speaker
+    "Speaker": ConnectorAPI.Objects.Speaker,
+    "Sponsor": ConnectorAPI.Objects.Sponsor,
+    "SponsorGroup": ConnectorAPI.Objects.SponsorGroup
   ]
 
   @_spi(Execution) public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {

@@ -5,12 +5,14 @@ struct MainView: View {
   enum TabIdentifier {
     case schedule
     case speakers
+    case sponsors
     case info
 
     var title: String {
       switch self {
       case .schedule: "Schedule"
       case .speakers: "Speakers"
+      case .sponsors: "Sponsors"
       case .info: "Info"
       }
     }
@@ -34,6 +36,12 @@ struct MainView: View {
             Image(.people)
           }
           .tag(TabIdentifier.speakers)
+
+        SponsorsTabView()
+          .tabItem {
+            Image(.heart)
+          }
+          .tag(TabIdentifier.sponsors)
 
         InfoTabView()
           .tabItem {

@@ -47,6 +47,20 @@ fragment SpeakerFragment on Speaker {
   }
 }
 
+### Sponsors
+
+query GetSponsorGroups {
+  sponsorGroups {
+    name
+    sponsors {
+      name
+      url
+      logoLight
+      logoDark
+    }
+  }
+}
+
 ### Feedback
 
 mutation SubmitFeedback($input: FeedbackInput!) {
