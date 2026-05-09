@@ -7,6 +7,7 @@ struct MainView: View {
     case speakers
     case sponsors
     case info
+    case search
 
     var title: String {
       switch self {
@@ -14,6 +15,7 @@ struct MainView: View {
       case .speakers: "Speakers"
       case .sponsors: "Sponsors"
       case .info: "Info"
+      case .search: "Search"
       }
     }
   }
@@ -25,29 +27,35 @@ struct MainView: View {
   var body: some View {
     NavigationStack {
       TabView(selection: self.$selectedTab) {
-        ScheduleTabView()
-          .tabItem {
-            Image(.calendar)
-          }
-          .tag(TabIdentifier.schedule)
+        Tab(value: .schedule) {
+          ScheduleTabView()
+        } label: {
+          Image(.calendar)
+        }
 
-        SpeakersTabView()
-          .tabItem {
-            Image(.people)
-          }
-          .tag(TabIdentifier.speakers)
+        Tab(value: .speakers) {
+          SpeakersTabView()
+        } label: {
+          Image(.people)
+        }
 
-        SponsorsTabView()
-          .tabItem {
-            Image(.heart)
-          }
-          .tag(TabIdentifier.sponsors)
+        Tab(value: .sponsors) {
+          SponsorsTabView()
+        } label: {
+          Image(.heart)
+        }
 
-        InfoTabView()
-          .tabItem {
-            Image(.info)
-          }
-          .tag(TabIdentifier.info)
+        Tab(value: .info) {
+          InfoTabView()
+        } label: {
+          Image(.info)
+        }
+
+        Tab(value: .search, role: .search) {
+          SearchTabView()
+        } label: {
+          Image(.search)
+        }
       }
       .tint(Theme.tint)
       .navigationBarTitleDisplayMode(.inline)
