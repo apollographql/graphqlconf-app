@@ -2,7 +2,7 @@ import SwiftUI
 
 struct InfoTabView: View {
 
-  enum InfoLink {
+  enum InfoLink: Identifiable {
     case codeOfConduct
     case privacyPolicy
     case healthAndSafety
@@ -10,6 +10,8 @@ struct InfoTabView: View {
 //    case eventResources
 //    case venueMap
     case graphqlOrg
+
+    var id: Self { self }
 
     var title: String {
       switch self {
@@ -34,6 +36,10 @@ struct InfoTabView: View {
       case .graphqlOrg: URL(string: "https://graphql.org")!
       }
     }
+
+    static let allLinks: [InfoLink] = [
+      .codeOfConduct, .privacyPolicy, .healthAndSafety, .inclusionAndAccessibility, /*.eventResources, .venueMap,*/ .graphqlOrg
+    ]
   }
 
   enum SocialLink: CaseIterable, Identifiable {
@@ -71,13 +77,7 @@ struct InfoTabView: View {
 
   private let licenseTitle: String = "License Attribution"
 
-  @State private var isCodeOfConductPresented = false
-  @State private var isPrivacyPolicyPresented = false
-  @State private var isHealthAndSafetyPresented = false
-  @State private var isInclusionAndAccessibilityPresented = false
-  @State private var isEventResourcesPresented = false
-  @State private var isVenueMapPresented = false
-  @State private var isGraphqlOrgPresented = false
+  @State private var presentedInfoLink: InfoLink?
   @State private var isLicensesPresented = false
 
   var body: some View {
@@ -85,37 +85,12 @@ struct InfoTabView: View {
       ScrollView {
         VStack(spacing: 12) {
           Section {
-            // TODO: This should be using ForEach but I haven't figured out a way to use a single WebViewRepresentable
-            // with dynamic URL loading. There were bugs I couldn't resolve in time and this had to ship. If there is
-            // time I'll come back to this.
-            InfoCellView(title: InfoLink.codeOfConduct.title)
-              .onTapGesture {
-                isCodeOfConductPresented.toggle()
-              }
-            InfoCellView(title: InfoLink.privacyPolicy.title)
-              .onTapGesture {
-                isPrivacyPolicyPresented.toggle()
-              }
-            InfoCellView(title: InfoLink.healthAndSafety.title)
-              .onTapGesture {
-                isHealthAndSafetyPresented.toggle()
-              }
-            InfoCellView(title: InfoLink.inclusionAndAccessibility.title)
-              .onTapGesture {
-                isInclusionAndAccessibilityPresented.toggle()
-              }
-//            InfoCellView(title: InfoLink.eventResources.title)
-//              .onTapGesture {
-//                isEventResourcesPresented.toggle()
-//              }
-//            InfoCellView(title: InfoLink.venueMap.title)
-//              .onTapGesture {
-//                isVenueMapPresented.toggle()
-//              }
-            InfoCellView(title: InfoLink.graphqlOrg.title)
-              .onTapGesture {
-                isGraphqlOrgPresented.toggle()
-              }
+            ForEach(InfoLink.allLinks) { link in
+              InfoCellView(title: link.title)
+                .onTapGesture {
+                  presentedInfoLink = link
+                }
+            }
           }
 
           Section {
@@ -150,65 +125,14 @@ struct InfoTabView: View {
     .toolbarBackground(Theme.tabBar, for: .tabBar)
     .toolbarBackground(.visible, for: .tabBar)
 
-    // TODO: Ideally we only have a single sheet with a single WebViewRepresentable instance but there were bugs I
-    // could not resolve in time and this app had to be released. If there is time I'll come back to this.
-    .sheet(isPresented: $isCodeOfConductPresented) {
+    .sheet(item: $presentedInfoLink) { link in
       NavigationStack {
-        WebViewRepresentable(url: InfoLink.codeOfConduct.url)
-          .navigationTitle(InfoLink.codeOfConduct.title)
+        WebViewRepresentable(url: link.url)
+          .navigationTitle(link.title)
           .navigationBarTitleDisplayMode(.inline)
           .presentationDragIndicator(.visible)
       }
     }
-    .sheet(isPresented: $isPrivacyPolicyPresented) {
-      NavigationStack {
-        WebViewRepresentable(url: InfoLink.privacyPolicy.url)
-          .navigationTitle(InfoLink.privacyPolicy.title)
-          .navigationBarTitleDisplayMode(.inline)
-          .presentationDragIndicator(.visible)
-      }
-    }
-    .sheet(isPresented: $isHealthAndSafetyPresented) {
-      NavigationStack {
-        WebViewRepresentable(url: InfoLink.healthAndSafety.url)
-          .navigationTitle(InfoLink.healthAndSafety.title)
-          .navigationBarTitleDisplayMode(.inline)
-          .presentationDragIndicator(.visible)
-      }
-    }
-    .sheet(isPresented: $isInclusionAndAccessibilityPresented) {
-      NavigationStack {
-        WebViewRepresentable(url: InfoLink.inclusionAndAccessibility.url)
-          .navigationTitle(InfoLink.inclusionAndAccessibility.title)
-          .navigationBarTitleDisplayMode(.inline)
-          .presentationDragIndicator(.visible)
-      }
-    }
-//    .sheet(isPresented: $isEventResourcesPresented) {
-//      NavigationStack {
-//        WebViewRepresentable(url: InfoLink.eventResources.url)
-//          .navigationTitle(InfoLink.eventResources.title)
-//          .navigationBarTitleDisplayMode(.inline)
-//          .presentationDragIndicator(.visible)
-//      }
-//    }
-//    .sheet(isPresented: $isVenueMapPresented) {
-//      NavigationStack {
-//        WebViewRepresentable(url: InfoLink.venueMap.url)
-//          .navigationTitle(InfoLink.venueMap.title)
-//          .navigationBarTitleDisplayMode(.inline)
-//          .presentationDragIndicator(.visible)
-//      }
-//    }
-    .sheet(isPresented: $isGraphqlOrgPresented) {
-      NavigationStack {
-        WebViewRepresentable(url: InfoLink.graphqlOrg.url)
-          .navigationTitle(InfoLink.graphqlOrg.title)
-          .navigationBarTitleDisplayMode(.inline)
-          .presentationDragIndicator(.visible)
-      }
-    }
-
     .sheet(isPresented: $isLicensesPresented) {
       NavigationStack {
         LicensesView()
