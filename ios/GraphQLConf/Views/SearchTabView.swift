@@ -70,10 +70,8 @@ struct SearchTabView: View {
     .toolbarBackground(Theme.tabBar, for: .tabBar)
     .toolbarBackground(.visible, for: .tabBar)
 
-    .onAppear {
-      Task {
-        await viewModel.fetchDataIfNeeded()
-      }
+    .task {
+      await viewModel.fetchData()
     }
   }
 }

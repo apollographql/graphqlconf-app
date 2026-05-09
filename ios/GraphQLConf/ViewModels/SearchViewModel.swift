@@ -10,12 +10,8 @@ class SearchViewModel: ObservableObject {
 
   private var sessions: [AugmentedSessionFragment] = []
   private var speakers: [SpeakerFragment] = []
-  private var hasFetchedData = false
 
-  func fetchDataIfNeeded() async {
-    guard !hasFetchedData else { return }
-    hasFetchedData = true
-
+  func fetchData() async {
     async let sessionsResult: Void = fetchSessions()
     async let speakersResult: Void = fetchSpeakers()
     _ = await (sessionsResult, speakersResult)
