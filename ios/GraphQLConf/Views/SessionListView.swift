@@ -38,7 +38,7 @@ struct SessionListView: View {
                   Text(section.first?.formattedSectionDate ?? "--")
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                    .font(.HostGrotesk.large)
+                    .font(.HostGrotesk.h3)
                     .foregroundStyle(Theme.primaryText)
                     .background(Theme.mainBackground)
                 }
