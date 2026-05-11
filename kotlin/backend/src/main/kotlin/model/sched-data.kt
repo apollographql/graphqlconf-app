@@ -1,6 +1,7 @@
 package model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.decodeFromStream
 import java.net.URLEncoder
 import kotlin.time.Duration.Companion.minutes
@@ -87,7 +88,9 @@ internal val schedSessionsRefresher = Refesher(
   initialValue = { JsonSession::class.java.classLoader.getResourceAsStream("sessions.json")!!.toSessionList() },
   refreshValue = {
     getUrl("$SCHED_BASE_URL/api/session/export?api_key=${schedApiKey()}&format=json").use {
-      json.decodeFromStream<List<SchedSession>>(it)
+//      json.decodeFromStream<List<SchedSession>>(it)
+      val sessions = it.reader().readText()
+      json.decodeFromString<List<SchedSession>>(sessions)
     }.map {
       it.toJsonSession()
     }
