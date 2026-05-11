@@ -35,6 +35,7 @@ class SearchViewModel: ObservableObject {
       return fragment.title.lowercased().contains(query) ||
           fragment.description.lowercased().contains(query) ||
           fragment.event_type.lowercased().contains(query) ||
+          fragment.room?.name.lowercased().contains(query) ?? false ||
           fragment.speakers.contains(where: { $0.name.lowercased().contains(query) })
     }
 
