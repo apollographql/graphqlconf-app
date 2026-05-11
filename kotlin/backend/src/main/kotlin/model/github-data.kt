@@ -75,7 +75,7 @@ internal class Refesher<D>(
 
   fun data(): D {
     synchronized(lock) {
-      if (job == null && System.nanoTime() - lastTime > pollingDelay.inWholeNanoseconds) {
+      if (job == null && (lastTime == 0L || System.nanoTime() - lastTime > pollingDelay.inWholeNanoseconds)) {
         job = GlobalScope.launch {
           try {
             println("${Clock.System.now()}: Refreshing $name...")
