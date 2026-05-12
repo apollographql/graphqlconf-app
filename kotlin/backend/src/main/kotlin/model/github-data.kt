@@ -116,7 +116,7 @@ internal fun InputStream.toSessionList(): List<JsonSession> {
  */
 internal fun getSessionTitle(title: String): String {
   var t = title
-  for (prefix in setOf("Sponsored Keynote: ", "Keynote: ", "Unconference: ")) {
+  for (prefix in setOf("Sponsored Keynote: ", "Sponsored Session: ", "Keynote: ", "Unconference: ")) {
     t = t.removePrefix(prefix)
   }
   return t.substringBefore(" -")
