@@ -1,6 +1,6 @@
 [versions]
 agp = "9.3.0-alpha04"
-androidx-lifecycle = "2.11.0-alpha03"
+androidx-lifecycle = "2.11.0-beta01"
 compat-patrouille = "0.4.2"
 compileSdk = "37"
 componentsResources = "1.11.0-beta03"
