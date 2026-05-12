@@ -116,13 +116,13 @@ fun InfoScreen(navigateToLicenses: () -> Unit, navigateToFloorPlan: () -> Unit) 
           title = stringResource(Res.string.onsite_resources),
           url = "https://graphql.org/conf/2026/resources/#onsite-resources",
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        InAppLinkCard(
-          title = stringResource(Res.string.floor_plan),
-          onClick = {
-            navigateToFloorPlan()
-          }
-        )
+//        Spacer(modifier = Modifier.height(16.dp))
+//        InAppLinkCard(
+//          title = stringResource(Res.string.floor_plan),
+//          onClick = {
+//            navigateToFloorPlan()
+//          }
+//        )
         Spacer(modifier = Modifier.height(16.dp))
         InAppLinkCard(
           title = stringResource(Res.string.licenses),

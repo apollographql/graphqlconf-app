@@ -379,21 +379,25 @@ private fun String.toRoom(): Room? {
       rank = 0,
       floor = 0
     )
+
     "Dumbarton" -> Room(
       name = "Dumbarton",
       rank = 1,
       floor = 0
     )
+
     "Humor" -> Room(
       name = "Humor",
       rank = 2,
       floor = 0
     )
+
     "FRE 117 Lobby" -> Room(
       name = "FRE 117 Lobby",
       rank = 3,
       floor = 0
     )
+
     "Mission Peak Foyer" -> Room(
       name = "Mission Peak Foyer",
       rank = 4,
@@ -420,47 +424,49 @@ fun buildItems(sessions: List<Session>): List<ScheduleItem> {
   var lastDate: LocalDate? = null
   var dayIndex = 1
   /**
-   * List of time slots created by the notebook and then tweaked manually.
+   * List of time slots created manually
+   * This could potentially be created automatically
    */
   listOf(
-    "2026-05-19 08:00" to "2026-05-19 09:00", // Registration + Badge Pick-up
-    "2026-05-19 09:00" to "2026-05-19 10:15", // Keynote Sessions To Be Announced
-    "2026-05-19 10:15" to "2026-05-19 10:35", // Break
-    "2026-05-19 10:35" to "2026-05-19 11:10", // "Big Graphs, Tiny Contexts: Dev Tools for Agents - Stephen Spalding & Kavitha Srinivasan, Netflix"
-    "2026-05-19 11:10" to "2026-05-19 11:45", // "React Server Components Vs. GraphQL - Jordan Eldredge, Meta"
-    "2026-05-19 11:45" to "2026-05-19 12:00", // "Shopify's Breadth-First Bet: Rethinking GraphQL Execution - Greg MacWilliam, Shopify"
-    "2026-05-19 12:00" to "2026-05-19 12:10", // "GraphQL: The Internal Agentic API - Christopher Chedeau, Meta"
-    "2026-05-19 12:10" to "2026-05-19 13:25", // Lunch
-    "2026-05-19 13:25" to "2026-05-19 14:00", // "The State of GraphQL Agent Skills - Dale Seo, Apollo GraphQL"
-    "2026-05-19 14:00" to "2026-05-19 14:25", // "Schema Composition Without Federation - Matt Mahoney, Meta"
-    "2026-05-19 14:25" to "2026-05-19 14:35", // "Making GraphQL Fun for the Backend Too - Stephen Haberman, Homebound"
-    "2026-05-19 14:35" to "2026-05-19 14:50", // "Bringing GraphQL Natively To Relational Databases With AI - Shashank Gugnani, Oracle"
-    "2026-05-19 14:50" to "2026-05-19 15:10", // "Breaking up With Inputs (Without Breaking Your Users) - Laurin Quast, The Guild"
-    "2026-05-19 15:10" to "2026-05-19 15:35", // "Connecting LLMs To GraphQL With Schema-Aware Embeddings - Thore Koritzius, Self"
-    "2026-05-19 15:35" to "2026-05-19 15:55", // Break
-    "2026-05-19 15:55" to "2026-05-19 16:30", // "Simplifying MCP Tool Sprawl With GraphQL - Roy Derks, IBM"
-    "2026-05-19 16:30" to "2026-05-19 17:05", // "Shifting Instagram Development Towards Monolith Server Via Federated Schema - Xiao Han, Chi Chan, Lisa Watkins & Anirudh Padmarao, Meta"
-    "2026-05-19 17:05" to "2026-05-20 08:00", // "Understanding Your Graph, One Hash at a Time - Jens Neuse, WunderGraph"
-    "2026-05-20 08:00" to "2026-05-20 09:00", // Registration + Badge Pick-up
-    "2026-05-20 09:00" to "2026-05-20 10:00", // GraphQL All Hands Meeting
-    "2026-05-20 10:00" to "2026-05-20 10:15", // Break
-    "2026-05-20 10:15" to "2026-05-20 10:30", // "When GraphQL Gets Expensive: Performance & Cost Patterns in Production Serverless Architectures - Harpreet Siddhu, AWS Community Builder & Shravanth Gowda Venkatesh, Independent Researcher"
-    "2026-05-20 10:30" to "2026-05-20 10:50", // "Resolvers Everywhere: Rethinking Client and Server Boundaries in GraphQL - Janette Cheng, Meta"
-    "2026-05-20 10:50" to "2026-05-20 11:25", // "GraphQL Meets LLMs & Agents: Building Production AI at Starbucks Scale - Sharon Gorla, Starbucks"
-    "2026-05-20 11:25" to "2026-05-20 12:00", // "Semantic Introspection - Pascal Senn, ChilliCream"
-    "2026-05-20 12:00" to "2026-05-20 12:25", // "GraphQL Embeddings: AI-Powered Dynamic Operations From Schema To IDE - Michael Watson, Self"
-    "2026-05-20 12:25" to "2026-05-20 13:40", // Lunch
-    "2026-05-20 13:40" to "2026-05-20 14:15", // "A GraphQL-inspired Orchestration Language for the AI Era - Martijn Walraven, Apollo"
-    "2026-05-20 14:15" to "2026-05-20 14:30", // "Governing the AI-Graph: Observability and Security for LLM-Generated Queries - Rajeshwari Sah, Apple Inc"
-    "2026-05-20 14:30" to "2026-05-20 14:50", // "Inside a Modern GraphQL Compiler - Alec Aivazis, Arista Networks"
-    "2026-05-20 14:50" to "2026-05-20 15:15", // "GraphQL Data Mocking at Scale With LLMs and @generateMock - Michael Rebello, Airbnb"
-    "2026-05-20 15:15" to "2026-05-20 15:35", // Break
-    "2026-05-20 15:35" to "2026-05-20 16:10", // "Observability for a Multi-Tenant GraphQL Gateway at Scale - Vickey Yeh, Airbnb"
-    "2026-05-20 16:10" to "2026-05-20 16:45", // "From Query to Conversation: GraphQL as an AI Interface Layer - Hugh Nguyen, Ben Golub, Adam Conrad & Kewei Qu, Meta"
-    "2026-05-20 16:45" to "2026-05-20 17:00", // "Keynote: GraphQL’s Next Chapter: Progress, Proposals, and Participation - Kewei Qu, Software Engineer, Meta; Pascal Senn, COO, Chillicream; Mark Larah, Group Tech Lead, Yelp"
-    "2026-05-20 17:00" to "2026-05-20 17:15", // Keynote Sessions To Be Announced
-    "2026-05-21 09:30" to "2026-05-21 16:30", // WG day
-    ).forEach {
+    "2026-05-19 08:00",
+    "2026-05-19 09:00",
+    "2026-05-19 10:10",
+    "2026-05-19 10:30",
+    "2026-05-19 11:05",
+    "2026-05-19 11:40",
+    "2026-05-19 12:15",
+    "2026-05-19 12:40",
+    "2026-05-19 14:10",
+    "2026-05-19 14:45",
+    "2026-05-19 15:20",
+    "2026-05-19 15:45",
+    "2026-05-19 16:05",
+    "2026-05-19 16:40",
+    "2026-05-19 17:15",
+    "2026-05-20 08:00",
+    "2026-05-20 09:00",
+    "2026-05-20 10:00",
+    "2026-05-20 10:15",
+    "2026-05-20 10:50",
+    "2026-05-20 11:25",
+    "2026-05-20 12:00",
+    "2026-05-20 12:25",
+    "2026-05-20 13:55",
+    "2026-05-20 14:30",
+    "2026-05-20 15:05",
+    "2026-05-20 15:30",
+    "2026-05-20 15:50",
+    "2026-05-20 16:25",
+    "2026-05-20 17:15",
+  ).let { start ->
+    start.indices.map { it ->
+      if (it < start.lastIndex) {
+        start[it] to start[it + 1]
+      } else {
+        start[it] to "2026-05-21 16:30"
+      }
+    }
+  }.forEach {
     val start = dateFormat.parse(it.first)
     val end = dateFormat.parse(it.second)
 
@@ -508,12 +514,14 @@ private val apolloClient = ApolloClient.Builder()
 class Mutation {
   suspend fun submitFeedback(feedbackInput: FeedbackInput): Boolean {
 
-    val response = apolloClient.mutation(SubmitFeedbackMutation(
-      feedbackInput.userId,
-      feedbackInput.sessionId,
-      feedbackInput.rating.ordinal,
-      feedbackInput.comment
-    )).execute()
+    val response = apolloClient.mutation(
+      SubmitFeedbackMutation(
+        feedbackInput.userId,
+        feedbackInput.sessionId,
+        feedbackInput.rating.ordinal,
+        feedbackInput.comment
+      )
+    ).execute()
 
     response.exception.let {
       if (it != null) {
