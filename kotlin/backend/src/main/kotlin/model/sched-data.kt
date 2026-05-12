@@ -7,7 +7,7 @@ import java.net.URLEncoder
 import kotlin.time.Duration.Companion.minutes
 
 @Serializable
-class SchedSession(
+data class SchedSession(
   val id: String,
   val event_key: String? = null,
   val name: String,
@@ -127,7 +127,7 @@ val allSpeakers: List<JsonSpeaker>
 fun SchedSession.toJsonSession(): JsonSession {
   return JsonSession(
     id = id,
-    name = name,
+    name =  getSessionTitle(name),
     event_start = event_start,
     event_end = event_end,
     event_type = event_type.orEmpty(),
@@ -135,7 +135,11 @@ fun SchedSession.toJsonSession(): JsonSession {
     venue = venue,
     description = description.orEmpty(),
     speakers = speakers.map { JsonSession.JsonSpeaker(username = it.username, id = it.id) },
-    files = files,
+    files = if (id == "0466574bdb1df2c888e087738a0248f8") {
+      files + JsonFile(name = "Golden Path Website", path = "https://goldenpath.graphql.org/") + JsonFile(name = "Golden Path Repository", path = "https://github.com/graphql/golden-path")
+    } else {
+      files
+    }
   )
 }
 

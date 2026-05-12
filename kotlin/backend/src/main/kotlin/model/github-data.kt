@@ -108,28 +108,13 @@ internal fun getUrl(url: String): InputStream {
 internal fun InputStream.toSessionList(): List<JsonSession> {
   return use {
     json.decodeFromStream<List<JsonSession>>(it)
-  }.sanitize()
-}
-
-internal fun List<JsonSession>.sanitize(): List<JsonSession> {
-  return map {
-    var session = it
-    session = session.copy(name = getSessionTitle(it.name))
-    if (session.id == "0466574bdb1df2c888e087738a0248f8") {
-      session = session.copy(
-        files = session.files
-            + JsonFile(name = "Golden Path Website", path = "https://goldenpath.graphql.org/")
-            + JsonFile(name = "Golden Path Repository", path = "https://github.com/graphql/golden-path")
-      )
-    }
-    session
   }
 }
 
 /**
  * See https://github.com/graphql/graphql.github.io/blob/a3d6819fbedd23b985fc05a37b8fb7722d3a517b/src/app/conf/2025/utils.ts#L49
  */
-private fun getSessionTitle(title: String): String {
+internal fun getSessionTitle(title: String): String {
   var t = title
   for (prefix in setOf("Keynote: ", "Unconference: ")) {
     t = t.removePrefix(prefix)
