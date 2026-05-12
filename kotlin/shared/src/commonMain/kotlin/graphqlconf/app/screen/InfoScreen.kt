@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import graphqlconf.app.misc.Header
 import graphqlconf.app.misc.MainHeaderContainerState
 import graphqlconf.app.misc.MainHeaderTitleBar
@@ -82,16 +83,29 @@ fun InfoScreen(navigateToLicenses: () -> Unit, navigateToFloorPlan: () -> Unit) 
         }
         Spacer(modifier = Modifier.height(16.dp))
       }
-      Spacer(modifier = Modifier.height(32.dp))
-      Text(
-        text = stringResource(Res.string.app_description),
-        style = GraphqlConfTheme.typography.bodyMedium,
-        color = GraphqlConfTheme.colors.text,
-        modifier = Modifier.padding(horizontal = 16.dp),
-      )
-      Spacer(modifier = Modifier.height(32.dp))
 
       Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+          text = stringResource(Res.string.app_description),
+          style = GraphqlConfTheme.typography.bodyMedium,
+          color = GraphqlConfTheme.colors.text,
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+          text = stringResource(Res.string.venue),
+          color = GraphqlConfTheme.colors.text,
+          style = GraphqlConfTheme.typography.h3,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        VenueCard(
+          name = stringResource(Res.string.venue_name),
+          address = stringResource(Res.string.venue_address),
+          imageUrl = stringResource(Res.string.venue_image_url),
+          url = stringResource(Res.string.venue_map_url),
+        )
+        Spacer(modifier = Modifier.height(32.dp))
         LinkCard(
           title = stringResource(Res.string.code_of_conduct),
           url = "https://graphql.org/conf/2026/resources/#code-of-conduct",
@@ -209,6 +223,49 @@ fun LinkCard(title: String, url: String) {
       colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.text)
     )
     Spacer(modifier = Modifier.width(8.dp))
+  }
+}
+
+@Composable
+fun VenueCard(name: String, address: String, imageUrl: String, url: String) {
+  val uriHandler = LocalUriHandler.current
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .border(width = 1.dp, color = GraphqlConfTheme.colors.textDimmed)
+      .background(GraphqlConfTheme.colors.surface)
+      .clickable {
+        uriHandler.openUri(url)
+      },
+  ) {
+    AsyncImage(
+      model = imageUrl,
+      contentDescription = name,
+      contentScale = ContentScale.Crop,
+      modifier = Modifier.fillMaxWidth().height(160.dp),
+    )
+    Row(verticalAlignment = CenterVertically) {
+      Column(modifier = Modifier.weight(1f).padding(8.dp)) {
+        Text(
+          text = name,
+          color = GraphqlConfTheme.colors.text,
+          style = GraphqlConfTheme.typography.bodyLarge,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+          text = address,
+          color = GraphqlConfTheme.colors.textDimmed,
+          style = GraphqlConfTheme.typography.bodySmall,
+        )
+      }
+      Image(
+        painter = painterResource(Res.drawable.arrow_left),
+        contentDescription = stringResource(Res.string.open_resource),
+        modifier = Modifier.size(24.dp).rotate(180f),
+        colorFilter = ColorFilter.tint(GraphqlConfTheme.colors.text)
+      )
+      Spacer(modifier = Modifier.width(8.dp))
+    }
   }
 }
 

@@ -39,6 +39,11 @@
   <string name="onsite_resources">Onsite resources</string>
   <string name="health_and_safety">Health &amp; safety</string>
   <string name="graphql_dot_org">graphql.org</string>
+  <string name="venue">Venue</string>
+  <string name="venue_name">DoubleTree by Hilton</string>
+  <string name="venue_address">39900 Balentine Drive, Newark, California, 94560-0564, USA</string>
+  <string name="venue_map_url">https://maps.app.goo.gl/BnPq9yu4EhMFdkY87</string>
+  <string name="venue_image_url">https://storage.googleapis.com/martin-public/doubletree.jpg</string>
   <string name="no_bookmarks">You don't have any bookmark yet.</string>
   <string name="app_description">This app was written in Kotlin using Jetpack Compose and Apollo Kotlin.\n\nThe "NOW" button and app structure is strongly inspired by the KotlinConf app. Special thanks to them for all the love and care they put in raising the bar for conference apps 💙</string>
   <string name="app_name">GraphQLConf 2026</string>
