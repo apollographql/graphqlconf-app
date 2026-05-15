@@ -374,20 +374,20 @@ class TimeHeader(
 
 private fun String.toRoom(): Room? {
   return when (this) {
-    "Mission Peak" -> Room(
-      name = "Mission Peak",
+    "Grand Ballroom II - IV" -> Room(
+      name = "Grand Ballroom II - IV",
       rank = 0,
       floor = 0
     )
 
-    "Dumbarton" -> Room(
-      name = "Dumbarton",
+    "Grand Ballroom I" -> Room(
+      name = "Grand Ballroom I",
       rank = 1,
       floor = 0
     )
 
-    "Humor" -> Room(
-      name = "Humor",
+    "Boardroom" -> Room(
+      name = "Boardroom",
       rank = 2,
       floor = 0
     )
@@ -398,21 +398,9 @@ private fun String.toRoom(): Room? {
       floor = 0
     )
 
-    "Mission Peak Foyer" -> Room(
-      name = "Mission Peak Foyer",
-      rank = 4,
-      floor = 0
-    )
-
-    "Cafeteria" -> Room(
-      name = "Cafeteria",
-      rank = 5,
-      floor = 0
-    )
-
     else -> Room(
       name = this,
-      rank = 0,
+      rank = Int.MAX_VALUE,
       floor = 6
     )
   }
