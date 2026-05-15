@@ -49,7 +49,7 @@ compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.re
 desktop = { module = "org.jetbrains.compose.desktop:desktop", version.ref = "compose" }
 foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
 #noinspection NewerVersionAvailable, crashes on some weird grpc-java/protobuf exeption
-google-cloud-bom = "com.google.cloud:libraries-bom:26.64.0"
+google-cloud-bom = "com.google.cloud:libraries-bom:26.81.0"
 #noinspection NewerVersionAvailable, crashes on some weird grpc-java/protobuf exeption
 google-cloud-run = "com.google.cloud:google-cloud-run:0.68.0"
 google-cloud-storage = { module = "com.google.cloud:google-cloud-storage" }
