@@ -17,7 +17,7 @@ minSdk = "26"
 targetSdk = "37"
 androidx-preference = "1.2.1"
 ktor = "3.4.2"
-apollo-cache = "1.0.2"
+apollo-cache = "1.0.9"
 
 [libraries]
 agp = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "agp" }
